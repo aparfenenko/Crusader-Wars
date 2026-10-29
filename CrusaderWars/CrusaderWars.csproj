@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -33,6 +34,10 @@
 <!--      <PackageReference Include="System.Windows.Extensions" Version="9.0.0" />-->
 <!--      <PackageReference Include="System.Resources.Extensions" Version="9.0.0" />-->
     </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CrusaderWars.Core\CrusaderWars.Core.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="client\MainFile.cs">
