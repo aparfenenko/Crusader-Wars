@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.Versioning;
 using System.Runtime.InteropServices;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars
 {
@@ -31,6 +32,7 @@ namespace CrusaderWars
             Logger.Debug("Application starting...");
             Logger.Debug(AppDomain.CurrentDomain.BaseDirectory);
             System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            CrusaderWarsEnvironment.Initialize(new WindowsGamePaths());
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
