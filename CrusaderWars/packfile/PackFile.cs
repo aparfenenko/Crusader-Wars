@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Linq;
 using CrusaderWars.Core.Paths;
+using CrusaderWars.Core.Pack;
 
 namespace CrusaderWars
 {
@@ -49,7 +50,7 @@ namespace CrusaderWars
         private static string? CreatePackFile(string command)
         {
             Program.Logger.Debug($"Executing RPFM command: {command}");
-            string rpfm_client_path = @".\data\rpfm\rpfm_cli.exe";
+            string rpfm_client_path = RpfmCliLocator.Resolve(PathConfig.Load().RpfmCli, @".\data\rpfm\rpfm_cli.exe");
 
             ProcessStartInfo procStartInfo = new ProcessStartInfo(rpfm_client_path, command)
 
