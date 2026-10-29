@@ -6,6 +6,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.IO.Compression;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.data.save_file
 {
@@ -14,7 +15,7 @@ namespace CrusaderWars.data.save_file
 
         internal static void Uncompress()
         {
-            string lastSavePath = Properties.Settings.Default.VAR_dir_save.Replace(@"save games", "last_save.ck3");
+            string lastSavePath = CrusaderWarsEnvironment.Paths.Ck3SaveGamesDirectory.Replace(@"save games", "last_save.ck3");
             string myLastSavePath = @".\data\save_file_data\last_save.zip";
             string gamestatePath = @".\data\save_file_data\gamestate_file\";
 
@@ -36,8 +37,9 @@ namespace CrusaderWars.data.save_file
         internal static void Finish()
         {
             string newSaveFilePath = @".\data\save_file_data\battle_results.zip";
-            string lastSavePath = Properties.Settings.Default.VAR_dir_save.Replace("save games", "last_save.ck3");
-            string normalSavePath = Properties.Settings.Default.VAR_dir_save + @"\battle_results.ck3";
+            string saveGamesDir = CrusaderWarsEnvironment.Paths.Ck3SaveGamesDirectory;
+            string lastSavePath = saveGamesDir.Replace("save games", "last_save.ck3");
+            string normalSavePath = saveGamesDir + @"\battle_results.ck3";
 
             File.Copy(newSaveFilePath, lastSavePath, true);
             File.Copy(newSaveFilePath, normalSavePath, true);
@@ -87,7 +89,7 @@ namespace CrusaderWars.data.save_file
 
         static void EditContinueGameJson()
         {
-            string jsonPath = Properties.Settings.Default.VAR_dir_save.Replace("save games", "continue_game.json");
+            string jsonPath = CrusaderWarsEnvironment.Paths.Ck3SaveGamesDirectory.Replace("save games", "continue_game.json");
             string keyToUpdate = "title";  // The key you want to update
             string newValue = "battle_results.ck3";    // The new value for the key
 

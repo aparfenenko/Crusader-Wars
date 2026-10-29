@@ -13,6 +13,7 @@ using System.Runtime.Versioning;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using CrusaderWars.unit_mapper;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.mod_manager
 {
@@ -154,7 +155,7 @@ namespace CrusaderWars.mod_manager
 
         public static string? GetWorkshopFolderPath()
         {
-            string attilaPath = Properties.Settings.Default.VAR_attila_path;
+            string attilaPath = CrusaderWarsEnvironment.Paths.AttilaExecutablePath;
             if (string.IsNullOrEmpty(attilaPath) || !System.IO.File.Exists(attilaPath))
             {
                 return null;
@@ -182,13 +183,13 @@ namespace CrusaderWars.mod_manager
         {
             Program.Logger.Debug("Creating user mods file for Attila...");
             // CREATE ESSENTIAL FILE TO OPEN ATTILA AUTOMATICALLY
-            string steam_app_id_path = Properties.Settings.Default.VAR_attila_path.Replace("Attila.exe", "steam_appid.txt");
+            string steam_app_id_path = CrusaderWarsEnvironment.Paths.AttilaExecutablePath.Replace("Attila.exe", "steam_appid.txt");
             if (!File.Exists(steam_app_id_path))
             {
                 File.WriteAllText(steam_app_id_path, "325610");
             }
 
-            string userMods_path = Properties.Settings.Default.VAR_attila_path.Replace("Attila.exe", "used_mods_cc.txt");
+            string userMods_path = CrusaderWarsEnvironment.Paths.AttilaExecutablePath.Replace("Attila.exe", "used_mods_cc.txt");
 
             // Clear existing content
             File.WriteAllText(userMods_path, "");
@@ -267,7 +268,7 @@ namespace CrusaderWars.mod_manager
         public static void ReadInstalledMods()
         {
             Program.Logger.Debug("Reading installed Attila mods...");
-            string data_folder_path = Properties.Settings.Default.VAR_attila_path.Replace("Attila.exe", @"data\");
+            string data_folder_path = CrusaderWarsEnvironment.Paths.AttilaExecutablePath.Replace("Attila.exe", @"data\");
             string? workshop_folder_path = GetWorkshopFolderPath();
 
             ModsPaths = new List<Mod>();
@@ -498,7 +499,7 @@ namespace CrusaderWars.mod_manager
             Program.Logger.Debug($"Mods to verify: {string.Join(", ", modStates.Keys)}");
 
             // Verify data folder (priority location)
-            string data_folder_path = Properties.Settings.Default.VAR_attila_path.Replace("Attila.exe", @"data\");
+            string data_folder_path = CrusaderWarsEnvironment.Paths.AttilaExecutablePath.Replace("Attila.exe", @"data\");
             Program.Logger.Debug($"Checking Attila data folder: {data_folder_path}");
             if (Directory.Exists(data_folder_path))
             {

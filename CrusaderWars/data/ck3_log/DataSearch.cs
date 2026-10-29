@@ -11,6 +11,7 @@ using CrusaderWars.terrain;
 using System.Text;
 using System.Globalization; // Added for CultureInfo
 using CrusaderWars.data.battle_results;
+using CrusaderWars.Core.Paths;
 
 
 namespace CrusaderWars
@@ -124,7 +125,7 @@ namespace CrusaderWars
         public static PlayerChar? Player_Character { get; set; }
         public static string? Player_Heir_ID { get; set; }
 
-        static string LogPath = Properties.Settings.Default.VAR_log_ck3;
+        static string LogPath = CrusaderWarsEnvironment.Paths.Ck3ConsoleLogPath;
 
         private static void IdentifyBattleType(string log)
         {
