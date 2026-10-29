@@ -11,6 +11,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms; // Added for MessageBox
 using CrusaderWars.client; // Added for ModOptions
+using CrusaderWars.Core.Dialogs;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars
 {
@@ -600,15 +602,14 @@ namespace CrusaderWars
                 {
                     Program.Logger.Debug($"Failed to start updater: {ex.Message}");
                     string fullUpdaterPath = updaterPath != null ? Path.GetFullPath(updaterPath) : "N/A";
-                    MessageBox.Show(
+                    CrusaderWarsEnvironment.Dialogs.Show(
                         $"The Crusader Conflicts updater failed to launch.\n\n" +
                         $"This is often caused by antivirus software blocking the executable.\n\n" +
                         $"Please try to manually run the updater from:\n" +
                         $"{fullUpdaterPath}\n\n" +
                         $"Error details: {ex.Message}",
                         "Crusader Conflicts: Updater Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
+                        DialogIcon.Error
                     );
                     Environment.Exit(0); // Exit the application after notifying the user
                 }
@@ -680,15 +681,14 @@ namespace CrusaderWars
                 {
                     Program.Logger.Debug($"Failed to start updater: {ex.Message}");
                     string fullUpdaterPath = updaterPath != null ? Path.GetFullPath(updaterPath) : "N/A";
-                    MessageBox.Show(
+                    CrusaderWarsEnvironment.Dialogs.Show(
                         $"The Crusader Conflicts unit mappers updater failed to launch.\n\n" +
                         $"This is often caused by antivirus software blocking the executable.\n\n" +
                         $"Please try to manually run the updater from:\n" +
                         $"{fullUpdaterPath}\n\n" +
                         $"Error details: {ex.Message}",
                         "Crusader Conflicts: Unit Mappers Updater Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
+                        DialogIcon.Error
                     );
                     Environment.Exit(0); // Exit the application after notifying the user
                 }

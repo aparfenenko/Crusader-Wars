@@ -11,6 +11,8 @@ using System.Runtime.Versioning;
 using CrusaderWars.client;
 using CrusaderWars.data.save_file;
 using CrusaderWars.twbattle;
+using CrusaderWars.Core.Dialogs;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.unit_mapper
 {
@@ -276,8 +278,8 @@ namespace CrusaderWars.unit_mapper
             }
             else
             {
-                MessageBox.Show($"Mods.xml was not found in {mapperPath}", "Crusader Conflicts: Crusader Conflicts: Unit Mappers Error",
-                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                CrusaderWarsEnvironment.Dialogs.Show($"Mods.xml was not found in {mapperPath}", "Crusader Conflicts: Crusader Conflicts: Unit Mappers Error",
+                DialogIcon.Error);
             }
             if (ck3ModNames.Count > ck3ModFileNames.Count)
                 Program.Logger.Debug($"Warning: 'ck3_mod_names' has {ck3ModNames.Count} entries but 'ck3_mod_file_names' has {ck3ModFileNames.Count}. Extra names ignored.");
@@ -853,8 +855,8 @@ namespace CrusaderWars.unit_mapper
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error reading {GetLoadedUnitMapperName()} terrains file: {ex.Message}", "Crusader Conflicts: Unit Mapper Error",
-                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                CrusaderWarsEnvironment.Dialogs.Show($"Error reading {GetLoadedUnitMapperName()} terrains file: {ex.Message}", "Crusader Conflicts: Unit Mapper Error",
+                DialogIcon.Error);
             }
         }
 
@@ -904,8 +906,8 @@ namespace CrusaderWars.unit_mapper
 
                 if (!requiredMods.Any()) // If no mods were found after checking all custom mappers
                 {
-                    MessageBox.Show($"The selected custom unit mapper '{customMapperTag}' does not have a valid configuration for the current in-game year ({Date.Year}).", "Crusader Conflicts: Configuration Error",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    CrusaderWarsEnvironment.Dialogs.Show($"The selected custom unit mapper '{customMapperTag}' does not have a valid configuration for the current in-game year ({Date.Year}).", "Crusader Conflicts: Configuration Error",
+                                    DialogIcon.Error);
                 }
                 return requiredMods;
             }
@@ -1025,15 +1027,15 @@ namespace CrusaderWars.unit_mapper
                     }
                     else
                     {
-                        MessageBox.Show($"Mods.xml was not found in {mapperPath}", "Crusader Conflicts: Unit Mappers Error",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        CrusaderWarsEnvironment.Dialogs.Show($"Mods.xml was not found in {mapperPath}", "Crusader Conflicts: Unit Mappers Error",
+                                        DialogIcon.Error);
                     }
                 }
             }
             else
             {
-                MessageBox.Show($"Time Period.xml or TimePeriod.xml was not found in {mapperPath}", "Crusader Conflicts: Unit Mappers Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                CrusaderWarsEnvironment.Dialogs.Show($"Time Period.xml or TimePeriod.xml was not found in {mapperPath}", "Crusader Conflicts: Unit Mappers Error",
+                                DialogIcon.Error);
             }
 
             return requiredMods;

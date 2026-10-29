@@ -10,6 +10,8 @@ using CrusaderWars.armies;
 using CrusaderWars.client;
 using CrusaderWars.data.save_file;
 using CrusaderWars.locs;
+using CrusaderWars.Core.Dialogs;
+using CrusaderWars.Core.Paths;
 using CrusaderWars.sieges;
 using CrusaderWars.terrain;
 using CrusaderWars.twbattle;
@@ -231,9 +233,9 @@ namespace CrusaderWars
                 string message = "To control your army as an ally, the 'Armies Control' setting must be 'All Controlled'.\n\n" +
                                  "Do you want to change it automatically and proceed with the battle?";
                 string title = "Crusader Conflicts: Ally Army Control";
-                DialogResult result = MessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                DialogChoice result = CrusaderWarsEnvironment.Dialogs.Show(message, title, DialogButtons.YesNo, DialogIcon.Question);
 
-                if (result == DialogResult.Yes)
+                if (result == DialogChoice.Yes)
                 {
                     Program.Logger.Debug("User agreed to change 'Armies Control' to 'All Controlled'.");
                     // Update the setting programmatically
@@ -247,8 +249,8 @@ namespace CrusaderWars
                 else // User clicked No
                 {
                     Program.Logger.Debug("User declined to change 'Armies Control' setting. Aborting battle generation.");
-                    MessageBox.Show("None of your armies are present in this battle! (If this error is unexpected, confirm your \"Armies Control\" selection in the mod settings)", "Crusader Conflicts: No Player Army",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    CrusaderWarsEnvironment.Dialogs.Show("None of your armies are present in this battle! (If this error is unexpected, confirm your \"Armies Control\" selection in the mod settings)", "Crusader Conflicts: No Player Army",
+                    DialogIcon.Error);
                     throw new Exception("Battle aborted: Player declined to change 'Armies Control' setting.");
                 }
             }
@@ -1501,9 +1503,9 @@ namespace CrusaderWars
                 }
                 else
                 {
-                    MessageBox.Show($"Could not determine a subculture for the defending faction '{attilaFaction}'.\n\nThe battle might not load correctly in Total War: Attila.\n\nPlease check your Unit Mapper files.",
+                    CrusaderWarsEnvironment.Dialogs.Show($"Could not determine a subculture for the defending faction '{attilaFaction}'.\n\nThe battle might not load correctly in Total War: Attila.\n\nPlease check your Unit Mapper files.",
                                     "Crusader Conflicts: Subculture Warning",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                                    DialogIcon.Warning);
                 }
             }
 

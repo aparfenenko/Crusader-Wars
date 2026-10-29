@@ -23,6 +23,7 @@ using System.Globalization; // Added for CultureInfo
 using System.Text.RegularExpressions; // Added for Regex
 using CrusaderWars.data.battle_results.editors;
 using CrusaderWars.Core.Paths;
+using CrusaderWars.Core.Dialogs;
 
 namespace CrusaderWars.twbattle
 {
@@ -101,7 +102,7 @@ namespace CrusaderWars.twbattle
             if (left_side is null || !left_side.Any() || right_side is null || !right_side.Any())
             {
                 Program.Logger.Debug("Could not determine battle sides or one side is empty. Aborting battle processing.");
-                MessageBox.Show(form, "Could not determine player and enemy sides for the battle, or one side has no armies. The battle cannot proceed.", "Crusader Conflicts: Battle Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CrusaderWarsEnvironment.Dialogs.Show(form, "Could not determine player and enemy sides for the battle, or one side has no armies. The battle cannot proceed.", "Crusader Conflicts: Battle Error", DialogIcon.Error);
                 return false; // break
             }
 
@@ -472,8 +473,7 @@ namespace CrusaderWars.twbattle
                     Program.Logger.Debug($"Error creating Attila battle: {ex.Message}");
                     form.Show();
                     form.CloseLoadingScreen();
-                    MessageBox.Show(form, $"Error creating the battle: {ex.Message}", "Crusader Conflicts: Data Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    CrusaderWarsEnvironment.Dialogs.Show(form, $"Error creating the battle: {ex.Message}", "Crusader Conflicts: Data Error", DialogIcon.Error);
                     if (ModOptions.CloseCK3DuringBattle())
                     {
                         Games.StartCrusaderKingsProcess();
@@ -528,8 +528,7 @@ namespace CrusaderWars.twbattle
                     Program.Logger.Debug($"Error starting Attila: {ex.Message}");
                     form.Show();
                     form.CloseLoadingScreen();
-                    MessageBox.Show(form, "Couldn't find 'Attila.exe'. Change the Total War Attila path. ", "Crusader Conflicts: Path Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    CrusaderWarsEnvironment.Dialogs.Show(form, "Couldn't find 'Attila.exe'. Change the Total War Attila path. ", "Crusader Conflicts: Path Error", DialogIcon.Error);
                     form.infoLabel.Text = "Ready to start!";
                     if (ModOptions.CloseCK3DuringBattle())
                     {
@@ -582,8 +581,7 @@ namespace CrusaderWars.twbattle
             catch (Exception ex)
             {
                 Program.Logger.Debug($"Error during cleanup before battle: {ex.Message}");
-                MessageBox.Show(form, $"Error: {ex.Message}", "Crusader Conflicts: Application Error",
-                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                CrusaderWarsEnvironment.Dialogs.Show(form, $"Error: {ex.Message}", "Crusader Conflicts: Application Error", DialogIcon.Error);
                 await Games.CloseTotalWarAttilaProcess();
                 if (ModOptions.CloseCK3DuringBattle())
                 {
@@ -726,11 +724,10 @@ namespace CrusaderWars.twbattle
                             {
                                 form.Invoke((MethodInvoker)delegate
                                 {
-                                    MessageBox.Show(form,
+                                    CrusaderWarsEnvironment.Dialogs.Show(form,
                                         "The autofix process could not find any replaceable custom units in the armies.\n\nThe crash may be caused by something else (e.g., a game bug, outdated drivers, or a corrupted installation).\n\nThe battle will be aborted.",
                                         "Crusader Conflicts: Autofix Failed",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
+                                        DialogIcon.Information);
                                 });
                             }
                             return false;
@@ -772,11 +769,10 @@ namespace CrusaderWars.twbattle
                             {
                                 form.Invoke((MethodInvoker)delegate
                                 {
-                                    MessageBox.Show(form,
+                                    CrusaderWarsEnvironment.Dialogs.Show(form,
                                         "The automatic fix failed. All available strategies were tried, but the game still crashed.\n\nThe battle will be aborted.",
                                         "Crusader Conflicts: Autofix Failed",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Error);
+                                        DialogIcon.Error);
                                 });
                             }
                             return false; // All strategies exhausted
@@ -1309,8 +1305,7 @@ namespace CrusaderWars.twbattle
             catch (Exception ex)
             {
                 Program.Logger.Debug($"Error retrieving TW:Attila battle results: {ex.Message}");
-                MessageBox.Show(form, $"Error retrieving TW:Attila battle results: {ex.Message}", "Crusader Conflicts: TW:Attila Battle Results Error",
-                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                CrusaderWarsEnvironment.Dialogs.Show(form, $"Error retrieving TW:Attila battle results: {ex.Message}", "Crusader Conflicts: TW:Attila Battle Results Error", DialogIcon.Error);
                 await Games.CloseTotalWarAttilaProcess();
                 if (ModOptions.CloseCK3DuringBattle())
                 {
@@ -1524,7 +1519,7 @@ namespace CrusaderWars.twbattle
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Could not open link: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CrusaderWarsEnvironment.Dialogs.Show($"Could not open link: {ex.Message}", "Error", DialogIcon.Error);
                     }
                 };
                 panel.Controls.Add(linkLabel);
@@ -1758,7 +1753,7 @@ namespace CrusaderWars.twbattle
                     }
                     else
                     {
-                        MessageBox.Show("Please select a strategy.", "No Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CrusaderWarsEnvironment.Dialogs.Show("Please select a strategy.", "No Selection", DialogIcon.Warning);
                     }
                 };
                 panel.Controls.Add(okButton);

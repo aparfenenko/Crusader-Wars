@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Runtime.Versioning;
 using System.Runtime.InteropServices;
 using CrusaderWars.Core.Paths;
+using CrusaderWars.Core.Dialogs;
 
 namespace CrusaderWars
 {
@@ -32,7 +33,7 @@ namespace CrusaderWars
             Logger.Debug("Application starting...");
             Logger.Debug(AppDomain.CurrentDomain.BaseDirectory);
             System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-            CrusaderWarsEnvironment.Initialize(new WindowsGamePaths());
+            CrusaderWarsEnvironment.Initialize(new WindowsGamePaths(), new WindowsDialogService());
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -48,7 +49,7 @@ namespace CrusaderWars
         {
             // Handle the exception
             Logger.Debug($"Global thread exception caught: {e.Exception.Message}");
-            MessageBox.Show("An unexpected error occurred. Please try again.", "Crusader Conflicts: Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            CrusaderWarsEnvironment.Dialogs.Show("An unexpected error occurred. Please try again.", "Crusader Conflicts: Error", DialogIcon.Error);
             // Log the exception for troubleshooting
             Logger.Log(e.Exception);
         }
@@ -58,7 +59,7 @@ namespace CrusaderWars
         {
             // Handle the exception
             Logger.Debug($"Unhandled domain exception caught: {((Exception)e.ExceptionObject).Message}");
-            MessageBox.Show("An unexpected error occurred. Please try again.", "Crusader Conflicts: Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            CrusaderWarsEnvironment.Dialogs.Show("An unexpected error occurred. Please try again.", "Crusader Conflicts: Error", DialogIcon.Error);
             // Log the exception for troubleshooting
             Logger.Log((Exception)e.ExceptionObject);
         }

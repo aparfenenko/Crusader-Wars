@@ -13,6 +13,8 @@ using CrusaderWars.unit_mapper;
 using CrusaderWars.locs;
 using System.Runtime.Versioning;
 using System.Windows.Forms;
+using CrusaderWars.Core.Dialogs;
+using CrusaderWars.Core.Paths;
 
 
 namespace CrusaderWars.data.battle_results
@@ -84,10 +86,9 @@ namespace CrusaderWars.data.battle_results
             catch (Exception e)
             {
                 Program.Logger.Debug($"Error reading Attila results for army {army.ID}: {e.ToString()}");
-                MessageBox.Show($"Error reading Attila results: {e.ToString()}",
+                CrusaderWarsEnvironment.Dialogs.Show($"Error reading Attila results: {e.ToString()}",
                     "Crusader Conflicts: Battle Results Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
-                    MessageBoxOptions.DefaultDesktopOnly);
+                    DialogIcon.Error);
                 throw new Exception();
 
             }

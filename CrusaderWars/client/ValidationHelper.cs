@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using CrusaderWars.Core.Dialogs;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.client
 {
@@ -44,13 +46,13 @@ namespace CrusaderWars.client
             }
 
             // Show MessageBox
-            var dialogResult = MessageBox.Show(
+            var dialogResult = CrusaderWarsEnvironment.Dialogs.Show(
                 $"The file '{xmlFileName}' is corrupted or invalid and cannot be loaded.\n\nWould you like to reset it to default settings?\n\nClicking 'No' will exit the application.",
                 "Configuration File Error",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
+                DialogButtons.YesNo,
+                DialogIcon.Warning);
 
-            if (dialogResult == DialogResult.Yes)
+            if (dialogResult == DialogChoice.Yes)
             {
                 createDefaultFileAction();
                 Program.Logger.Debug($"Default file created for {xmlFileName} at {xmlPath}");
