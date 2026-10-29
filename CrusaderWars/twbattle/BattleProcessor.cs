@@ -22,6 +22,7 @@ using static CrusaderWars.HomePage; // To access nested static classes like Game
 using System.Globalization; // Added for CultureInfo
 using System.Text.RegularExpressions; // Added for Regex
 using CrusaderWars.data.battle_results.editors;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.twbattle
 {
@@ -613,7 +614,7 @@ namespace CrusaderWars.twbattle
             //                       Battle Results                     |
             //-----------------------------------------------------------
 
-            string attilaLogPath = Properties.Settings.Default.VAR_log_attila;
+            string attilaLogPath = CrusaderWarsEnvironment.Paths.AttilaBattleLogPath;
 
             bool battleEnded = false;
 
@@ -974,7 +975,7 @@ namespace CrusaderWars.twbattle
                     form.infoLabel.Text = "Processing TW:Attila battle results...";
                     form.Text = "Crusader Conflicts (Processing results)";
 
-                    string path_log_attila = Properties.Settings.Default.VAR_log_attila;
+                    string path_log_attila = CrusaderWarsEnvironment.Paths.AttilaBattleLogPath;
 
                     // --- START: Capture pre-battle state for report ---
                     // Removed deployedCounts as it will be derived from UnitCasualitiesReport
@@ -1817,7 +1818,7 @@ namespace CrusaderWars.twbattle
                 report.WallDamage = "N/A";
 
                 // Try to get actual siege results
-                string path_log_attila = Properties.Settings.Default.VAR_log_attila;
+                string path_log_attila = CrusaderWarsEnvironment.Paths.AttilaBattleLogPath;
                 var (siegeOutcome, wallDamage) = BattleResultReader.GetSiegeOutcome(path_log_attila, "attacker", "defender");
                 report.SiegeResult = siegeOutcome;
                 report.WallDamage = wallDamage;
