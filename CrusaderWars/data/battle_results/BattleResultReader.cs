@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Text;
 using CrusaderWars.twbattle; // Added for BattleFile access
 using System.Globalization; // Added for CultureInfo
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.data.battle_results
 {
@@ -268,10 +269,7 @@ namespace CrusaderWars.data.battle_results
         public static void ClearAttilaLog()
         {
             Program.Logger.Debug("Entering ClearAttilaLog method.");
-            string Attila_Path = Properties.Settings.Default.VAR_attila_path;
-            Properties.Settings.Default.VAR_log_attila = Attila_Path.Substring(0, Attila_Path.IndexOf("Attila.exe")) + "data\\BattleResults_log.txt";
-            Properties.Settings.Default.Save();
-            string path_attila_log = Properties.Settings.Default.VAR_log_attila;
+            string path_attila_log = CrusaderWarsEnvironment.Paths.AttilaBattleLogPath;
             Program.Logger.Debug($"Attila log file path to clear: {path_attila_log}");
 
             bool isCreated = false;

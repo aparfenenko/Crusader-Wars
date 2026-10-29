@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using CrusaderWars.client;
 using CrusaderWars.data.save_file;
 using CrusaderWars.unit_mapper;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.locs
 {
@@ -328,8 +329,9 @@ namespace CrusaderWars.locs
         static void SearchMAANamesInLocalizationFiles(List<Army> armies)
         {
             List<string> enabledCK3ModsPaths = LandedTitles.GetEnabledModsPaths();
-            string defaultCK3LocFilePath = Properties.Settings.Default.VAR_ck3_path.Replace(@"binaries\ck3.exe", @"game\localization\english\regiment_l_english.yml");
-            string defaultCK3DLCLocFilePath = Properties.Settings.Default.VAR_ck3_path.Replace(@"binaries\ck3.exe", @"game\localization\english\dlc\fp1\dlc_fp1_regiment_l_english.yml");
+            string ck3_exe_path = CrusaderWarsEnvironment.Paths.Ck3ExecutablePath;
+            string defaultCK3LocFilePath = ck3_exe_path.Replace(@"binaries\ck3.exe", @"game\localization\english\regiment_l_english.yml");
+            string defaultCK3DLCLocFilePath = ck3_exe_path.Replace(@"binaries\ck3.exe", @"game\localization\english\dlc\fp1\dlc_fp1_regiment_l_english.yml");
 
             var maaList = new List<Unit>();
             foreach (Army army in armies)

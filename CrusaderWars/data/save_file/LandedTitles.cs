@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.data.save_file
 {
@@ -25,7 +26,7 @@ namespace CrusaderWars.data.save_file
         }
         static void ReadEnabledMods()
         {
-            string ck3_mods_folder_path = Properties.Settings.Default.VAR_log_ck3;
+            string ck3_mods_folder_path = CrusaderWarsEnvironment.Paths.Ck3ConsoleLogPath;
             ck3_mods_folder_path = Regex.Replace(ck3_mods_folder_path, @"console_history.txt", "mod");
 
             string ck3_mods_enabled_file_path = Regex.Replace(ck3_mods_folder_path, "mod", "dlc_load.json");
@@ -47,7 +48,7 @@ namespace CrusaderWars.data.save_file
         static List<string> EnabledMods_Folders_Paths = new List<string>();
         static void ReadEachModPath()
         {
-            string ck3_mods_folder_path = Properties.Settings.Default.VAR_log_ck3;
+            string ck3_mods_folder_path = CrusaderWarsEnvironment.Paths.Ck3ConsoleLogPath;
             ck3_mods_folder_path = Regex.Replace(ck3_mods_folder_path, @"console_history.txt", "mod");
             var all_mods_paths = Directory.GetFiles(ck3_mods_folder_path);
 
@@ -120,7 +121,7 @@ namespace CrusaderWars.data.save_file
 
         static void ReadDefaultCK3LandedTitles(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            string ck3_exe_path = Properties.Settings.Default.VAR_ck3_path;
+            string ck3_exe_path = CrusaderWarsEnvironment.Paths.Ck3ExecutablePath;
             string default_landed_titles_dir = Regex.Replace(ck3_exe_path, @"binaries\\ck3.exe", @"game\\common\\landed_titles");
 
             if (Directory.Exists(default_landed_titles_dir))
