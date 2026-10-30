@@ -9,7 +9,6 @@ using CrusaderWars.Core.Pack;
 using CrusaderWars.Core.Paths;
 using CrusaderWars.Core.Process;
 using CrusaderWars.Core.Save;
-using CrusaderWars.MacCli;
 using CrusaderWars;
 using CrusaderWars.client;
 using CrusaderWars.mod_manager;

@@ -1,7 +1,6 @@
 using CrusaderWars.Core.Logging;
-using CrusaderWars.Core.Paths;
 
-namespace CrusaderWars.MacCli;
+namespace CrusaderWars.Core.Paths;
 
 public sealed class DetectionResult
 {

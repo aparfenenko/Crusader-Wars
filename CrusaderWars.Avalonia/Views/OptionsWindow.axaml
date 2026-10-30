@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CrusaderWars.Avalonia.Views.OptionsWindow"
+        Title="Crusader Conflicts — Options" Width="520" Height="640">
+    <DockPanel Margin="8">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="8">
+            <Button Content="Save" Click="OnSave" MinWidth="100" />
+            <Button Content="Close" Click="OnClose" MinWidth="100" />
+            <TextBlock x:Name="SaveStatus" VerticalAlignment="Center" />
+        </StackPanel>
+        <ScrollViewer>
+            <StackPanel x:Name="OptionsPanel" Spacing="4" />
+        </ScrollViewer>
+    </DockPanel>
+</Window>

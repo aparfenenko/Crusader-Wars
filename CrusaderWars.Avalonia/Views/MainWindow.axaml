@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CrusaderWars.Avalonia.Views.MainWindow"
+        Title="Crusader Conflicts" Width="960" Height="640">
+    <DockPanel Margin="8">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8">
+            <Button x:Name="StartButton" Content="Start Battle" Click="OnStartBattle" MinWidth="120" />
+            <Button Content="Options" Click="OnOptions" />
+            <Button Content="Path Setup" Click="OnPathSetup" />
+            <TextBlock x:Name="StatusText" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="600" />
+        </StackPanel>
+        <TextBox x:Name="LogBox" IsReadOnly="True" TextWrapping="Wrap"
+                 FontFamily="Menlo,Consolas,Monospace" Text="" />
+    </DockPanel>
+</Window>

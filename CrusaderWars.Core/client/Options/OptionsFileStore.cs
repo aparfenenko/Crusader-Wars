@@ -227,6 +227,58 @@ namespace CrusaderWars.client
         }
 
         /// <summary>
+        /// Persists the in-memory options dictionary back to Options.xml, updating
+        /// existing Option nodes and appending missing ones (mac GUI options editor).
+        /// </summary>
+        public static void SaveOptionsFile()
+        {
+            try
+            {
+                string file = OptionsFilePath;
+                string dir = Path.GetDirectoryName(file)!;
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                XmlDocument xmlDoc = new XmlDocument();
+                if (File.Exists(file))
+                {
+                    xmlDoc.Load(file);
+                }
+                if (xmlDoc.DocumentElement is null)
+                {
+                    XmlElement rootElement = xmlDoc.CreateElement("Options");
+                    xmlDoc.AppendChild(rootElement);
+                }
+
+                foreach (var entry in ModOptions.optionsValuesCollection)
+                {
+                    var node = xmlDoc.SelectSingleNode("//Option[@name='" + entry.Key + "']");
+                    if (node != null)
+                    {
+                        node.InnerText = entry.Value ?? string.Empty;
+                    }
+                    else
+                    {
+                        XmlElement option = xmlDoc.CreateElement("Option");
+                        option.SetAttribute("name", entry.Key);
+                        option.InnerText = entry.Value ?? string.Empty;
+                        xmlDoc.DocumentElement!.AppendChild(option);
+                    }
+                }
+
+                xmlDoc.Save(file);
+                CrusaderWarsEnvironment.Logger.Debug("Options.xml saved from in-memory collection.");
+            }
+            catch (Exception ex)
+            {
+                CrusaderWarsEnvironment.Logger.Error(ex);
+                CrusaderWarsEnvironment.Dialogs.Show("Error saving game options.", "Crusader Conflicts: File Error", DialogIcon.Error);
+            }
+        }
+
+        /// <summary>
         /// Corrupted-file repair flow shared by the settings loaders: backs the broken
         /// file up, asks the user whether to reset it, and recreates the default on
         /// confirmation. Returns the user's choice; false must be treated as "exit" by
