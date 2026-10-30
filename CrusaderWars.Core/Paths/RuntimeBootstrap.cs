@@ -35,6 +35,7 @@ public static class RuntimeBootstrap
             throw new InvalidOperationException("Settings load failed.");
         }
 
+        logger.Info($"Runtime initialized. Workspace: {paths.WorkspaceDir}");
         return (paths, detector);
     }
 }

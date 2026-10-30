@@ -19,4 +19,8 @@
     <ProjectReference Include="..\CrusaderWars.Core\CrusaderWars.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\CrusaderWars\settings\schemas\*.xsd" Link="settings\schemas\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

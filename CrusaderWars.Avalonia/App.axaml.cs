@@ -34,6 +34,7 @@ public partial class App : Application
                     new AppPathsGamePaths(paths),
                     new ConsoleDialogService(),
                     new CompositeLogger(fileLogger, sinkLogger));
+                CrusaderWarsEnvironment.Logger.Info($"Runtime initialized. Workspace: {paths.WorkspaceDir}");
 
                 viewModel.Initialize(paths, detector);
             }
