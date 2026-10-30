@@ -1,5 +1,6 @@
 using CrusaderWars.Core.Attila;
 using CrusaderWars.Core.Bridge;
+using CrusaderWars.Core.Dialogs;
 using CrusaderWars.Core.Launch;
 using CrusaderWars.Core.Logging;
 using CrusaderWars.Core.Logs;
@@ -8,6 +9,8 @@ using CrusaderWars.Core.Paths;
 using CrusaderWars.Core.Process;
 using CrusaderWars.Core.Save;
 using CrusaderWars.MacCli;
+using CrusaderWars;
+using CrusaderWars.twbattle;
 
 var logger = new ConsoleLogger();
 
@@ -42,6 +45,7 @@ static void PrintHelp()
         Commands:
           detect          Find CK3/Attila paths and write ~/.config/crusader-conflicts/paths.json
           watch           Wait until CK3 writes a battle dump to console_history.txt
+          parse-console   Parse the current console_history battle dump (DataSearch) and print the facts
           launch-attila   Start native Attila with used_mods_cc.txt
           launch-ck3      Start native CK3 (add --continue-last-save to load last save)
           wait-battle     Poll Attila BattleResults_log.txt until the battle ends
@@ -68,6 +72,21 @@ static async Task<int> RunCommand(string command, Dictionary<string, string> fla
             PrintDetection(detector.Describe(detected));
             detected.Save();
             logger.Info($"Wrote {PathConfig.DefaultConfigPath}");
+            return 0;
+        }
+        case "parse-console":
+        {
+            var (paths, _) = LoadServices(logger, detector);
+            CrusaderWarsEnvironment.Initialize(new AppPathsGamePaths(paths), new ConsoleDialogService(), logger);
+            var watcher = new Ck3LogWatcher(paths, logger);
+            if (!watcher.TryRead(out string content) || string.IsNullOrWhiteSpace(content))
+            {
+                logger.Error($"No battle dump in console_history.txt: {watcher.LogPath}. Run 'watch' first or trigger a battle in the CK3 mod.");
+                return 1;
+            }
+
+            DataSearch.Search(content);
+            PrintParsedBattle();
             return 0;
         }
         case "watch":
@@ -170,6 +189,19 @@ static void PrintDetection(IReadOnlyList<DetectionResult> results)
 static void PrintSummary(BattleLogSummary summary)
 {
     Console.WriteLine($"ended={summary.Ended} winner={summary.Winner} siege={summary.SiegeOutcome} walls={summary.WallDamage} aliveReports={summary.AliveReports} killReports={summary.KillReports}");
+}
+
+static void PrintParsedBattle()
+{
+    var leftCommander = CK3LogData.LeftSide.GetCommander();
+    var rightCommander = CK3LogData.RightSide.GetCommander();
+
+    Console.WriteLine($"battle-type={(BattleState.IsSiegeBattle ? "SIEGE" : "BATTLE")}");
+    Console.WriteLine($"date={Date.Year}.{Date.Month}.{Date.Day} season={Date.GetSeason()}");
+    Console.WriteLine($"left-realm={CK3LogData.LeftSide.GetRealmName()} commander={leftCommander.name} prowess={leftCommander.prowess} martial={leftCommander.martial} knights={CK3LogData.LeftSide.GetKnights().Count}");
+    Console.WriteLine($"right-realm={CK3LogData.RightSide.GetRealmName()} commander={rightCommander.name} prowess={rightCommander.prowess} martial={rightCommander.martial} knights={CK3LogData.RightSide.GetKnights().Count}");
+    var player = DataSearch.Player_Character;
+    Console.WriteLine($"player-character={(player is null ? "n/a" : $"{player.GetID()} culture={player.GetCultureID()}")}");
 }
 
 static Dictionary<string, string> ParseFlags(string[] args)
