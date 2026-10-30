@@ -12,6 +12,8 @@ using CrusaderWars.MacCli;
 using CrusaderWars;
 using CrusaderWars.client;
 using CrusaderWars.mod_manager;
+using CrusaderWars.armies;
+using CrusaderWars.data.save_file;
 using CrusaderWars.twbattle;
 
 var logger = new ConsoleLogger();
@@ -48,6 +50,7 @@ static void PrintHelp()
           detect          Find CK3/Attila paths and write ~/.config/crusader-conflicts/paths.json
           watch           Wait until CK3 writes a battle dump to console_history.txt
           parse-console   Parse the current console_history battle dump (DataSearch) and print the facts
+          read-save       parse-console + uncompress last_save.ck3 and read armies (ArmiesReader)
           launch-attila   Start native Attila with used_mods_cc.txt
           launch-ck3      Start native CK3 (add --continue-last-save to load last save)
           wait-battle     Poll Attila BattleResults_log.txt until the battle ends
@@ -101,6 +104,23 @@ static async Task<int> RunCommand(string command, Dictionary<string, string> fla
             TimeSpan wait = TimeSpan.FromMinutes(timeoutMinutes > 0 ? timeoutMinutes : 60);
             string type = await watcher.WaitForBattleAsync(wait, CancellationToken.None);
             Console.WriteLine($"battle-type={type}");
+            return 0;
+        }
+        case "read-save":
+        {
+            var (paths, _) = LoadServices(logger, detector);
+            var watcher = new Ck3LogWatcher(paths, logger);
+            if (!watcher.TryRead(out string content) || string.IsNullOrWhiteSpace(content))
+            {
+                logger.Error($"No battle dump in console_history.txt: {watcher.LogPath}.");
+                return 1;
+            }
+            DataSearch.Search(content);
+
+            SaveFile.Uncompress();
+            var (attacker, defender) = ArmiesReader.ReadBattleArmies();
+            PrintArmies("attacker", attacker);
+            PrintArmies("defender", defender);
             return 0;
         }
         case "launch-attila":
@@ -203,6 +223,15 @@ static void PrintDetection(IReadOnlyList<DetectionResult> results)
 static void PrintSummary(BattleLogSummary summary)
 {
     Console.WriteLine($"ended={summary.Ended} winner={summary.Winner} siege={summary.SiegeOutcome} walls={summary.WallDamage} aliveReports={summary.AliveReports} killReports={summary.KillReports}");
+}
+
+static void PrintArmies(string label, List<Army> armies)
+{
+    Console.WriteLine($"{label}: {armies.Count} armies");
+    foreach (var army in armies)
+    {
+        Console.WriteLine($"  army id={army.ID} realm={army.RealmName} side={army.CombatSide} regiments={army.ArmyRegiments.Count} units={army.Units.Count}");
+    }
 }
 
 static void PrintParsedBattle()
