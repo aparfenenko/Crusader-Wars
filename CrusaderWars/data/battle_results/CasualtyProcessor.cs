@@ -12,7 +12,6 @@ using CrusaderWars.armies; // Added for List<Army>
 using CrusaderWars.unit_mapper;
 using CrusaderWars.locs;
 using System.Runtime.Versioning;
-using System.Windows.Forms;
 using CrusaderWars.Core.Dialogs;
 using CrusaderWars.Core.Paths;
 

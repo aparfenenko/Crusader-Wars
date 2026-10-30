@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using CrusaderWars.armies;
 using CrusaderWars.data.save_file;
 using CrusaderWars.unit_mapper;

@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using CrusaderWars.Core.Dialogs;
 using CrusaderWars.Core.Paths;
 

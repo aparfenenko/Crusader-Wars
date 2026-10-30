@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using CrusaderWars.twbattle;
 using CrusaderWars.unit_mapper;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.terrain
