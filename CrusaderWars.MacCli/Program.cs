@@ -10,6 +10,8 @@ using CrusaderWars.Core.Process;
 using CrusaderWars.Core.Save;
 using CrusaderWars.MacCli;
 using CrusaderWars;
+using CrusaderWars.client;
+using CrusaderWars.mod_manager;
 using CrusaderWars.twbattle;
 
 var logger = new ConsoleLogger();
@@ -77,7 +79,6 @@ static async Task<int> RunCommand(string command, Dictionary<string, string> fla
         case "parse-console":
         {
             var (paths, _) = LoadServices(logger, detector);
-            CrusaderWarsEnvironment.Initialize(new AppPathsGamePaths(paths), new ConsoleDialogService(), logger);
             var watcher = new Ck3LogWatcher(paths, logger);
             if (!watcher.TryRead(out string content) || string.IsNullOrWhiteSpace(content))
             {
@@ -172,6 +173,19 @@ static (AppPaths Paths, GameLauncher Launcher) LoadServices(ConsoleLogger logger
     }
 
     var paths = AppPaths.FromConfig(config);
+
+    // Domain code resolves workspace-relative paths (settings\Options.xml, data\...) from
+    // the current directory, mirroring the Windows app layout.
+    if (Directory.Exists(paths.WorkspaceDir))
+        Environment.CurrentDirectory = paths.WorkspaceDir;
+
+    CrusaderWarsEnvironment.Initialize(new AppPathsGamePaths(paths), new ConsoleDialogService(), logger);
+    if (!OptionsFileStore.ReadOptionsFile() || !ActiveSubmods.Load())
+    {
+        logger.Error("Settings load failed. Exiting.");
+        Environment.Exit(1);
+    }
+
     var processes = new PosixProcessController(logger);
     var launcher = new GameLauncher(paths, logger, processes);
     return (paths, launcher);

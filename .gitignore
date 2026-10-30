@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 debug/*
+# Crusader Conflicts runtime settings (created next to the executable / workspace)
+settings/*
+!settings/schemas/

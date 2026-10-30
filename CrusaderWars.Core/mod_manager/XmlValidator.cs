@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Versioning;
 using System.Xml;
 using System.Xml.Schema;
 
@@ -15,7 +14,6 @@ namespace CrusaderWars.mod_manager
         /// <param name="xmlPath">Absolute path to the XML file to validate.</param>
         /// <param name="xsdPath">Absolute path to the XSD schema file.</param>
         /// <returns>A list of validation error messages. An empty list indicates the XML is valid.</returns>
-        [SupportedOSPlatform("windows")]
         public static List<string> Validate(string xmlPath, string xsdPath)
         {
             var errors = new List<string>();
