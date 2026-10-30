@@ -1,0 +1,12 @@
+#!/bin/bash
+# Runs the Windows rpfm_cli.exe (v4.7.4) through CrossOver's wine.
+# Uses the CrossOver bottle named by CX_BOTTLE (default: TEST — the GUI-created
+# bottle that has the Windows system DLLs; a bare `cxbottle --create` bottle lacks them).
+# Args pass through unchanged, so PackFile.cs pack commands work unchanged.
+set -e
+CX="/Applications/CrossOver.app/Contents/SharedSupport/CrossOver/bin"
+RPFM_EXE="${RPFM_EXE:-$HOME/Downloads/rpfm-v4.7.4-x86_64-pc-windows-msvc/rpfm_cli.exe}"
+BOTTLE="${CX_BOTTLE:-TEST}"
+
+export CX_BOTTLE="$BOTTLE"
+exec "$CX/wine" "$RPFM_EXE" "$@"

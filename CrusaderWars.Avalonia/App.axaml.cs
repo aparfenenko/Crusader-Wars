@@ -25,14 +25,16 @@ public partial class App : Application
 
             try
             {
-                var (paths, detector) = RuntimeBootstrap.Initialize(sinkLogger, new ConsoleDialogService());
+                var dialogs = new AvaloniaDialogService(() =>
+                    (ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
+                var (paths, detector) = RuntimeBootstrap.Initialize(sinkLogger, dialogs);
 
                 // Re-initialize with the final composite logger now that the workspace
                 // (and its data/ folder) is known.
                 var fileLogger = new FileAppLogger(System.IO.Path.Combine(paths.WorkspaceDir, "data"));
                 CrusaderWarsEnvironment.Initialize(
                     new AppPathsGamePaths(paths),
-                    new ConsoleDialogService(),
+                    dialogs,
                     new CompositeLogger(fileLogger, sinkLogger));
                 CrusaderWarsEnvironment.Logger.Info($"Runtime initialized. Workspace: {paths.WorkspaceDir}");
 
