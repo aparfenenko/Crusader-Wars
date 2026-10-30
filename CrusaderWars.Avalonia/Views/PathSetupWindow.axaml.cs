@@ -91,9 +91,10 @@ public partial class PathSetupWindow : Window
     {
         string? selected = mode switch
         {
-            // A file picker with no type filter lets the user open /Applications from the
-            // sidebar and click the .app bundle directly (folder pickers cannot select bundles).
-            PickerMode.AppBundle => await PickFile("Select the application bundle (.app)", AppBundleType),
+            // No type filter: with a filter Avalonia classifies the returned .app bundle as
+            // a folder and drops it from the results, leaving the field empty. A plain file
+            // panel returns the bundle as a file item.
+            PickerMode.AppBundle => await PickFile("Select the application bundle (.app)", filter: null),
             PickerMode.File => await PickFile($"Select {key}", AnyFileType),
             PickerMode.Folder => await PickFolder($"Select {key}"),
             _ => null
@@ -102,15 +103,25 @@ public partial class PathSetupWindow : Window
         {
             editor.Text = selected;
         }
+        LogSelection(key, mode, selected);
     }
 
-    private async Task<string?> PickFile(string title, FilePickerFileType fileType)
+    private void LogSelection(string key, PickerMode mode, string? selected)
+    {
+        string line = selected is null
+            ? $"[WRN] Path Setup: browse for '{key}' returned nothing (cancelled or dropped by the picker)."
+            : $"[INF] Path Setup: '{key}' = {selected}";
+        (DataContext as ViewModels.MainWindowViewModel)?.AppendLog(line);
+        try { CrusaderWarsEnvironment.Logger.Warn(line); } catch { /* gateway not ready */ }
+    }
+
+    private async Task<string?> PickFile(string title, FilePickerFileType? filter)
     {
         var result = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = title,
             AllowMultiple = false,
-            FileTypeFilter = new[] { fileType }
+            FileTypeFilter = filter is null ? null : new[] { filter }
         });
         return result.Count > 0 ? result[0].Path.LocalPath : null;
     }
