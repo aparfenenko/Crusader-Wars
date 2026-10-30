@@ -30,10 +30,11 @@ if (args.Length == 0 || args[0] is "-h" or "--help" or "help")
 
 string command = args[0];
 var flags = ParseFlags(args.Skip(1).ToArray());
+string[] positional = args.Skip(1).Where(a => !a.StartsWith("--", StringComparison.Ordinal)).ToArray();
 
 try
 {
-    return await RunCommand(command, flags, logger);
+    return await RunCommand(command, flags, positional, logger);
 }
 catch (Exception ex)
 {
@@ -52,6 +53,11 @@ static void PrintHelp()
 
         Commands:
           detect          Find CK3/Attila paths and write ~/.config/crusader-conflicts/paths.json
+          set-path <key> <value>
+                          Set a path manually (GOG, custom installs). Keys are the paths.json
+                          names: ck3App, attilaApp, saveGames, attilaData, attilaLog, rpfmCli,
+                          ck3Documents, ck3Log, attilaUserScript, workspaceDir. Example:
+                            set-path ck3App "/Applications/Crusader Kings III/ck3.app"
           watch           Wait until CK3 writes a battle dump to console_history.txt
           parse-console   Parse the current console_history battle dump (DataSearch) and print the facts
           read-save       parse-console + uncompress last_save.ck3 and read armies (ArmiesReader)
@@ -68,7 +74,7 @@ static void PrintHelp()
         """);
 }
 
-static async Task<int> RunCommand(string command, Dictionary<string, string> flags, ConsoleLogger logger)
+static async Task<int> RunCommand(string command, Dictionary<string, string> flags, string[] positional, ConsoleLogger logger)
 {
     var detector = new MacPathDetector(logger);
     int timeoutMinutes = flags.TryGetValue("timeout-minutes", out string? t) && int.TryParse(t, out int n) ? n : 0;
@@ -82,6 +88,30 @@ static async Task<int> RunCommand(string command, Dictionary<string, string> fla
             PrintDetection(detector.Describe(detected));
             detected.Save();
             logger.Info($"Wrote {PathConfig.DefaultConfigPath}");
+            return 0;
+        }
+        case "set-path":
+        {
+            if (positional.Length < 2)
+            {
+                logger.Error("Usage: set-path <key> <value>  (keys: ck3App, attilaApp, saveGames, attilaData, attilaLog, rpfmCli, ck3Documents, ck3Log, attilaUserScript, workspaceDir)");
+                return 1;
+            }
+            string key = positional[0];
+            string value = positional[1];
+
+            PathConfig config = File.Exists(PathConfig.DefaultConfigPath)
+                ? PathConfig.Load()
+                : new MacPathDetector(logger).Detect();
+            if (!config.SetByName(key, value))
+            {
+                logger.Error($"Unknown path key: {key}");
+                return 1;
+            }
+            config.Save();
+            logger.Info($"Saved {key} = {value} to {PathConfig.DefaultConfigPath}");
+            if (!config.ExistsByName(key))
+                logger.Warn($"Warning: '{value}' does not exist on disk. The battle cycle will fail until it points at a real location.");
             return 0;
         }
         case "parse-console":

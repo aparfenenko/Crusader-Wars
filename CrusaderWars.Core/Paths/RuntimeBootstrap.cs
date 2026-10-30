@@ -15,9 +15,21 @@ public static class RuntimeBootstrap
     public static (AppPaths Paths, MacPathDetector Detector) Initialize(IAppLogger logger, IDialogService dialogs)
     {
         var detector = new MacPathDetector(logger);
-        PathConfig config = File.Exists(PathConfig.DefaultConfigPath) ? PathConfig.Load() : detector.Detect();
-        if (!File.Exists(PathConfig.DefaultConfigPath))
+        PathConfig config;
+        if (File.Exists(PathConfig.DefaultConfigPath))
         {
+            // Manual paths win over auto-detection: only empty fields are filled in.
+            config = PathConfig.Load();
+            if (string.IsNullOrWhiteSpace(config.Ck3App) || string.IsNullOrWhiteSpace(config.AttilaApp))
+            {
+                config.FillMissingFrom(detector.Detect());
+                config.Save();
+                logger.Info("Filled missing paths from auto-detection (manual values preserved).");
+            }
+        }
+        else
+        {
+            config = detector.Detect();
             config.Save();
             logger.Info($"Wrote {PathConfig.DefaultConfigPath} (run 'detect' to refresh).");
         }
