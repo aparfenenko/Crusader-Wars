@@ -1,5 +1,6 @@
 using CrusaderWars.Core.Attila;
 using CrusaderWars.Core.Bridge;
+using CrusaderWars.Core.Cycle;
 using CrusaderWars.Core.Dialogs;
 using CrusaderWars.Core.Launch;
 using CrusaderWars.Core.Logging;
@@ -130,72 +131,27 @@ static async Task<int> RunCommand(string command, Dictionary<string, string> fla
         }
         case "generate-battle":
         {
-            var (paths, _) = LoadServices(logger, detector);
+            var (paths, launcher) = LoadServices(logger, detector);
+            var cycle = new BattleCycle(paths, logger, launcher);
             var watcher = new Ck3LogWatcher(paths, logger);
             if (!watcher.TryRead(out string content) || string.IsNullOrWhiteSpace(content))
             {
                 logger.Error($"No battle dump in console_history.txt: {watcher.LogPath}.");
                 return 1;
             }
-            DataSearch.Search(content);
-
-            SaveFile.Uncompress();
-            BattleResult.WarID = ArmiesReader.FindWarID();
-            var (attacker, defender, left, right) = PrepareArmies();
-            GenerateBattleFiles(attacker, defender, left, right);
+            var (attacker, defender, left, right) = cycle.PrepareFromDump(content);
+            cycle.GenerateBattleFiles(attacker, defender, left, right);
             Console.WriteLine("generate-battle done: battle files written, pack deployed if rpfm_cli succeeded.");
             return 0;
         }
         case "run":
         {
             var (paths, launcher) = LoadServices(logger, detector);
-            var watcher = new Ck3LogWatcher(paths, logger);
-            logger.Info($"Waiting for a battle dump in {watcher.LogPath} (trigger the battle in the CK3 mod)...");
+            var cycle = new BattleCycle(paths, logger, launcher);
             TimeSpan ck3Wait = TimeSpan.FromMinutes(timeoutMinutes > 0 ? timeoutMinutes : 60);
-            await watcher.WaitForBattleAsync(ck3Wait, CancellationToken.None);
-            if (!watcher.TryRead(out string content) || string.IsNullOrWhiteSpace(content))
-            {
-                logger.Error($"No battle dump in console_history.txt: {watcher.LogPath}.");
-                return 1;
-            }
-            DataSearch.Search(content);
-
-            SaveFile.Uncompress();
-            BattleResult.WarID = ArmiesReader.FindWarID();
-            var (attacker, defender, left, right) = PrepareArmies();
-            GenerateBattleFiles(attacker, defender, left, right);
-
-            try
-            {
-                launcher.SuspendCk3();
-            }
-            catch (Exception ex)
-            {
-                logger.Warn($"Could not suspend CK3: {ex.Message}");
-            }
-
-            new AttilaUserScript(paths, logger).WarnIfPackMissing();
-            launcher.LaunchAttila();
-
-            string attilaLogPath = CrusaderWarsEnvironment.Paths.AttilaBattleLogPath;
             TimeSpan attilaWait = TimeSpan.FromMinutes(timeoutMinutes > 0 ? timeoutMinutes : 180);
-            logger.Info($"Waiting for the battle to end (log: {attilaLogPath})...");
-            var deadline = DateTime.UtcNow + attilaWait;
-            bool battleEnded = false;
-            while (DateTime.UtcNow < deadline)
-            {
-                battleEnded = BattleResultReader.HasBattleEnded(attilaLogPath);
-                if (battleEnded) break;
-                await Task.Delay(1000);
-            }
-            if (!battleEnded)
-            {
-                logger.Error("Battle did not end within the timeout. Run again with --timeout-minutes to wait longer.");
-                return 1;
-            }
-
-            string path_editedSave = "./data/save_file_data/gamestate_file/gamestate";
-            string winner = ResultsProcessor.Apply(attacker, defender, left, right, attilaLogPath, path_editedSave);
+            logger.Info($"Waiting for a battle dump in {cycle.Ck3LogPath} (trigger the battle in the CK3 mod)...");
+            string winner = await cycle.RunFullCycle(ck3Wait, attilaWait, CancellationToken.None);
             Console.WriteLine($"battle applied: winner={winner}. Load battle_results.ck3 in CK3 if it did not continue automatically.");
             return 0;
         }
@@ -246,62 +202,6 @@ static void PrintDetection(IReadOnlyList<DetectionResult> results)
 static void PrintSummary(BattleLogSummary summary)
 {
     Console.WriteLine($"ended={summary.Ended} winner={summary.Winner} siege={summary.SiegeOutcome} walls={summary.WallDamage} aliveReports={summary.AliveReports} killReports={summary.KillReports}");
-}
-
-static (List<Army> attacker, List<Army> defender, List<Army> left, List<Army> right) PrepareArmies()
-{
-    UnitsFile.ResetProcessedArmies();
-    // Single parse: unit IDs are assigned globally during parsing, so attacker and
-    // defender lists must come from the same ReadBattleArmies call.
-    var (attacker, defender) = ArmiesReader.ReadBattleArmies();
-    var left = ArmiesReader.GetSideArmies("left", attacker, defender)
-        ?? throw new InvalidOperationException("Could not determine the left side armies.");
-    var right = ArmiesReader.GetSideArmies("right", attacker, defender)
-        ?? throw new InvalidOperationException("Could not determine the right side armies.");
-    return (attacker, defender, left, right);
-}
-
-static void GenerateBattleFiles(List<Army> attacker, List<Army> defender, List<Army> left, List<Army> right)
-{
-    BattleFile.SetArmiesSides(attacker, defender);
-
-    if (!ModOptions.optionsValuesCollection.TryGetValue("CombineKnights", out string? combineKnights) || combineKnights != "Enabled")
-        ProminentKnights.Process(attacker, defender);
-    if (!BattleState.IsSiegeBattle)
-        TerrainGenerator.CheckForSpecialCrossingBattle(attacker, defender);
-
-    CrusaderWarsEnvironment.Logger.Info("Clearing previous battle files...");
-    BattleFile.ClearFile();
-    DeclarationsFile.Erase();
-    BattleScript.EraseScript(BattleState.IsSiegeBattle);
-    Data.units_scripts.Clear();
-    BattleResultReader.ClearAttilaLog();
-    UnitsCardsNames.RemoveFiles();
-
-    int leftTotal = left.Sum(a => a.GetTotalSoldiers());
-    int rightTotal = right.Sum(a => a.GetTotalSoldiers());
-    BattleDetails.ChangeBattleDetails(leftTotal, rightTotal, left[0].CombatSide, right[0].CombatSide);
-    BattleScript.CreateScript();
-
-    int totalSoldiers = attacker.SelectMany(a => a.Units).Sum(u => u.GetSoldiers()) +
-                        defender.SelectMany(a => a.Units).Sum(u => u.GetSoldiers());
-    ArmyProportions.AutoSizeUnits(totalSoldiers);
-    foreach (var army in attacker) army.ScaleUnits(ArmyProportions.BattleScale);
-    foreach (var army in defender) army.ScaleUnits(ArmyProportions.BattleScale);
-    BattleLog.Reset();
-
-    CrusaderWarsEnvironment.Logger.Info("Creating TW:Attila battle files...");
-    BattleFile.BETA_CreateBattle(attacker, defender);
-
-    if (BattleLog.HasUnmappedUnits())
-    {
-        CrusaderWarsEnvironment.Logger.Warn("Some CK3 units could not be mapped to Total War: Attila units and were dropped:");
-        foreach (var u in BattleLog.GetUnmappedUnits().Distinct())
-            Console.WriteLine($"  - type={u.RegimentType} name={u.UnitName} faction={u.AttilaFaction} culture={u.Culture}");
-    }
-
-    CrusaderWarsEnvironment.Logger.Info("Creating .pack file (rpfm)...");
-    PackFile.PackFileCreator();
 }
 
 static void PrintArmies(string label, List<Army> armies)
