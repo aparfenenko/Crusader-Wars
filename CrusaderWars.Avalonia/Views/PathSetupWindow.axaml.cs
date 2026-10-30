@@ -17,21 +17,34 @@ namespace CrusaderWars.Avalonia.Views;
 /// </summary>
 public partial class PathSetupWindow : Window
 {
-    private static readonly (string Key, string Label, string BrowseTitle)[] EditableFields =
+    private enum PickerMode { AppBundle, File, Folder }
+
+    private static readonly (string Key, string Label, PickerMode Mode)[] EditableFields =
     {
-        ("ck3App", "CK3 app (.app bundle)", "Select the Crusader Kings III .app bundle"),
-        ("attilaApp", "Attila app (.app bundle)", "Select the Total War: ATTILA .app bundle"),
-        ("ck3Documents", "CK3 documents folder", "Select the 'Crusader Kings III' documents folder"),
-        ("saveGames", "CK3 save games folder", "Select the CK3 'save games' folder"),
-        ("ck3Log", "CK3 console_history.txt", "Select console_history.txt"),
-        ("attilaData", "Attila data folder", "Select the Attila 'data' folder"),
-        ("attilaLog", "Attila BattleResults_log.txt", "Select BattleResults_log.txt"),
-        ("attilaUserScript", "Attila user.script.txt", "Select user.script.txt"),
-        ("rpfmCli", "rpfm_cli executable", "Select the rpfm_cli executable"),
-        ("workspaceDir", "Workspace folder", "Select the Crusader Conflicts workspace folder"),
+        ("ck3App", "CK3 app (.app bundle)", PickerMode.AppBundle),
+        ("attilaApp", "Attila app (.app bundle)", PickerMode.AppBundle),
+        ("ck3Documents", "CK3 documents folder", PickerMode.Folder),
+        ("saveGames", "CK3 save games folder", PickerMode.Folder),
+        ("ck3Log", "CK3 console_history.txt", PickerMode.File),
+        ("attilaData", "Attila data folder", PickerMode.Folder),
+        ("attilaLog", "Attila BattleResults_log.txt", PickerMode.File),
+        ("attilaUserScript", "Attila user.script.txt", PickerMode.File),
+        ("rpfmCli", "rpfm_cli executable", PickerMode.File),
+        ("workspaceDir", "Workspace folder", PickerMode.Folder),
     };
 
     private readonly Dictionary<string, TextBox> _editors = new();
+
+    // UTI for .app bundles: makes the macOS open panel select bundles directly.
+    private static readonly FilePickerFileType AppBundleType = new("Application bundle")
+    {
+        AppleUniformTypeIdentifiers = new[] { "com.apple.application-bundle" }
+    };
+
+    private static readonly FilePickerFileType AnyFileType = new("All files")
+    {
+        Patterns = new[] { "*" }
+    };
 
     public PathSetupWindow()
     {
@@ -50,7 +63,7 @@ public partial class PathSetupWindow : Window
         RowsPanel.Children.Clear();
         _editors.Clear();
 
-        foreach (var (key, label, browseTitle) in EditableFields)
+        foreach (var (key, label, mode) in EditableFields)
         {
             var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
             var text = new TextBlock
@@ -65,8 +78,8 @@ public partial class PathSetupWindow : Window
                 Width = 480
             };
             _editors[key] = editor;
-            var browse = new Button { Content = "Browse…", Tag = browseTitle };
-            browse.Click += async (_, _) => await BrowseAsync(editor, browseTitle);
+            var browse = new Button { Content = "Browse…" };
+            browse.Click += async (_, _) => await BrowseAsync(editor, key, mode);
             row.Children.Add(text);
             row.Children.Add(editor);
             row.Children.Add(browse);
@@ -74,17 +87,42 @@ public partial class PathSetupWindow : Window
         }
     }
 
-    private async Task BrowseAsync(TextBox editor, string title)
+    private async Task BrowseAsync(TextBox editor, string key, PickerMode mode)
+    {
+        string? selected = mode switch
+        {
+            // A file picker with no type filter lets the user open /Applications from the
+            // sidebar and click the .app bundle directly (folder pickers cannot select bundles).
+            PickerMode.AppBundle => await PickFile("Select the application bundle (.app)", AppBundleType),
+            PickerMode.File => await PickFile($"Select {key}", AnyFileType),
+            PickerMode.Folder => await PickFolder($"Select {key}"),
+            _ => null
+        };
+        if (selected is not null)
+        {
+            editor.Text = selected;
+        }
+    }
+
+    private async Task<string?> PickFile(string title, FilePickerFileType fileType)
+    {
+        var result = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = title,
+            AllowMultiple = false,
+            FileTypeFilter = new[] { fileType }
+        });
+        return result.Count > 0 ? result[0].Path.LocalPath : null;
+    }
+
+    private async Task<string?> PickFolder(string title)
     {
         var result = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
         {
             Title = title,
             AllowMultiple = false
         });
-        if (result.Count > 0)
-        {
-            editor.Text = result[0].Path.LocalPath;
-        }
+        return result.Count > 0 ? result[0].Path.LocalPath : null;
     }
 
     private static string PascalName(string jsonName) =>
