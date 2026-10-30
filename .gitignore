@@ -366,3 +366,6 @@ debug/*
 # Crusader Conflicts runtime settings (created next to the executable / workspace)
 settings/*
 !settings/schemas/
+
+# macOS Finder junk
+.DS_Store
