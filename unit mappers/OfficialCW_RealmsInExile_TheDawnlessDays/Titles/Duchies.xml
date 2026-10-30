@@ -1,0 +1,445 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Titles>
+	<!--This is to assign MEN-AT-ARMS units based on title key and not owner culture-->
+	<!--Levies do not take part in this!!-->
+	<!--DEFAULT value does not work here, every unit must have a unit key-->
+	<!--title_key = key of the landed title-->
+	<Faction title_key="d_amon_lanc" name="Dol Guldur">
+		<General key="dg_khamul"></General>
+		<Knights key="mor_servants_of_the_eyes"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="mor_uruk_archers" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="ise_uruk_hai_crossbowmen" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="mor_nazgul" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="gun_warg_scouts" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="mor_guards_of_the_teeth" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="mor_mirkwood_raiders" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="gob_mordor_uruks" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="dg_chieftain" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="gun_armoured_blade_wargs" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="mor_uruk_archers" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="gob_scavenged_crossbows" max="RANGED"></MenAtArm>
+		<MenAtArm type="horse_archers" key="mor_warg_sentries" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="dg_guldur_pikes" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="dg_guldur_blades" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="gun_warg_riders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="mor_uruk_spears" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_anfalas" name="Anfalas">
+		<General key="golasgil"></General>
+		<Knights key="golasgil"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="nan_i_faroth_hunters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="golasgil" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="wardens_of_lond_galen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="nan_i_faroth_skirmishers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="hammers_of_lond_cirion" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="barrow_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="marshals_of_men_falas" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="nan_i_faroth_hunters" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="hammers_of_lond_cirion" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="wardens_of_lond_galen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="aerost_sergeants" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="langstrand_coastal_messengers" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="barad_faen_beacon_guard" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_arlefnui" name="Pinnath Gelin">
+		<General key="hirluin"></General>
+		<Knights key="men_galen_road_patrol"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="mesta_hired_riders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="green_hill_guardians" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="leb_marineskirm" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="lords_of_the_mesta" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="pinnath_gelin_boarspears" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="men_galen_road_patrol" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="green_crest_trackers" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="lords_of_the_mesta" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="green_hill_guardians" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="ram_galen_heavy_macemen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="mesta_hired_riders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="ram_galen_watchmen" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_balins_expedition" name="Khazad">
+		<General key="khz_durins_mithril_guard"></General>
+		<Knights key="khz_durins_gate_guard"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="khz_crossbows" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="khz_crossbows" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="tlb_ere_goat_riders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="ere_merc_cav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="khz_durins_gate_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="khz_axe_throwers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="khz_durins_mithril_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="khz_champions_of_mountain" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="tlb_ere_goat_riders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="khz_crossbows" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="khz_crossbows" max="RANGED"></MenAtArm>
+		<MenAtArm type="house_guard" key="khz_veterans_khazad_dum" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="ere_miners" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="ere_merc_cav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="khz_protectors_azanulbizar" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_celosien" name="Lebennin">
+		<General key="leb_guardspear"></General>
+		<Knights key="leb_retainercav"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="gon_ithilien_rangers" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="gon_fountain_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="gon_lebennin_marines" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="gon_lossarnach_warriors" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="leb_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="leb_retainercav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="leb_marinearcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="leb_guardsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="leb_guardsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="leb_marineraider" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="leb_mediumcav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="leb_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_doranorien" name="Anorien">
+		<General key="stan_citadel"></General>
+		<Knights key="stan_cav"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="stan_ranger" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="stan_veteranspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="stan_skirm" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="stan_mace" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="stan_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="stan_cav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="stan_mediumarcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="stan_cairandros" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="gon_fountain_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="stan_mediumsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="stan_sergeantcav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="stan_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_edhellond" name="Anfalas">
+		<General key="golasgil"></General>
+		<Knights key="golasgil"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="nan_i_faroth_hunters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="golasgil" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="wardens_of_lond_galen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="nan_i_faroth_skirmishers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="hammers_of_lond_cirion" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="barrow_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="marshals_of_men_falas" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="nan_i_faroth_hunters" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="hammers_of_lond_cirion" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="wardens_of_lond_galen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="aerost_sergeants" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="langstrand_coastal_messengers" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="barad_faen_beacon_guard" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_entyn_i_onodlo" name="Anorien">
+		<General key="stan_citadel"></General>
+		<Knights key="stan_cav"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="stan_ranger" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="stan_veteranspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="stan_skirm" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="stan_mace" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="stan_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="stan_cav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="stan_mediumarcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="stan_cairandros" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="gon_fountain_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="stan_mediumsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="stan_sergeantcav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="stan_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_gardhon_fuir" name="Anorien">
+		<General key="stan_citadel"></General>
+		<Knights key="stan_cav"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="stan_ranger" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="stan_veteranspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="stan_skirm" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="stan_mace" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="stan_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="stan_cav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="stan_mediumarcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="stan_cairandros" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="gon_fountain_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="stan_mediumsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="stan_sergeantcav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="stan_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_gilrain" name="Lebennin">
+		<General key="leb_guardspear"></General>
+		<Knights key="leb_retainercav"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="gon_ithilien_rangers" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="gon_fountain_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="gon_lebennin_marines" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="gon_lossarnach_warriors" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="leb_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="leb_retainercav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="leb_marinearcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="leb_guardsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="leb_guardsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="leb_marineraider" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="leb_mediumcav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="leb_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_glandhir" name="Lamedon">
+		<General key="lam_angbor"></General>
+		<Knights key="lam_cav"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="gon_ithilien_rangers" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="lam_guardspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="gon_lebennin_marines" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="lam_chevaliers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="lam_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="lam_cav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="lam_heavyarcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="lam_chevaliers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="lam_guardspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="lam_mediumsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="lam_sergeantcav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="lam_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_harithilien" name="Harondor">
+		<General key="hor_heavycav"></General>
+		<Knights key="hor_immortals"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="gon_ithilien_rangers" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="hor_immortals" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="hor_horsearcher" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="hor_guardspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="hor_marksmen_rev" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="gon_lossarnach_warriors" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="hor_heavyshock_rev" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="hor_immortals" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="hor_marksmen_rev" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="hor_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="hor_horsearcher" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="hor_guardspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="hor_mediumsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="hor_cav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="hor_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_laergaladrin" name="Harondor">
+		<General key="hor_heavycav"></General>
+		<Knights key="hor_immortals"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="gon_ithilien_rangers" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="hor_immortals" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="hor_horsearcher" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="hor_guardspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="hor_marksmen_rev" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="gon_lossarnach_warriors" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="hor_heavyshock_rev" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="hor_immortals" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="hor_marksmen_rev" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="hor_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="hor_horsearcher" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="hor_guardspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="hor_mediumsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="hor_cav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="hor_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_lamedon" name="Lamedon">
+		<General key="lam_angbor"></General>
+		<Knights key="lam_cav"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="gon_ithilien_rangers" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="lam_guardspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="gon_lebennin_marines" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="lam_chevaliers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="lam_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="lam_cav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="lam_heavyarcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="lam_chevaliers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="lam_guardspear" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="lam_mediumsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="lam_sergeantcav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="lam_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_lebennivet" name="Lebennin">
+		<General key="leb_guardspear"></General>
+		<Knights key="leb_retainercav"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="gon_ithilien_rangers" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="gon_fountain_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="gon_lebennin_marines" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="gon_lossarnach_warriors" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="leb_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="leb_retainercav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="leb_marinearcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="leb_guardsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="leb_guardsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="leb_marineraider" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="leb_mediumcav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="leb_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_lossarnach" name="Lossarnach">
+		<General key="los_forlong"></General>
+		<Knights key="los_flowercav"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="los_refugearcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="los_pike" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="los_axethrowers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="los_heavyaxe" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="los_poleaxe" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="los_flowercav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="los_refugearcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="los_lords" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="los_pike" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="los_skirm" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="los_axecav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="los_spears" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_morthond_vale" name="Blackroot Vale">
+		<General key="imlad_angren_archers"></General>
+		<Knights key="keepers_of_the_stone"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="gon_ithilien_rangers" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="blackroot_vale_roughriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="gon_fountain_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="blackroot_vale_roughriders" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="gon_lossarnach_warriors" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="blackroot_vale_vanguard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="gon_cavalry" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="nimrods_of_nineryn" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="keepers_of_the_stone" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="garrison_of_morthondost" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="kechel_miners" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="gon_princes_sergeants" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="bordermen_of_tarlangs_neck" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_pelargir" name="Lebennin">
+		<General key="leb_guardspear"></General>
+		<Knights key="leb_retainercav"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="gon_ithilien_rangers" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="gon_silver_swan_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="gon_fountain_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="gon_lebennin_marines" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="gon_lossarnach_warriors" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="leb_heavysword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="leb_retainercav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="leb_marinearcher" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="leb_guardsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="leb_guardsword" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="leb_marineraider" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="leb_mediumcav" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="leb_heavyspear" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_pinnath_gelin" name="Pinnath Gelin">
+		<General key="hirluin"></General>
+		<Knights key="men_galen_road_patrol"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="mesta_hired_riders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="green_hill_guardians" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="leb_marineskirm" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="lords_of_the_mesta" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="pinnath_gelin_boarspears" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="men_galen_road_patrol" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="green_crest_trackers" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="lords_of_the_mesta" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="green_hill_guardians" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="ram_galen_heavy_macemen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="mesta_hired_riders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="ram_galen_watchmen" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_rhandir" name="Pinnath Gelin">
+		<General key="hirluin"></General>
+		<Knights key="men_galen_road_patrol"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="mesta_hired_riders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="green_hill_guardians" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="leb_marineskirm" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="lords_of_the_mesta" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="pinnath_gelin_boarspears" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="men_galen_road_patrol" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="green_crest_trackers" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="lords_of_the_mesta" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="green_hill_guardians" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="ram_galen_heavy_macemen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="mesta_hired_riders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="ram_galen_watchmen" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="d_serelond" name="Anfalas">
+		<General key="golasgil"></General>
+		<Knights key="golasgil"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="nan_i_faroth_hunters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="saerthondost_arbalesters" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="golasgil" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="wardens_of_lond_galen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="nan_i_faroth_skirmishers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="hammers_of_lond_cirion" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="barrow_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="marshals_of_men_falas" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="nan_i_faroth_hunters" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="vigilants_of_pinnornost" max="RANGED"></MenAtArm>
+		<MenAtArm type="gondorian_footmen" key="hammers_of_lond_cirion" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="horse_archers" key="rendul_outriders" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="wardens_of_lond_galen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="aerost_sergeants" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="langstrand_coastal_messengers" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="barad_faen_beacon_guard" max="INFANTRY"></MenAtArm>
+	</Faction>
+</Titles>

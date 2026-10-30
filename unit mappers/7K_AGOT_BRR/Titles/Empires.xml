@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Titles>
+	<!--This is to assign MEN-AT-ARMS units based on title key and not owner culture-->
+	<!--Levies do not take part in this!!-->
+	<!--DEFAULT value does not work here, every unit must have a unit key-->
+	<!--title_key = key of the landed title-->
+	<Faction title_key="e_the_iron_throne" name="The Iron Throne">
+		<General key="Crownlands_Targaryen_MAA_Lance_Cavalry"></General>
+		<Knights key="Crownlands_Targaryen_MAA_Mounted_Swordsmen"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="Crownlands_Targaryen_MAA_Longbowmen" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="Crownlands_Targaryen_MAA_Crossbowmen" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="Crownlands_Targaryen_MAA_Lance_Cavalry" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="Crownlands_Targaryen_MAA_Mounted_Swordsmen" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="Crownlands_Targaryen_MAA_Pikemen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="Crownlands_Targaryen_MAA_Axemen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="Crownlands_Targaryen_MAA_Halberdiers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="Crownlands_Targaryen_MAA_Swordsmen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="Crownlands_Targaryen_MAA_Lance_Cavalry" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="Crownlands_Targaryen_MAA_Longbowmen" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="Crownlands_Targaryen_MAA_Crossbowmen" max="RANGED"></MenAtArm>
+		<MenAtArm type="dragonkeepers" key="Crownlands_Targaryen_MAA_Halberdiers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="goldcloaks" key="Crownlands_Kings_Landing_Goldcloak_Swordsmen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="Crownlands_Targaryen_MAA_Billmen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="Crownlands_Targaryen_MAA_Axemen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="Crownlands_Targaryen_MAA_Mounted_Swordsmen" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="Crownlands_Targaryen_MAA_Pikemen" max="INFANTRY"></MenAtArm>
+	</Faction>
+</Titles>

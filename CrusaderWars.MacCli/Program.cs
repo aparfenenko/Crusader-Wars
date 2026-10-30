@@ -53,6 +53,7 @@ static void PrintHelp()
 
         Commands:
           detect          Find CK3/Attila paths and write ~/.config/crusader-conflicts/paths.json
+          check-mappers   Validate ./unit mappers: required files + Mods.xml parse per tag
           set-path <key> <value>
                           Set a path manually (GOG, custom installs). Keys are the paths.json
                           names: ck3App, attilaApp, saveGames, attilaData, attilaLog, rpfmCli,
@@ -89,6 +90,66 @@ static async Task<int> RunCommand(string command, Dictionary<string, string> fla
             detected.Save();
             logger.Info($"Wrote {PathConfig.DefaultConfigPath}");
             return 0;
+        }
+        case "check-mappers":
+        {
+            var (paths, _) = LoadServices(logger, detector);
+            string mappersRoot = Path.Combine(".", "unit mappers");
+            if (!Directory.Exists(mappersRoot))
+            {
+                logger.Error($"No unit mappers folder: {Path.GetFullPath(mappersRoot)}");
+                return 1;
+            }
+
+            int failures = 0;
+            foreach (string mapper in Directory.GetDirectories(mappersRoot))
+            {
+                string name = Path.GetFileName(mapper);
+                string tagFile = Path.Combine(mapper, "tag.txt");
+                if (!File.Exists(tagFile))
+                {
+                    logger.Warn($"  {name}: no tag.txt — skipped");
+                    failures++;
+                    continue;
+                }
+                string tag = File.ReadAllText(tagFile).Trim();
+
+                bool missing = false;
+                foreach (string required in new[] { "Mods.xml", "CK3Mods.xml", "Factions", "Cultures" })
+                {
+                    if (!Path.Exists(Path.Combine(mapper, required)))
+                    {
+                        logger.Error($"  {name} ({tag}): missing {required}");
+                        missing = true;
+                    }
+                }
+                // Titles is optional in the code (missing it only degrades subculture matching).
+                if (!Path.Exists(Path.Combine(mapper, "Titles")))
+                {
+                    logger.Warn($"  {name} ({tag}): no Titles folder — title-to-faction matching is degraded");
+                }
+                bool hasTimePeriod = Path.Exists(Path.Combine(mapper, "Time Period.xml")) || Path.Exists(Path.Combine(mapper, "TimePeriod.xml"));
+                if (!hasTimePeriod)
+                {
+                    logger.Error($"  {name} ({tag}): missing Time Period.xml");
+                    missing = true;
+                }
+                if (missing) { failures++; continue; }
+
+                try
+                {
+                    var (mods, submods, ck3Mods) = UnitMappers_BETA.GetUnitMappersModsCollectionFromTag(tag);
+                    Console.WriteLine($"OK  {name} ({tag}): {mods.Count} attila packs, {submods.Count} submods, {ck3Mods.Count} ck3 mod files");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error($"  {name} ({tag}): Mods.xml parse failed: {ex.Message}");
+                    failures++;
+                }
+            }
+
+            Console.WriteLine(failures == 0 ? "All mappers valid." : $"{failures} mapper(s) failed.");
+            return failures == 0 ? 0 : 1;
         }
         case "set-path":
         {

@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Cultures>
+	<Heritage name="heritage_andal" faction="Crownlands">
+		<Culture name="crownlander" faction="Crownlands"></Culture>
+		<Culture name="fingerman" faction="Vale"></Culture>
+		<Culture name="moonman" faction="Vale"></Culture>
+		<Culture name="valeman" faction="Vale"></Culture>
+		<Culture name="harborman" faction="Reach"></Culture>
+		<Culture name="honeywiner" faction="Reach"></Culture>
+		<Culture name="reachman" faction="Reach"></Culture>
+		<Culture name="shieldman" faction="Reach"></Culture>
+		<Culture name="vineman" faction="Reach"></Culture>
+		<Culture name="stone_dornish" faction="Dorne"></Culture>
+		<Culture name="marcher" faction="Stormlands"></Culture>
+		<Culture name="stormlander" faction="Stormlands"></Culture>
+		<Culture name="riverlander" faction="Riverlands"></Culture>
+		<Culture name="westerman" faction="Westerlands"></Culture>
+		<Culture name="andalosi" faction="Crownlands"></Culture>
+		<Culture name="axeman" faction="Crownlands"></Culture>
+	</Heritage>
+	<Heritage name="heritage_first_man" faction="North">
+		<Culture name="barrowman" faction="North"></Culture>
+		<Culture name="bearman" faction="North"></Culture>
+		<Culture name="clawman" faction="Crownlands"></Culture>
+		<Culture name="crannogman" faction="North"></Culture>
+		<Culture name="fangman" faction="North"></Culture>
+		<Culture name="forestman" faction="All_Factions"></Culture>
+		<Culture name="frozen_shoreman" faction="All_Factions"></Culture>
+		<Culture name="hill_clansman" faction="North"></Culture>
+		<Culture name="hornfoot" faction="All_Factions"></Culture>
+		<Culture name="ice_riverman" faction="All_Factions"></Culture>
+		<Culture name="krakenman" faction="Iron_Islands"></Culture>
+		<Culture name="lakeman" faction="All_Factions"></Culture>
+		<Culture name="mountain_clansman" faction="Wall"></Culture>
+		<Culture name="nightrunner" faction="All_Factions"></Culture>
+		<Culture name="northman" faction="North"></Culture>
+		<Culture name="sisterman" faction="Vale"></Culture>
+		<Culture name="skagosi" faction="Wall"></Culture>
+		<Culture name="thenn" faction="All_Factions"></Culture>
+		<Culture name="wolfswood_clansman" faction="North"></Culture>
+	</Heritage>
+	<Heritage name="heritage_ironborn" faction="Iron_Islands">
+		<Culture name="greenborn" faction="Iron_Islands"></Culture>
+		<Culture name="ironborn" faction="Iron_Islands"></Culture>
+	</Heritage>
+	<Heritage name="heritage_rhoynish" faction="Dorne">
+		<Culture name="rhoynish" faction="Slaver_Cities"></Culture>
+		<Culture name="greenblood" faction="Dorne"></Culture>
+		<Culture name="salt_dornish" faction="Dorne"></Culture>
+		<Culture name="sand_dornish" faction="Dorne"></Culture>
+		<Culture name="selhori" faction="Slaver_Cities"></Culture>
+		<Culture name="summer_rhoynish" faction="Slaver_Cities"></Culture>
+	</Heritage>
+	<Heritage name="heritage_valyrian" faction="Crownlands">
+		<Culture name="high_valyrian" faction="Crownlands"></Culture>
+		<Culture name="westerosi_valyrian" faction="Crownlands"></Culture>
+		<Culture name="essosi_valyrian" faction="Free_Cities"></Culture>
+		<Culture name="braavosi" faction="Free_Cities"></Culture>
+		<Culture name="gogossosi" faction="Slaver_Cities"></Culture>
+		<Culture name="mantaryan" faction="Slaver_Cities"></Culture>
+		<Culture name="tolosi" faction="Slaver_Cities"></Culture>
+		<Culture name="elyrian" faction="Slaver_Cities"></Culture>
+		<Culture name="volantene" faction="Free_Cities"></Culture>
+		<Culture name="painted_clansman" faction="Slaver_Cities"></Culture>
+		<Culture name="essarian" faction="Slaver_Cities"></Culture>
+		<Culture name="lorathi" faction="Free_Cities"></Culture>
+		<Culture name="lyseni" faction="Free_Cities"></Culture>
+		<Culture name="myrish" faction="Free_Cities"></Culture>
+		<Culture name="hartalari" faction="Slaver_Cities"></Culture>
+		<Culture name="norvoshi" faction="Free_Cities"></Culture>
+		<Culture name="pentoshi" faction="Free_Cities"></Culture>
+		<Culture name="qohorik" faction="Free_Cities"></Culture>
+		<Culture name="tyroshi" faction="Free_Cities"></Culture>
+	</Heritage>
+</Cultures>

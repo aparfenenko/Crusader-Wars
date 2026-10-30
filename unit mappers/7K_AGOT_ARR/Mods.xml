@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mods>
+	<Mod steam="true" steam_sha256="91230ccd5d7032bfb561c56d0c0e15bd19d9898433a71259a22fb8e26b9abac1">7k_Additional_Houses_2.pack</Mod>
+	<Mod steam="true" steam_sha256="fdc53733c5265b808bf8d008de0ea83836d561aa07c62ff0b58a7922c6aa0383">7K_Additional_Houses.pack</Mod>
+	<Mod screen_name="Lord_Of_The_Tides_Submod_V0.5.pack" notes="Version 0.5" url="https://www.moddb.com/mods/lord-of-the-tides-game-of-throne-submod/downloads/lord-of-the-tides-v05" sha256="b6cd540f6c107966fe94ad892fdf3436a07aef67777023a016c0461be18f474e">Lord_Of_The_Tides_Submod_V0.5.pack</Mod>
+	<Mod steam_sha256="1eced4af8e5c5b484b9b79c894e146cabdfc5ebc69944d938bcdc72830b948e8" screen_name="7k submod 2.pack" url="https://www.moddb.com/mods/seven-kingdoms-submod" notes="Dec 12 2020" sha256="1eced4af8e5c5b484b9b79c894e146cabdfc5ebc69944d938bcdc72830b948e8">7k submod 2.pack</Mod>
+	<Mod steam_sha256="c8630c35919f43e9e6736e3c9d9ad8ec065c2f73960ac051457432179d39cdfe" screen_name="7K_Overhaul.pack" url="https://www.moddb.com/mods/seven-kingdoms-total-war" notes="Oct 26 2019, Alpha_2.1" sha256="c8630c35919f43e9e6736e3c9d9ad8ec065c2f73960ac051457432179d39cdfe">7K_Overhaul.pack</Mod>
+	<Mod steam_sha256="b3ee520959e646a705a0453e99ff901a370bcdbaeeffaf0579d188146b532661" screen_name="7K_Models_and_Textures.pack" url="https://www.moddb.com/mods/seven-kingdoms-total-war" notes="Oct 26 2019, Alpha_2.1" sha256="b3ee520959e646a705a0453e99ff901a370bcdbaeeffaf0579d188146b532661">7K_Models_and_Textures.pack</Mod>
+</Mods>

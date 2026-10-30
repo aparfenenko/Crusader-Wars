@@ -36,6 +36,16 @@ downloaded/installed by the updater (CWUpdater). On macOS the model is:
 
 - The CLI runs inside a Crusader Conflicts workspace (detected by walking up from the
   current directory until `data/battle files` or `CrusaderWars.sln` is found).
+- This repository now SHIPS the data pieces: `unit mappers/` from the official mapper
+  updater repo (github.com/equanimittyy/CW-Mappers, 9 mappers incl. AGOT / Realms in
+  Exile / The Fallen Eagle / DefaultCK3) and `data/schema_att.ron` refreshed via
+  `rpfm_cli --game attila schemas update --schema-path ./data`.
+- rpfm_cli on mac runs through CrossOver: `tools/rpfm_cli` wraps the Windows
+  rpfm_cli.exe v4.7.4 (CX_BOTTLE selects the bottle — use a GUI-created bottle that has
+  the Windows system DLLs). Registered via `set-path rpfmCli <workspace>/tools/rpfm_cli`.
+- Caveats: The Fallen Eagle mappers in the CW repo have no Titles folder (title matching
+  is degraded, code handles it gracefully); mapper folder names are `OfficialCW_*` while
+  CC code special-cases some `OfficialCC_*` names — those switches fall to defaults.
 - `detect` reports each required piece as OK / MISSING — build the workspace by copying
   the pieces from a Windows Crusader Conflicts installation (or a future mac updater).
 - `generate-battle` fails with a clear error if a required piece is absent.

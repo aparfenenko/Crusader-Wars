@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Titles>
+	<!--This is to assign MEN-AT-ARMS units based on title key and not owner culture-->
+	<!--Levies do not take part in this!!-->
+	<!--DEFAULT value does not work here, every unit must have a unit key-->
+	<!--title_key = key of the landed title-->
+	<Faction title_key="e_byzantium" name="Byzantine Empire">
+		<General key="mk_nic_t1_oikeioi"></General>
+		<Knights key="mk_nic_t1_hippovardariotai"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="mk_nic_t1_mourtatoi" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="mk_nic_t1_italikon" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_horse_archers" key="mk_nic_t1_massagetoi" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="mk_nic_t1_pronoiarioi" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="mk_nic_t1_hippotoxotai" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="mk_nic_t1_scoutatoi_spearmen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="mk_merc_ara_t1_almogavar" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="mk_tre_t1_varangoi" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="mk_tre_t1_spatharioi_tou_vasileos" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="mk_nic_t1_kavallarioi" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="mk_nic_t1_akritai_toxotes" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="mk_nic_t1_tzangratoroi" max="RANGED"></MenAtArm>
+		<MenAtArm type="horse_archers" key="mk_nic_t1_skythikoi" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="mk_nic_t1_vardariotai" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="mk_tre_t1_spathatoi" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="mk_nic_t1_koursores" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="mk_nic_t1_menavlatoi" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="skoutatoi" key="mk_tre_t1_scoutatoi" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="teutonic_knights" key="mk_tre_t1_varangoi" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="e_france" name="French Empire">
+		<General key="mk_fre_t1_kings_bodyguard"></General>
+		<Knights key="mk_fre_t1_general_bodyguard"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="mk_merc_eng_t1_longbowmen" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="mk_fre_t1_arbaletriers_mounted" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="mk_fre_t1_banneret_chevaliers_mounted" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="mk_fre_t1_arbaletriers_mounted" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="mk_merc_fre_t1_routiers_spearmen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="mk_merc_bra_t1_brabanzonen_goedendag" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="mk_fre_t1_chevaliers_dismounted" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="mk_fre_t1_sergeant_at_arms" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="mk_fre_t1_banneret_chevaliers_mounted" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="mk_fre_t1_archers" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="mk_fre_t1_arbaletriers" max="RANGED"></MenAtArm>
+		<MenAtArm type="house_guard" key="mk_fre_t1_sergeant_at_arms" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="mk_fre_t1_sergeant_axemen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="mk_fre_t1_cliens" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="mk_fre_t1_guisarmiers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="teutonic_knights" key="mk_mio_t1_templar_knights_dismounted" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="e_hre" name="Holy Roman Empire">
+		<General key="mk_hre_t1_kaiser_und_gefolge"></General>
+		<Knights key="mk_hre_t1_reichshauptmann_und_gefolge"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="mk_hre_t1_bogenschutzen" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="mk_merc_gen_t1_genoese_crossbowmen" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="mk_ger_t1_banneret_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="mk_mio_t1_teu_sariantbruder" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="mk_merc_bra_t1_brabanzonen_voulgier" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="mk_merc_bra_t1_brabanzonen_goedendag" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="mk_teu_t1_swordbrethren" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="mk_hre_t1_konstafler_streitaxte" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="mk_hre_t1_ritter" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="mk_hre_t1_bogenschutzen" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="mk_hre_t1_armbrustschutzen" max="RANGED"></MenAtArm>
+		<MenAtArm type="house_guard" key="mk_tri_t1_dismounted_elector_guard" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="mk_hre_t1_burgerwehr_streitaxte" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="mk_hre_t1_knappen" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="mk_hre_t1_fussknecht" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="teutonic_knights" key="mk_teu_t1_swordbrethren" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="e_latin_empire" name="Latin Empire">
+		<General key="mk_lat_t1_emperor_bodyguard"></General>
+		<Knights key="mk_lat_t1_general_bodyguard"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="mk_lat_t1_slavos_toxotes" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="mk_jer_t1_hospitaller_caravan" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="mk_mio_t1_hospitaller_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="mk_lat_t1_mounted_crossbowmen" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="mk_lat_t1_guisarmiers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="mk_merc_ara_t1_almogavar" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="mk_mio_t1_hospitaller_knights_dismounted" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="mk_lat_t1_dismounted_chevaliers" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="mk_lat_t1_chevaliers" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="mk_lat_t1_thelematarioi_toxotes" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="mk_lat_t1_arbalestriers" max="RANGED"></MenAtArm>
+		<MenAtArm type="house_guard" key="mk_epi_t1_englinovarangoi" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="mk_lat_t1_gasmouli" max="RANGED"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="mk_lat_t1_mounted_sergeants" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="mk_lat_t1_kastrenoi_burgenses" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="teutonic_knights" key="mk_mio_t1_templar_knights_dismounted" max="INFANTRY"></MenAtArm>
+	</Faction>
+	<Faction title_key="e_outremer" name="Outremer">
+		<General key="mk_jer_t1_jerusalem_kingsguard"></General>
+		<Knights key="mk_jer_t1_bodyguard_baron"></Knights>
+		<MenAtArm type="accolade_maa_archers" key="mk_merc_eng_t1_longbowmen" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_crossbowmen" key="mk_mio_t1_templar_crossbowmen_sergeants" max="RANGED"></MenAtArm>
+		<MenAtArm type="accolade_maa_horse_archers" key="mk_aus_t1_mounted_crossbowmen" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_lancers" key="mk_mio_t1_templar_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_outriders" key="mk_jer_t1_mounted_serjeants" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_pikes" key="mk_pap_t1_papal_sergeants" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_skirmishers" key="mk_eng_t1_axe_sergeant" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="accolade_maa_vanguard" key="mk_jer_t1_lazarus_knights_dismounted" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_footmen" key="mk_jer_t1_poulain_knights_dismounted" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="armored_horsemen" key="mk_ant_t1_canon_knights" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="bowmen" key="mk_jer_t1_turcopoles_dismounted" max="RANGED"></MenAtArm>
+		<MenAtArm type="crossbowmen" key="mk_jer_t1_poulain_crossbowmen" max="RANGED"></MenAtArm>
+		<MenAtArm type="horse_archers" key="mk_jer_t1_turcopoles" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="house_guard" key="mk_ant_t1_canon_knights_dismounted" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_footmen" key="mk_merc_ita_t1_foot_berrovieri" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="light_horsemen" key="mk_mio_t1_templar_mounted_sergeants" max="CAVALRY"></MenAtArm>
+		<MenAtArm type="pikemen_unit" key="mk_jer_t1_ministeriale_spearmen" max="INFANTRY"></MenAtArm>
+		<MenAtArm type="teutonic_knights" key="mk_mio_t1_templar_knights_dismounted" max="INFANTRY"></MenAtArm>
+	</Faction>
+</Titles>

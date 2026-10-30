@@ -287,7 +287,6 @@ namespace CrusaderWars.unit_mapper
                 ck3ModPairs.Add((ck3ModFileNames[i], i < ck3ModNames.Count ? ck3ModNames[i] : null));
             return (requiredMods, submods, ck3ModPairs);
         }
-        [SupportedOSPlatform("windows")]
         public static (List<ModFile> requiredMods, List<Submod> submods, List<(string fileName, string? displayName)> ck3ModFileNames) GetUnitMappersModsCollectionFromTag(string tag)
         {
             var allRequiredMods = new List<ModFile>();
@@ -859,7 +858,6 @@ namespace CrusaderWars.unit_mapper
             }
         }
 
-        [SupportedOSPlatform("windows")]
         public static List<string> GetUnitMapperModFromTagAndTimePeriod(string tag, List<string> activeSubmods)
         {
             ActivePlaythroughTag = tag;
