@@ -6,6 +6,7 @@ public sealed class ConsoleLogger : IAppLogger
     public void Info(string message) => Write("INF", message);
     public void Warn(string message) => Write("WRN", message);
     public void Error(string message) => Write("ERR", message);
+    public void Error(Exception exception) => Write("ERR", $"{exception.GetType()}: {exception.Message}");
 
     private static void Write(string level, string message)
     {

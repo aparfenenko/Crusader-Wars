@@ -92,5 +92,7 @@ public class AttilaUserScriptTests : IDisposable
         public void Warn(string message) => Warnings.Add(message);
 
         public void Error(string message) { }
+
+        public void Error(Exception exception) { }
     }
 }

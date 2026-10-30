@@ -9,6 +9,7 @@ using System.Runtime.Versioning;
 using System.Runtime.InteropServices;
 using CrusaderWars.Core.Paths;
 using CrusaderWars.Core.Dialogs;
+using CrusaderWars.Core.Logging;
 
 namespace CrusaderWars
 {
@@ -30,10 +31,13 @@ namespace CrusaderWars
         static void Main()
         {
             ShowWindow(GetConsoleWindow(), SW_HIDE);
+            System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            CrusaderWarsEnvironment.Initialize(
+                new WindowsGamePaths(),
+                new WindowsDialogService(),
+                new FileAppLogger(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data"), truncateDebugLogOnCreate: true));
             Logger.Debug("Application starting...");
             Logger.Debug(AppDomain.CurrentDomain.BaseDirectory);
-            System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-            CrusaderWarsEnvironment.Initialize(new WindowsGamePaths(), new WindowsDialogService());
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -64,66 +68,21 @@ namespace CrusaderWars
             Logger.Log((Exception)e.ExceptionObject);
         }
 
+        /// <summary>
+        /// Application logging. Delegates to the portable logger on the environment so the
+        /// format and files (data/debug.log, data/error.log) stay identical while domain
+        /// code can later use the same implementation from Core.
+        /// </summary>
         public static class Logger
         {
-            private static string logFilePath = @".\data\error.log"; // Path to the log file
-            private static string debugLogFilePath = @".\data\debug.log";
-
-            static Logger()
-            {
-                try
-                {
-                    // Ensure the directory exists.
-                    string? logDirectory = Path.GetDirectoryName(debugLogFilePath);
-                    if (logDirectory != null && !Directory.Exists(logDirectory))
-                    {
-                        Directory.CreateDirectory(logDirectory);
-                    }
-
-                    // Clear the log file by creating it (or overwriting it if it exists).
-                    File.WriteAllText(debugLogFilePath, string.Empty);
-                }
-                catch (Exception ex)
-                {
-                    // If logging can't be initialized, write to console.
-                    // This is a fallback for critical startup errors.
-                    Console.WriteLine($"FATAL: Could not initialize logger. {ex.Message}");
-                }
-            }
-
             public static void Debug(string message)
             {
-                try
-                {
-                    string logMessage = $"[{DateTime.Now}] DEBUG: {message}";
-                    Console.WriteLine(logMessage);
-                    using (StreamWriter writer = new StreamWriter(debugLogFilePath, true))
-                    {
-                        writer.WriteLine(logMessage);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"FATAL: Could not write to debug log. {ex.Message}");
-                }
+                CrusaderWarsEnvironment.Logger.Debug(message);
             }
 
             public static void Log(Exception ex)
             {
-                try
-                {
-                    // Create or append to the log file
-                    using (StreamWriter writer = new StreamWriter(logFilePath, true))
-                    {
-                        writer.WriteLine($"[{DateTime.Now}] {ex.GetType()}: {ex.Message}");
-                        writer.WriteLine($"StackTrace: {ex.StackTrace}");
-                        writer.WriteLine(); // Empty line for better readability
-                    }
-                }
-                catch (Exception logEx)
-                {
-                    Console.WriteLine($"FATAL: Could not write to error log. {logEx.Message}");
-                }
+                CrusaderWarsEnvironment.Logger.Error(ex);
             }
         }
 
