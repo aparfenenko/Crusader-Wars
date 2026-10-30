@@ -13,7 +13,11 @@ using CrusaderWars;
 using CrusaderWars.client;
 using CrusaderWars.mod_manager;
 using CrusaderWars.armies;
+using CrusaderWars.data.battle_results;
 using CrusaderWars.data.save_file;
+using CrusaderWars.locs;
+using CrusaderWars.terrain;
+using CrusaderWars.unit_mapper;
 using CrusaderWars.twbattle;
 
 var logger = new ConsoleLogger();
@@ -51,6 +55,7 @@ static void PrintHelp()
           watch           Wait until CK3 writes a battle dump to console_history.txt
           parse-console   Parse the current console_history battle dump (DataSearch) and print the facts
           read-save       parse-console + uncompress last_save.ck3 and read armies (ArmiesReader)
+          generate-battle Full read pipeline: parse → save → armies → Attila battle files → pack
           launch-attila   Start native Attila with used_mods_cc.txt
           launch-ck3      Start native CK3 (add --continue-last-save to load last save)
           wait-battle     Poll Attila BattleResults_log.txt until the battle ends
@@ -121,6 +126,72 @@ static async Task<int> RunCommand(string command, Dictionary<string, string> fla
             var (attacker, defender) = ArmiesReader.ReadBattleArmies();
             PrintArmies("attacker", attacker);
             PrintArmies("defender", defender);
+            return 0;
+        }
+        case "generate-battle":
+        {
+            var (paths, _) = LoadServices(logger, detector);
+            var watcher = new Ck3LogWatcher(paths, logger);
+            if (!watcher.TryRead(out string content) || string.IsNullOrWhiteSpace(content))
+            {
+                logger.Error($"No battle dump in console_history.txt: {watcher.LogPath}.");
+                return 1;
+            }
+            DataSearch.Search(content);
+
+            SaveFile.Uncompress();
+            BattleResult.WarID = ArmiesReader.FindWarID();
+            var (attacker, defender) = ArmiesReader.ReadBattleArmies();
+
+            UnitsFile.ResetProcessedArmies();
+            var left = ArmiesReader.GetSideArmies("left", attacker, defender);
+            var right = ArmiesReader.GetSideArmies("right", attacker, defender);
+            if (left is null || !left.Any() || right is null || !right.Any())
+            {
+                logger.Error("Could not determine battle sides or one side is empty. Cannot generate the battle.");
+                return 1;
+            }
+            BattleFile.SetArmiesSides(attacker, defender);
+
+            if (!ModOptions.optionsValuesCollection.TryGetValue("CombineKnights", out string? combineKnights) || combineKnights != "Enabled")
+                ProminentKnights.Process(attacker, defender);
+            if (!BattleState.IsSiegeBattle)
+                TerrainGenerator.CheckForSpecialCrossingBattle(attacker, defender);
+
+            logger.Info("Clearing previous battle files...");
+            BattleFile.ClearFile();
+            DeclarationsFile.Erase();
+            BattleScript.EraseScript(BattleState.IsSiegeBattle);
+            Data.units_scripts.Clear();
+            BattleResultReader.ClearAttilaLog();
+            UnitsCardsNames.RemoveFiles();
+
+            int leftTotal = left.Sum(a => a.GetTotalSoldiers());
+            int rightTotal = right.Sum(a => a.GetTotalSoldiers());
+            BattleDetails.ChangeBattleDetails(leftTotal, rightTotal, left[0].CombatSide, right[0].CombatSide);
+            BattleScript.CreateScript();
+
+            int totalSoldiers = attacker.SelectMany(a => a.Units).Sum(u => u.GetSoldiers()) +
+                                defender.SelectMany(a => a.Units).Sum(u => u.GetSoldiers());
+            ArmyProportions.AutoSizeUnits(totalSoldiers);
+            foreach (var army in attacker) army.ScaleUnits(ArmyProportions.BattleScale);
+            foreach (var army in defender) army.ScaleUnits(ArmyProportions.BattleScale);
+            BattleLog.Reset();
+
+            logger.Info("Creating TW:Attila battle files...");
+            BattleFile.BETA_CreateBattle(attacker, defender);
+
+            if (BattleLog.HasUnmappedUnits())
+            {
+                logger.Warn("Some CK3 units could not be mapped to Total War: Attila units and were dropped:");
+                foreach (var u in BattleLog.GetUnmappedUnits().Distinct())
+                    Console.WriteLine($"  - type={u.RegimentType} name={u.UnitName} faction={u.AttilaFaction} culture={u.Culture}");
+            }
+
+            logger.Info("Creating .pack file (rpfm)...");
+            PackFile.PackFileCreator();
+
+            Console.WriteLine("generate-battle done: battle files written, pack deployed if rpfm_cli succeeded.");
             return 0;
         }
         case "launch-attila":

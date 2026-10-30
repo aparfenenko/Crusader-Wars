@@ -107,7 +107,15 @@ public sealed class MacPathDetector
             Result("Attila battle log", config.AttilaLog, File.Exists(config.AttilaLog) || Directory.Exists(Path.GetDirectoryName(config.AttilaLog)!)),
             Result("Attila user.script", config.AttilaUserScript, File.Exists(config.AttilaUserScript)),
             Result("rpfm_cli", config.RpfmCli, File.Exists(config.RpfmCli)),
-            Result("workspace", config.WorkspaceDir, Directory.Exists(config.WorkspaceDir))
+            Result("workspace", config.WorkspaceDir, Directory.Exists(config.WorkspaceDir)),
+            Result("workspace: unit mappers", Path.Combine(config.WorkspaceDir, "unit mappers"),
+                Directory.Exists(Path.Combine(config.WorkspaceDir, "unit mappers"))),
+            Result("workspace: schema_att.ron", Path.Combine(config.WorkspaceDir, "data", "schema_att.ron"),
+                File.Exists(Path.Combine(config.WorkspaceDir, "data", "schema_att.ron"))),
+            Result("workspace: battle files", Path.Combine(config.WorkspaceDir, "data", "battle files"),
+                Directory.Exists(Path.Combine(config.WorkspaceDir, "data", "battle files"))),
+            Result("workspace: settings schemas", Path.Combine(config.WorkspaceDir, "settings", "schemas"),
+                Directory.Exists(Path.Combine(config.WorkspaceDir, "settings", "schemas")))
         ];
     }
 

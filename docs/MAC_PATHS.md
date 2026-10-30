@@ -26,6 +26,20 @@ dotnet run --project CrusaderWars.MacCli -- launch-attila
 dotnet run --project CrusaderWars.MacCli -- wait-battle
 ```
 
+## Workspace data supply (decision)
+
+The battle pipeline needs the same distribution pieces next to the workspace as the
+Windows application has in its output folder: `unit mappers/` (mappers XML),
+`data/schema_att.ron`, `data/battle files/`, `settings/schemas/*.xsd` and
+`tools/rpfm_cli`. These are NOT in the git repository — on Windows they are
+downloaded/installed by the updater (CWUpdater). On macOS the model is:
+
+- The CLI runs inside a Crusader Conflicts workspace (detected by walking up from the
+  current directory until `data/battle files` or `CrusaderWars.sln` is found).
+- `detect` reports each required piece as OK / MISSING — build the workspace by copying
+  the pieces from a Windows Crusader Conflicts installation (or a future mac updater).
+- `generate-battle` fails with a clear error if a required piece is absent.
+
 Fill in this file with the `OK` / `MISSING` lines from `detect` after the first run on a real Mac install.
 
 ## Notes from first detect run

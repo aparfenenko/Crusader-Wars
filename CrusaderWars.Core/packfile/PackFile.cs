@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using System.Linq;
 using CrusaderWars.Core.Paths;
 using CrusaderWars.Core.Pack;
@@ -15,7 +14,7 @@ namespace CrusaderWars
 
         public static void PackFileCreator()
         {
-            Program.Logger.Debug("Starting .pack file creation process...");
+            CrusaderWarsEnvironment.Logger.Debug("Starting .pack file creation process...");
             // Create and import .pack file
 
             string create_path = Directory.GetCurrentDirectory() + @"\CrusaderConflicts.pack";
@@ -44,12 +43,12 @@ namespace CrusaderWars
             {
                 File.Copy(thumbnail_path, thumb_file_path);
             }
-            Program.Logger.Debug(".pack file created and moved to Attila data folder successfully.");
+            CrusaderWarsEnvironment.Logger.Debug(".pack file created and moved to Attila data folder successfully.");
         }
 
         private static string? CreatePackFile(string command)
         {
-            Program.Logger.Debug($"Executing RPFM command: {command}");
+            CrusaderWarsEnvironment.Logger.Debug($"Executing RPFM command: {command}");
             string rpfm_client_path = RpfmCliLocator.Resolve(PathConfig.Load().RpfmCli, @".\data\rpfm\rpfm_cli.exe");
 
             ProcessStartInfo procStartInfo = new ProcessStartInfo(rpfm_client_path, command)
@@ -68,13 +67,13 @@ namespace CrusaderWars
                     proc.StartInfo = procStartInfo;
                     proc.Start();
                     string output = proc.StandardOutput.ReadToEnd();
-                    Program.Logger.Debug($"RPFM output: {output}");
+                    CrusaderWarsEnvironment.Logger.Debug($"RPFM output: {output}");
                     return output;
                 }
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error creating pack file: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error creating pack file: {ex.Message}");
                 return null;
             }
         }
