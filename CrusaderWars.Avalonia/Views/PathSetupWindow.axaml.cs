@@ -91,10 +91,9 @@ public partial class PathSetupWindow : Window
     {
         string? selected = mode switch
         {
-            // No type filter: with a filter Avalonia classifies the returned .app bundle as
-            // a folder and drops it from the results, leaving the field empty. A plain file
-            // panel returns the bundle as a file item.
-            PickerMode.AppBundle => await PickFile("Select the application bundle (.app)", filter: null),
+            // The native panel drops .app bundles from its results (they are directories),
+            // so app bundles are picked from an in-app list of discovered installations.
+            PickerMode.AppBundle => await PickAppBundle(key),
             PickerMode.File => await PickFile($"Select {key}", AnyFileType),
             PickerMode.Folder => await PickFolder($"Select {key}"),
             _ => null
@@ -113,6 +112,22 @@ public partial class PathSetupWindow : Window
             : $"[INF] Path Setup: '{key}' = {selected}";
         (DataContext as ViewModels.MainWindowViewModel)?.AppendLog(line);
         try { CrusaderWarsEnvironment.Logger.Warn(line); } catch { /* gateway not ready */ }
+    }
+
+    private async Task<string?> PickAppBundle(string key)
+    {
+        // Field key -> bundle name keyword (ck3App -> "Crusader Kings", attilaApp -> "Attila").
+        string keyword = key.StartsWith("ck3", StringComparison.OrdinalIgnoreCase) ? "Crusader Kings" : "Attila";
+
+        var matches = AppBundleScanner.FindMatching(keyword);
+        var candidates = matches.Count > 0 ? matches : AppBundleScanner.FindBundles(keyword);
+        string hint = matches.Count > 0
+            ? "These matched the game. If yours is missing, type its path into the field manually."
+            : $"No '{keyword}' bundles found in /Applications, ~/Applications or Steam. Type the path manually into the field.";
+
+        var dialog = new AppBundlePickerWindow($"Select the {keyword} application", candidates, hint);
+        await dialog.ShowDialog(this);
+        return dialog.SelectedPath;
     }
 
     private async Task<string?> PickFile(string title, FilePickerFileType? filter)
