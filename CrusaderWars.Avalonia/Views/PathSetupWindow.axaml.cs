@@ -19,18 +19,18 @@ public partial class PathSetupWindow : Window
 {
     private enum PickerMode { AppBundle, File, Folder }
 
-    private static readonly (string Key, string Label, PickerMode Mode)[] EditableFields =
+    private static readonly (string Key, string Label, PickerMode Mode, bool Required)[] EditableFields =
     {
-        ("ck3App", "CK3 app (.app bundle)", PickerMode.AppBundle),
-        ("attilaApp", "Attila app (.app bundle)", PickerMode.AppBundle),
-        ("ck3Documents", "CK3 documents folder", PickerMode.Folder),
-        ("saveGames", "CK3 save games folder", PickerMode.Folder),
-        ("ck3Log", "CK3 console_history.txt", PickerMode.File),
-        ("attilaData", "Attila data folder", PickerMode.Folder),
-        ("attilaLog", "Attila BattleResults_log.txt", PickerMode.File),
-        ("attilaUserScript", "Attila user.script.txt", PickerMode.File),
-        ("rpfmCli", "rpfm_cli executable", PickerMode.File),
-        ("workspaceDir", "Workspace folder", PickerMode.Folder),
+        ("ck3App", "CK3 app (.app bundle)", PickerMode.AppBundle, true),
+        ("attilaApp", "Attila app (.app bundle)", PickerMode.AppBundle, true),
+        ("ck3Documents", "CK3 documents folder", PickerMode.Folder, false),
+        ("saveGames", "CK3 save games folder", PickerMode.Folder, false),
+        ("ck3Log", "CK3 console_history.txt", PickerMode.File, false),
+        ("attilaData", "Attila data folder", PickerMode.Folder, false),
+        ("attilaLog", "Attila BattleResults_log.txt", PickerMode.File, false),
+        ("attilaUserScript", "Attila user.script.txt", PickerMode.File, false),
+        ("rpfmCli", "rpfm_cli executable", PickerMode.File, false),
+        ("workspaceDir", "Workspace folder", PickerMode.Folder, false),
     };
 
     private readonly Dictionary<string, TextBox> _editors = new();
@@ -63,8 +63,28 @@ public partial class PathSetupWindow : Window
         RowsPanel.Children.Clear();
         _editors.Clear();
 
-        foreach (var (key, label, mode) in EditableFields)
+        RowsPanel.Children.Add(new TextBlock
         {
+            Text = "Required — the only fields you normally fill:",
+            FontWeight = global::Avalonia.Media.FontWeight.Bold,
+            Margin = new global::Avalonia.Thickness(0, 0, 0, 4)
+        });
+        AddRows(config, requiredOnly: true);
+        RowsPanel.Children.Add(new TextBlock
+        {
+            Text = "Advanced — filled automatically (defaults from the two apps above). Touch only for non-standard installs:",
+            FontWeight = global::Avalonia.Media.FontWeight.Bold,
+            Opacity = 0.8,
+            Margin = new global::Avalonia.Thickness(0, 10, 0, 4)
+        });
+        AddRows(config, requiredOnly: false);
+    }
+
+    private void AddRows(PathConfig config, bool requiredOnly)
+    {
+        foreach (var (key, label, mode, required) in EditableFields)
+        {
+            if (required != requiredOnly) continue;
             var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
             var text = new TextBlock
             {
@@ -157,7 +177,7 @@ public partial class PathSetupWindow : Window
     private void OnSave(object? sender, RoutedEventArgs e)
     {
         var config = LoadConfig();
-        foreach (var (key, _, _) in EditableFields)
+        foreach (var (key, _, _, _) in EditableFields)
         {
             config.SetByName(key, _editors[key].Text ?? "");
         }
@@ -170,7 +190,7 @@ public partial class PathSetupWindow : Window
     private void OnAutoFill(object? sender, RoutedEventArgs e)
     {
         var detected = new MacPathDetector(CrusaderWarsEnvironment.Logger).Detect();
-        foreach (var (key, _, _) in EditableFields)
+        foreach (var (key, _, _, _) in EditableFields)
         {
             var editor = _editors[key];
             if (string.IsNullOrWhiteSpace(editor.Text))

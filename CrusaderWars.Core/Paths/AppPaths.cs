@@ -50,16 +50,25 @@ public sealed class AppPaths
                 "Library", "Application Support", "The Creative Assembly", "Attila", "scripts", "user.script.txt")
             : config.AttilaUserScript;
 
+        string attilaData = config.AttilaData;
+        if (string.IsNullOrWhiteSpace(attilaData) && !string.IsNullOrWhiteSpace(config.AttilaApp))
+        {
+            // Default: data/ sits next to the .app bundle (mac Steam layout).
+            var appDir = Path.GetDirectoryName(config.AttilaApp);
+            if (!string.IsNullOrEmpty(appDir))
+                attilaData = Path.Combine(appDir, "data");
+        }
+
         string attilaLog = config.AttilaLog;
-        if (string.IsNullOrWhiteSpace(attilaLog) && !string.IsNullOrWhiteSpace(config.AttilaData))
-            attilaLog = Path.Combine(config.AttilaData, "BattleResults_log.txt");
+        if (string.IsNullOrWhiteSpace(attilaLog) && !string.IsNullOrWhiteSpace(attilaData))
+            attilaLog = Path.Combine(attilaData, "BattleResults_log.txt");
 
         return new AppPaths
         {
             Ck3App = config.Ck3App,
             AttilaApp = config.AttilaApp,
             SaveGames = saveGames,
-            AttilaData = config.AttilaData,
+            AttilaData = attilaData,
             AttilaLog = attilaLog,
             RpfmCli = config.RpfmCli,
             Ck3Documents = ck3Documents,
