@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.twbattle
 {
@@ -64,7 +65,7 @@ namespace CrusaderWars.twbattle
             string? main_owner = main_army.Owner?.GetID();
             if (main_owner == null)
             {
-                Program.Logger.Debug($"Warning: Main army {main_army.ID} has no owner. Cannot merge friendlies.");
+                CrusaderWarsEnvironment.Logger.Debug($"Warning: Main army {main_army.ID} has no owner. Cannot merge friendlies.");
                 return main_army;
             }
             armies.Remove(main_army);

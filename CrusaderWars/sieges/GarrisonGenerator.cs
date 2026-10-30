@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions; // Added for Regex
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.sieges
 {
@@ -45,7 +46,7 @@ namespace CrusaderWars.sieges
                     }
                 }
             }
-            Program.Logger.Debug($"Warning: Could not find culture name for ID {cultureID}. Falling back to ID.");
+            CrusaderWarsEnvironment.Logger.Debug($"Warning: Could not find culture name for ID {cultureID}. Falling back to ID.");
             return cultureID;
         }
 
@@ -74,7 +75,7 @@ namespace CrusaderWars.sieges
             var unit = new Unit("Garrison", garrisonSize, new Culture(cultureID), RegimentType.Garrison, twbattle.Sieges.GetHoldingLevel());
             garrisonArmy.Units.Add(unit);
 
-            Program.Logger.Debug($"Created garrison placeholder army with {garrisonSize} soldiers for culture ID {cultureID}.");
+            CrusaderWarsEnvironment.Logger.Debug($"Created garrison placeholder army with {garrisonSize} soldiers for culture ID {cultureID}.");
             return garrisonArmy;
         }
 
@@ -87,18 +88,18 @@ namespace CrusaderWars.sieges
         /// <returns>A list of Unit objects representing the distributed garrisons.</returns>
         public static List<Unit> GenerateDistributedGarrisonUnits(int garrisonSize, Culture garrisonCulture, string heritage)
         {
-            Program.Logger.Debug($"Generating distributed garrison units for garrison of size {garrisonSize}, culture {garrisonCulture.GetCultureName()}, heritage {heritage}.");
+            CrusaderWarsEnvironment.Logger.Debug($"Generating distributed garrison units for garrison of size {garrisonSize}, culture {garrisonCulture.GetCultureName()}, heritage {heritage}.");
 
             List<Unit> newUnits = new List<Unit>();
             if (garrisonSize <= 0)
             {
-                Program.Logger.Debug("Garrison size is 0 or less, returning empty unit list.");
+                CrusaderWarsEnvironment.Logger.Debug("Garrison size is 0 or less, returning empty unit list.");
                 return newUnits;
             }
 
             string cultureName = garrisonCulture.GetCultureName();
             string attilaFaction = UnitMappers_BETA.GetAttilaFaction(cultureName, heritage);
-            Program.Logger.Debug($"Determined Attila Faction for garrison: {attilaFaction}");
+            CrusaderWarsEnvironment.Logger.Debug($"Determined Attila Faction for garrison: {attilaFaction}");
 
             List<(int porcentage, string unit_key, string name, string max)> garrisonComposition;
             try
@@ -108,13 +109,13 @@ namespace CrusaderWars.sieges
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Could not get garrison composition for faction '{attilaFaction}' at holding level {twbattle.Sieges.GetHoldingLevel()}. Error: {ex.Message}. Cannot generate distributed garrison units.");
+                CrusaderWarsEnvironment.Logger.Debug($"Could not get garrison composition for faction '{attilaFaction}' at holding level {twbattle.Sieges.GetHoldingLevel()}. Error: {ex.Message}. Cannot generate distributed garrison units.");
                 return newUnits; // Return empty list
             }
 
             if (!garrisonComposition.Any())
             {
-                Program.Logger.Debug($"Warning: No garrison composition found for faction '{attilaFaction}'. Cannot generate distributed garrison units.");
+                CrusaderWarsEnvironment.Logger.Debug($"Warning: No garrison composition found for faction '{attilaFaction}'. Cannot generate distributed garrison units.");
                 return newUnits; // Return empty list
             }
 
@@ -122,7 +123,7 @@ namespace CrusaderWars.sieges
             double totalPercentage = garrisonComposition.Sum(l => l.porcentage);
             if (totalPercentage == 0)
             {
-                Program.Logger.Debug($"Warning: Total percentage for garrison composition is 0 for faction '{attilaFaction}'. Cannot generate distributed garrison units.");
+                CrusaderWarsEnvironment.Logger.Debug($"Warning: Total percentage for garrison composition is 0 for faction '{attilaFaction}'. Cannot generate distributed garrison units.");
                 return newUnits; // Return empty list
             }
 
@@ -176,7 +177,7 @@ namespace CrusaderWars.sieges
 
                 if (soldiers > 0)
                 {
-                    Program.Logger.Debug($"Allocating {soldiers} soldiers to distributed garrison unit '{unit_key}' (merged from multiple definitions)");
+                    CrusaderWarsEnvironment.Logger.Debug($"Allocating {soldiers} soldiers to distributed garrison unit '{unit_key}' (merged from multiple definitions)");
                     // Create the Unit, which represents the soldiers in Attila.
                     // Use "Garrison" as the generic name for these distributed units.
                     var unit = new Unit("Garrison", soldiers, garrisonCulture, RegimentType.Garrison, twbattle.Sieges.GetHoldingLevel());
@@ -191,7 +192,7 @@ namespace CrusaderWars.sieges
             newUnits = Armies_Functions.GetAllUnits_Max(newUnits);
             // Removed: newUnits = Armies_Functions.GetAllUnits_UnitKeys(newUnits); // Unit keys are now set directly from XML
 
-            Program.Logger.Debug($"Finished generating {newUnits.Count} distributed garrison units for garrison.");
+            CrusaderWarsEnvironment.Logger.Debug($"Finished generating {newUnits.Count} distributed garrison units for garrison.");
             return newUnits;
         }
     }

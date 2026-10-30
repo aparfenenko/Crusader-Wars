@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.armies.commander_traits
 {
@@ -185,7 +186,7 @@ namespace CrusaderWars.armies.commander_traits
 
 
                 xp_boost += trait.GetXPBoost();
-                Program.Logger.Debug($"TRAIT {trait.GetKey()} increased +{xp_boost}XP");
+                CrusaderWarsEnvironment.Logger.Debug($"TRAIT {trait.GetKey()} increased +{xp_boost}XP");
             }
 
             return xp_boost;
@@ -240,7 +241,7 @@ namespace CrusaderWars.armies.commander_traits
                                             whoAffects = TraitsAffectEnum.Enemies;
                                         else
                                         {
-                                            Program.Logger.Debug("WRONG VALUE IN AFFECT XML NODE");
+                                            CrusaderWarsEnvironment.Logger.Debug("WRONG VALUE IN AFFECT XML NODE");
                                             whoAffects = TraitsAffectEnum.Friendlies;
                                         }
                                         break;
@@ -263,7 +264,7 @@ namespace CrusaderWars.armies.commander_traits
                                             combatSide = "defender";
                                         else
                                         {
-                                            Program.Logger.Debug("WRONG VALUE IN COMBAT SIDE XML NODE");
+                                            CrusaderWarsEnvironment.Logger.Debug("WRONG VALUE IN COMBAT SIDE XML NODE");
                                             combatSide = "attacker";
                                         }
                                         break;

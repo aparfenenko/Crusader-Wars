@@ -30,7 +30,7 @@ namespace CrusaderWars
         // Modified signature to return releaseApiUrl
         private async Task<(string? version, string? downloadUrl, string? releaseApiUrl)> GetLatestReleaseInfoAsync(string releasesUrl)
         {
-            Program.Logger.Debug($"Getting latest release info from: {releasesUrl}");
+            CrusaderWarsEnvironment.Logger.Debug($"Getting latest release info from: {releasesUrl}");
             try
             {
                 client.DefaultRequestHeaders.Clear();
@@ -42,14 +42,14 @@ namespace CrusaderWars
                     JsonElement root = document.RootElement;
                     if (root.ValueKind != JsonValueKind.Array)
                     {
-                        Program.Logger.Debug($"Expected JSON array from {releasesUrl}, but got {root.ValueKind}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Expected JSON array from {releasesUrl}, but got {root.ValueKind}.");
                         return (null, null, null);
                     }
 
                     bool optInPreReleases = ModOptions.GetOptInPreReleases();
                     JsonElement? targetRelease = null;
 
-                    Program.Logger.Debug($"Searching for releases. Opt-in for pre-releases: {optInPreReleases}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Searching for releases. Opt-in for pre-releases: {optInPreReleases}");
 
                     foreach (JsonElement release in root.EnumerateArray())
                     {
@@ -62,25 +62,25 @@ namespace CrusaderWars
                                                        tagName.Contains("-alpha") ||
                                                        tagName.Contains("-rc");
 
-                        Program.Logger.Debug($"Evaluating release: {tagName} (Is pre-release: {isEffectivelyPreRelease})");
+                        CrusaderWarsEnvironment.Logger.Debug($"Evaluating release: {tagName} (Is pre-release: {isEffectivelyPreRelease})");
 
                         if (optInPreReleases)
                         {
                             // If opted in, take the very first release found (the latest), regardless of whether it's stable or pre-release.
-                            Program.Logger.Debug($"Opted into pre-releases. Selecting latest release: {tagName}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Opted into pre-releases. Selecting latest release: {tagName}");
                             targetRelease = release;
                             break;
                         }
                         else if (!isEffectivelyPreRelease)
                         {
                             // If not opted in, take the first release that is NOT a pre-release.
-                            Program.Logger.Debug($"Not opted into pre-releases. Selecting latest stable release: {tagName}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Not opted into pre-releases. Selecting latest stable release: {tagName}");
                             targetRelease = release;
                             break;
                         }
                         else
                         {
-                            Program.Logger.Debug($"Skipping pre-release: {tagName}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Skipping pre-release: {tagName}");
                         }
                     }
 
@@ -95,7 +95,7 @@ namespace CrusaderWars
                             // If this is the main app repo, look for the specific zip file.
                             if (releasesUrl == SzmaniaReleasesUrl)
                             {
-                                Program.Logger.Debug("Searching for main application asset 'crusader-conflicts*.zip'...");
+                                CrusaderWarsEnvironment.Logger.Debug("Searching for main application asset 'crusader-conflicts*.zip'...");
                                 foreach (var asset in assets.EnumerateArray())
                                 {
                                     string? assetName = asset.GetProperty("name").GetString();
@@ -104,7 +104,7 @@ namespace CrusaderWars
                                         assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                                     {
                                         downloadUrl = asset.GetProperty("browser_download_url").GetString();
-                                        Program.Logger.Debug($"Found matching asset: {assetName}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Found matching asset: {assetName}");
                                         break;
                                     }
                                 }
@@ -112,13 +112,13 @@ namespace CrusaderWars
                                 // Fallback if no specific asset was found
                                 if (string.IsNullOrEmpty(downloadUrl))
                                 {
-                                    Program.Logger.Debug("No specific 'crusader-conflicts*.zip' asset found. Falling back to first asset.");
+                                    CrusaderWarsEnvironment.Logger.Debug("No specific 'crusader-conflicts*.zip' asset found. Falling back to first asset.");
                                     downloadUrl = assets.EnumerateArray().First().GetProperty("browser_download_url").GetString();
                                 }
                             }
                             else if (releasesUrl == SzmaniaUnitMappersReleasesUrl) // Specific handling for Unit Mappers
                             {
-                                Program.Logger.Debug("Searching for Unit Mappers asset 'CC-Mappers*.zip'...");
+                                CrusaderWarsEnvironment.Logger.Debug("Searching for Unit Mappers asset 'CC-Mappers*.zip'...");
                                 foreach (var asset in assets.EnumerateArray())
                                 {
                                     string? assetName = asset.GetProperty("name").GetString();
@@ -127,7 +127,7 @@ namespace CrusaderWars
                                         assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                                     {
                                         downloadUrl = asset.GetProperty("browser_download_url").GetString();
-                                        Program.Logger.Debug($"Found matching Unit Mappers asset: {assetName}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Found matching Unit Mappers asset: {assetName}");
                                         break;
                                     }
                                 }
@@ -135,25 +135,25 @@ namespace CrusaderWars
                                 // Fallback if no specific asset was found
                                 if (string.IsNullOrEmpty(downloadUrl))
                                 {
-                                    Program.Logger.Debug("No specific 'CC-Mappers*.zip' asset found. Falling back to first asset.");
+                                    CrusaderWarsEnvironment.Logger.Debug("No specific 'CC-Mappers*.zip' asset found. Falling back to first asset.");
                                     downloadUrl = assets.EnumerateArray().First().GetProperty("browser_download_url").GetString();
                                 }
                             }
                             else // For any other repos, just take the first asset (general fallback)
                             {
-                                Program.Logger.Debug("Unknown repo, taking first asset as general fallback.");
+                                CrusaderWarsEnvironment.Logger.Debug("Unknown repo, taking first asset as general fallback.");
                                 downloadUrl = assets.EnumerateArray().First().GetProperty("browser_download_url").GetString();
                             }
                         }
 
-                        Program.Logger.Debug($"Found version: {latestVersion}, URL: {downloadUrl}, Release API URL: {releaseApiUrl} (Pre-release opt-in: {optInPreReleases})");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found version: {latestVersion}, URL: {downloadUrl}, Release API URL: {releaseApiUrl} (Pre-release opt-in: {optInPreReleases})");
                         return (latestVersion, downloadUrl, releaseApiUrl);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error getting release info from {releasesUrl}: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error getting release info from {releasesUrl}: {ex.Message}");
             }
 
             return (null, null, null);
@@ -162,12 +162,12 @@ namespace CrusaderWars
         public string GetAppVersion()
         {
             string version_path = Directory.GetCurrentDirectory() + "\\app_version.txt";
-            Program.Logger.Debug($"Reading app version from: {version_path}");
+            CrusaderWarsEnvironment.Logger.Debug($"Reading app version from: {version_path}");
             string app_version = "1.0.0"; // Default version
 
             if (!File.Exists(version_path))
             {
-                Program.Logger.Debug($"app_version.txt not found. Creating with default version \"{app_version}\".");
+                CrusaderWarsEnvironment.Logger.Debug($"app_version.txt not found. Creating with default version \"{app_version}\".");
                 File.WriteAllText(version_path, $"version=\"{app_version}\"");
             }
 
@@ -177,11 +177,11 @@ namespace CrusaderWars
             if (match.Success)
             {
                 app_version = match.Groups[1].Value;
-                Program.Logger.Debug($"App version parsed: {app_version}");
+                CrusaderWarsEnvironment.Logger.Debug($"App version parsed: {app_version}");
             }
             else
             {
-                Program.Logger.Debug($"Failed to parse app version from '{fileContent}'. Using default version \"{app_version}\".");
+                CrusaderWarsEnvironment.Logger.Debug($"Failed to parse app version from '{fileContent}'. Using default version \"{app_version}\".");
             }
 
             AppVersion = app_version;
@@ -191,12 +191,12 @@ namespace CrusaderWars
         public string GetUnitMappersVersion()
         {
             string version_path = Directory.GetCurrentDirectory() + "\\um_version.txt";
-            Program.Logger.Debug($"Reading unit mappers version from: {version_path}");
+            CrusaderWarsEnvironment.Logger.Debug($"Reading unit mappers version from: {version_path}");
             string um_version = "1.0.0"; // Default version
 
             if (!File.Exists(version_path))
             {
-                Program.Logger.Debug($"um_version.txt not found. Creating with default version \"{um_version}\".");
+                CrusaderWarsEnvironment.Logger.Debug($"um_version.txt not found. Creating with default version \"{um_version}\".");
                 File.WriteAllText(version_path, $"version=\"{um_version}\"");
             }
 
@@ -206,11 +206,11 @@ namespace CrusaderWars
             if (match.Success)
             {
                 um_version = match.Groups[1].Value;
-                Program.Logger.Debug($"Unit mappers version parsed: {um_version}");
+                CrusaderWarsEnvironment.Logger.Debug($"Unit mappers version parsed: {um_version}");
             }
             else
             {
-                Program.Logger.Debug($"Failed to parse unit mappers version from '{fileContent}'. Using default version \"{um_version}\".");
+                CrusaderWarsEnvironment.Logger.Debug($"Failed to parse unit mappers version from '{fileContent}'. Using default version \"{um_version}\".");
             }
 
             UMVersion = um_version;
@@ -235,7 +235,7 @@ namespace CrusaderWars
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Failed to parse version string '{versionStr}' (processed to '{mainVersionPart}'). Error: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Failed to parse version string '{versionStr}' (processed to '{mainVersionPart}'). Error: {ex.Message}");
                 return new Version("0.0"); // Fallback to a default version on failure.
             }
         }
@@ -254,7 +254,7 @@ namespace CrusaderWars
 
         public bool IsNewerVersion(string versionA, string versionB)
         {
-            Program.Logger.Debug($"Comparing versions - A: '{versionA}', B: '{versionB}'");
+            CrusaderWarsEnvironment.Logger.Debug($"Comparing versions - A: '{versionA}', B: '{versionB}'");
 
             Version verA = ParseVersion(versionA);
             Version verB = ParseVersion(versionB);
@@ -262,41 +262,41 @@ namespace CrusaderWars
             // 1. Compare main version numbers
             if (verB > verA)
             {
-                Program.Logger.Debug($"  Main version B ({verB}) is newer than A ({verA}). B is newer.");
+                CrusaderWarsEnvironment.Logger.Debug($"  Main version B ({verB}) is newer than A ({verA}). B is newer.");
                 return true;
             }
             if (verB < verA)
             {
-                Program.Logger.Debug($"  Main version A ({verA}) is newer than B ({verB}). B is not newer.");
+                CrusaderWarsEnvironment.Logger.Debug($"  Main version A ({verA}) is newer than B ({verB}). B is not newer.");
                 return false;
             }
 
             // 2. If main versions are equal, compare pre-release tags
-            Program.Logger.Debug($"  Main versions are equal ({verA}). Comparing pre-release tags.");
+            CrusaderWarsEnvironment.Logger.Debug($"  Main versions are equal ({verA}). Comparing pre-release tags.");
             string? tagA = GetPreReleaseTag(versionA);
             string? tagB = GetPreReleaseTag(versionB);
 
             // A stable version is always newer than a pre-release version
             if (tagA == null && tagB != null)
             {
-                Program.Logger.Debug($"  A is stable, B is pre-release ('{tagB}'). A is newer. B is not newer.");
+                CrusaderWarsEnvironment.Logger.Debug($"  A is stable, B is pre-release ('{tagB}'). A is newer. B is not newer.");
                 return false; // A (stable) is newer than B (pre-release)
             }
             if (tagA != null && tagB == null)
             {
-                Program.Logger.Debug($"  A is pre-release ('{tagA}'), B is stable. B is newer.");
+                CrusaderWarsEnvironment.Logger.Debug($"  A is pre-release ('{tagA}'), B is stable. B is newer.");
                 return true; // B (stable) is newer than A (pre-release)
             }
 
             // If both are stable or both are pre-release
             if (tagA == null && tagB == null)
             {
-                Program.Logger.Debug($"  Both A and B are stable and equal. B is not newer.");
+                CrusaderWarsEnvironment.Logger.Debug($"  Both A and B are stable and equal. B is not newer.");
                 return false; // Both are stable and equal
             }
 
             // Both have pre-release tags, compare them
-            Program.Logger.Debug($"  Both A ('{tagA}') and B ('{tagB}') have pre-release tags. Comparing tags.");
+            CrusaderWarsEnvironment.Logger.Debug($"  Both A ('{tagA}') and B ('{tagB}') have pre-release tags. Comparing tags.");
             string[] partsA = tagA!.Split('.');
             string[] partsB = tagB!.Split('.');
 
@@ -314,25 +314,25 @@ namespace CrusaderWars
                     // Both are numeric, compare numerically
                     if (numB > numA)
                     {
-                        Program.Logger.Debug($"    Numeric part B ({numB}) > A ({numA}). B is newer.");
+                        CrusaderWarsEnvironment.Logger.Debug($"    Numeric part B ({numB}) > A ({numA}). B is newer.");
                         return true;
                     }
                     if (numB < numA)
                     {
-                        Program.Logger.Debug($"    Numeric part A ({numA}) > B ({numB}). B is not newer.");
+                        CrusaderWarsEnvironment.Logger.Debug($"    Numeric part A ({numA}) > B ({numB}). B is not newer.");
                         return false;
                     }
                 }
                 else if (isNumericA && !isNumericB)
                 {
                     // Numeric has lower precedence than string
-                    Program.Logger.Debug($"    Part A ('{partA}') is numeric, B ('{partB}') is string. B is newer.");
+                    CrusaderWarsEnvironment.Logger.Debug($"    Part A ('{partA}') is numeric, B ('{partB}') is string. B is newer.");
                     return true;
                 }
                 else if (!isNumericA && isNumericB)
                 {
                     // String has higher precedence than numeric
-                    Program.Logger.Debug($"    Part A ('{partA}') is string, B ('{partB}') is numeric. B is not newer.");
+                    CrusaderWarsEnvironment.Logger.Debug($"    Part A ('{partA}') is string, B ('{partB}') is numeric. B is not newer.");
                     return false;
                 }
                 else
@@ -341,12 +341,12 @@ namespace CrusaderWars
                     int comparison = string.Compare(partA, partB, StringComparison.OrdinalIgnoreCase);
                     if (comparison > 0)
                     {
-                        Program.Logger.Debug($"    String part A ('{partA}') > B ('{partB}'). B is not newer.");
+                        CrusaderWarsEnvironment.Logger.Debug($"    String part A ('{partA}') > B ('{partB}'). B is not newer.");
                         return false;
                     }
                     if (comparison < 0)
                     {
-                        Program.Logger.Debug($"    String part B ('{partB}') > A ('{partA}'). B is newer.");
+                        CrusaderWarsEnvironment.Logger.Debug($"    String part B ('{partB}') > A ('{partA}'). B is newer.");
                         return true;
                     }
                 }
@@ -355,11 +355,11 @@ namespace CrusaderWars
             // If all common parts are equal, the one with more parts is newer
             if (partsB.Length > partsA.Length)
             {
-                Program.Logger.Debug($"  All common pre-release parts are equal. B has more parts. B is newer.");
+                CrusaderWarsEnvironment.Logger.Debug($"  All common pre-release parts are equal. B has more parts. B is newer.");
                 return true;
             }
 
-            Program.Logger.Debug($"  Versions are considered equivalent or B is not newer.");
+            CrusaderWarsEnvironment.Logger.Debug($"  Versions are considered equivalent or B is not newer.");
             return false;
         }
 
@@ -397,7 +397,7 @@ namespace CrusaderWars
 
             if (!validReleases.Any())
             {
-                Program.Logger.Debug("No releases found in any repository.");
+                CrusaderWarsEnvironment.Logger.Debug("No releases found in any repository.");
                 return (null, null, null);
             }
 
@@ -413,24 +413,24 @@ namespace CrusaderWars
 
             if (File.Exists(primaryPath))
             {
-                Program.Logger.Debug($"Found updater at: {primaryPath}");
+                CrusaderWarsEnvironment.Logger.Debug($"Found updater at: {primaryPath}");
                 return primaryPath;
             }
 
             if (File.Exists(fallbackPath))
             {
-                Program.Logger.Debug($"Updater not found at primary path. Using fallback: {fallbackPath}");
+                CrusaderWarsEnvironment.Logger.Debug($"Updater not found at primary path. Using fallback: {fallbackPath}");
                 return fallbackPath;
             }
 
-            Program.Logger.Debug($"Updater executable not found at '{primaryPath}' or '{fallbackPath}'.");
+            CrusaderWarsEnvironment.Logger.Debug($"Updater executable not found at '{primaryPath}' or '{fallbackPath}'.");
             return null;
         }
 
         // Modified signature to accept releaseApiUrl
         private async Task<string?> GetAssetDownloadUrlAsync(string releaseApiUrl, string assetName)
         {
-            Program.Logger.Debug($"Searching for asset '{assetName}' in release: {releaseApiUrl}");
+            CrusaderWarsEnvironment.Logger.Debug($"Searching for asset '{assetName}' in release: {releaseApiUrl}");
             try
             {
                 client.DefaultRequestHeaders.Clear();
@@ -448,7 +448,7 @@ namespace CrusaderWars
                         if (name != null && name.Equals(assetName, StringComparison.OrdinalIgnoreCase))
                         {
                             string? downloadUrl = asset.GetProperty("browser_download_url").GetString();
-                            Program.Logger.Debug($"Found asset '{assetName}' with download URL: {downloadUrl}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found asset '{assetName}' with download URL: {downloadUrl}");
                             return downloadUrl;
                         }
                     }
@@ -456,10 +456,10 @@ namespace CrusaderWars
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error getting asset info from {releaseApiUrl}: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error getting asset info from {releaseApiUrl}: {ex.Message}");
             }
 
-            Program.Logger.Debug($"Asset '{assetName}' not found in release.");
+            CrusaderWarsEnvironment.Logger.Debug($"Asset '{assetName}' not found in release.");
             return null;
         }
 
@@ -468,17 +468,17 @@ namespace CrusaderWars
             if (_updaterChecked) return;
             _updaterChecked = true;
 
-            Program.Logger.Debug("Checking for updater self-update...");
+            CrusaderWarsEnvironment.Logger.Debug("Checking for updater self-update...");
             if (!HasInternetConnection())
             {
-                Program.Logger.Debug("No internet connection, skipping updater self-update check.");
+                CrusaderWarsEnvironment.Logger.Debug("No internet connection, skipping updater self-update check.");
                 return;
             }
 
             string? localUpdaterPath = GetUpdaterPath();
             if (string.IsNullOrEmpty(localUpdaterPath))
             {
-                Program.Logger.Debug("Local updater not found, cannot perform self-update check.");
+                CrusaderWarsEnvironment.Logger.Debug("Local updater not found, cannot perform self-update check.");
                 return;
             }
 
@@ -489,32 +489,32 @@ namespace CrusaderWars
                 string currentVersion = GetAppVersion();
                 if (string.IsNullOrEmpty(currentVersion))
                 {
-                    Program.Logger.Debug("Could not determine current app version from app_version.txt. Aborting updater self-update.");
+                    CrusaderWarsEnvironment.Logger.Debug("Could not determine current app version from app_version.txt. Aborting updater self-update.");
                     return;
                 }
-                Program.Logger.Debug($"Using current app version for updater comparison: {currentVersion}");
+                CrusaderWarsEnvironment.Logger.Debug($"Using current app version for updater comparison: {currentVersion}");
 
                 // Use SzmaniaReleasesUrl (plural) and GetLatestReleaseInfoAsync to get the appropriate release based on opt-in
                 var latestRelease = await GetLatestReleaseInfoAsync(SzmaniaReleasesUrl);
                 if (string.IsNullOrEmpty(latestRelease.version) || string.IsNullOrEmpty(latestRelease.releaseApiUrl))
                 {
-                    Program.Logger.Debug("Could not fetch latest release version tag or API URL. Aborting self-update.");
+                    CrusaderWarsEnvironment.Logger.Debug("Could not fetch latest release version tag or API URL. Aborting self-update.");
                     return;
                 }
 
                 if (IsNewerVersion(currentVersion, latestRelease.version))
                 {
-                    Program.Logger.Debug($"A newer release ({latestRelease.version}) is available. Checking for updated updater asset.");
+                    CrusaderWarsEnvironment.Logger.Debug($"A newer release ({latestRelease.version}) is available. Checking for updated updater asset.");
 
                     // Pass the specific release API URL to GetAssetDownloadUrlAsync
                     string? updaterDownloadUrl = await GetAssetDownloadUrlAsync(latestRelease.releaseApiUrl, "CWUpdater.exe");
                     if (string.IsNullOrEmpty(updaterDownloadUrl))
                     {
-                        Program.Logger.Debug("Newer release found, but it does not contain a 'CWUpdater.exe' asset. Skipping self-update.");
+                        CrusaderWarsEnvironment.Logger.Debug("Newer release found, but it does not contain a 'CWUpdater.exe' asset. Skipping self-update.");
                         return;
                     }
 
-                    Program.Logger.Debug($"Downloading new updater from: {updaterDownloadUrl}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Downloading new updater from: {updaterDownloadUrl}");
                     string tempUpdaterPath = Path.Combine(Path.GetTempPath(), "CWUpdater_new.exe");
 
                     using (var httpClient = new HttpClient())
@@ -524,20 +524,20 @@ namespace CrusaderWars
                     }
 
                     // The release tag is newer, so we assume the asset is newer and replace it without checking its internal version.
-                    Program.Logger.Debug($"Downloaded updater from release {latestRelease.version}. Replacing local updater.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Downloaded updater from release {latestRelease.version}. Replacing local updater.");
                     File.Copy(tempUpdaterPath, localUpdaterPath, true);
-                    Program.Logger.Debug("Updater has been successfully updated.");
+                    CrusaderWarsEnvironment.Logger.Debug("Updater has been successfully updated.");
 
                     File.Delete(tempUpdaterPath);
                 }
                 else
                 {
-                    Program.Logger.Debug($"Current version ({currentVersion}) is up-to-date with latest release ({latestRelease.version}). No updater self-update needed.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Current version ({currentVersion}) is up-to-date with latest release ({latestRelease.version}). No updater self-update needed.");
                 }
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"An error occurred during updater self-update check: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"An error occurred during updater self-update check: {ex.Message}");
             }
         }
 
@@ -545,18 +545,18 @@ namespace CrusaderWars
         public async Task CheckAppVersion()
         {
             await CheckForUpdaterUpdateAsync();
-            Program.Logger.Debug("Checking app version...");
+            CrusaderWarsEnvironment.Logger.Debug("Checking app version...");
             if (!HasInternetConnection())
             {
-                Program.Logger.Debug("No internet connection detected.");
+                CrusaderWarsEnvironment.Logger.Debug("No internet connection detected.");
                 return;
             }
 
-            Program.Logger.Debug("Internet connection detected.");
+            CrusaderWarsEnvironment.Logger.Debug("Internet connection detected.");
             string currentVersion = GetAppVersion() ?? "1.0.0";
             if (string.IsNullOrEmpty(currentVersion))
             {
-                Program.Logger.Debug("Current version is empty, skipping update check.");
+                CrusaderWarsEnvironment.Logger.Debug("Current version is empty, skipping update check.");
                 return;
             }
 
@@ -577,12 +577,12 @@ namespace CrusaderWars
                     string skippedVersion = File.ReadAllText(skippedVersionPath).Trim();
                     if (skippedVersion.Equals(latestRelease.version, StringComparison.OrdinalIgnoreCase))
                     {
-                        Program.Logger.Debug($"Update to version {latestRelease.version} was previously skipped. Bypassing update check.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Update to version {latestRelease.version} was previously skipped. Bypassing update check.");
                         return; // Skip the update
                     }
                 }
 
-                Program.Logger.Debug($"Update available for app: {latestRelease.version}. Starting updater...");
+                CrusaderWarsEnvironment.Logger.Debug($"Update available for app: {latestRelease.version}. Starting updater...");
                 try
                 {
                     updaterPath = GetUpdaterPath(); // Assign inside try block
@@ -600,7 +600,7 @@ namespace CrusaderWars
                 }
                 catch (Exception ex)
                 {
-                    Program.Logger.Debug($"Failed to start updater: {ex.Message}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Failed to start updater: {ex.Message}");
                     string fullUpdaterPath = updaterPath != null ? Path.GetFullPath(updaterPath) : "N/A";
                     CrusaderWarsEnvironment.Dialogs.Show(
                         $"The Crusader Conflicts updater failed to launch.\n\n" +
@@ -616,7 +616,7 @@ namespace CrusaderWars
             }
             else
             {
-                Program.Logger.Debug("Application is up to date.");
+                CrusaderWarsEnvironment.Logger.Debug("Application is up to date.");
             }
         }
 
@@ -624,18 +624,18 @@ namespace CrusaderWars
         public async Task CheckUnitMappersVersion()
         {
             await CheckForUpdaterUpdateAsync();
-            Program.Logger.Debug("Checking unit mappers version...");
+            CrusaderWarsEnvironment.Logger.Debug("Checking unit mappers version...");
             if (!HasInternetConnection())
             {
-                Program.Logger.Debug("No internet connection detected.");
+                CrusaderWarsEnvironment.Logger.Debug("No internet connection detected.");
                 return;
             }
 
-            Program.Logger.Debug("Internet connection detected.");
+            CrusaderWarsEnvironment.Logger.Debug("Internet connection detected.");
             string currentVersion = GetUnitMappersVersion() ?? "1.0.0";
             if (string.IsNullOrEmpty(currentVersion))
             {
-                Program.Logger.Debug("Current unit mappers version is empty, skipping update check.");
+                CrusaderWarsEnvironment.Logger.Debug("Current unit mappers version is empty, skipping update check.");
                 return;
             }
 
@@ -656,12 +656,12 @@ namespace CrusaderWars
                     string skippedVersion = File.ReadAllText(skippedVersionPath).Trim();
                     if (skippedVersion.Equals(latestRelease.version, StringComparison.OrdinalIgnoreCase))
                     {
-                        Program.Logger.Debug($"Update to unit mappers version {latestRelease.version} was previously skipped. Bypassing update check.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Update to unit mappers version {latestRelease.version} was previously skipped. Bypassing update check.");
                         return; // Skip the update
                     }
                 }
 
-                Program.Logger.Debug($"Update available for unit mappers: {latestRelease.version}. Starting updater...");
+                CrusaderWarsEnvironment.Logger.Debug($"Update available for unit mappers: {latestRelease.version}. Starting updater...");
                 try
                 {
                     updaterPath = GetUpdaterPath(); // Assign inside try block
@@ -679,7 +679,7 @@ namespace CrusaderWars
                 }
                 catch (Exception ex)
                 {
-                    Program.Logger.Debug($"Failed to start updater: {ex.Message}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Failed to start updater: {ex.Message}");
                     string fullUpdaterPath = updaterPath != null ? Path.GetFullPath(updaterPath) : "N/A";
                     CrusaderWarsEnvironment.Dialogs.Show(
                         $"The Crusader Conflicts unit mappers updater failed to launch.\n\n" +
@@ -695,13 +695,13 @@ namespace CrusaderWars
             }
             else
             {
-                Program.Logger.Debug("Unit mappers are up to date.");
+                CrusaderWarsEnvironment.Logger.Debug("Unit mappers are up to date.");
             }
         }
 
         public async Task<string> GetReleaseUrlForVersion(string version, bool isUnitMapper)
         {
-            Program.Logger.Debug($"Searching release URL for version {version} (isUnitMapper: {isUnitMapper})");
+            CrusaderWarsEnvironment.Logger.Debug($"Searching release URL for version {version} (isUnitMapper: {isUnitMapper})");
             string repoName = isUnitMapper ? "CC-Mappers" : "Crusader-Wars";
             string[] users = { "szmania" };
 
@@ -726,7 +726,7 @@ namespace CrusaderWars
                         {
                             releaseUrl = $"https://github.com/{user}/{repoName}/releases/tag/{version}";
                         }
-                        Program.Logger.Debug($"Found release at: {releaseUrl}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found release at: {releaseUrl}");
                         return releaseUrl;
                     }
                     else
@@ -739,22 +739,22 @@ namespace CrusaderWars
                             if (response.IsSuccessStatusCode)
                             {
                                 string releaseUrl = $"https://github.com/{user}/{repoName}/releases/tag/{version}";
-                                Program.Logger.Debug($"Found release at: {releaseUrl}");
+                                CrusaderWarsEnvironment.Logger.Debug($"Found release at: {releaseUrl}");
                                 return releaseUrl;
                             }
                         }
-                        Program.Logger.Debug($"Release not found for user {user} with tag {version} or v{version}. Status: {response.StatusCode}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Release not found for user {user} with tag {version} or v{version}. Status: {response.StatusCode}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Program.Logger.Debug($"Error checking release for user {user}: {ex.Message}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Error checking release for user {user}: {ex.Message}");
                 }
             }
 
             // Fallback if not found in any repo
             string fallbackUrl = $"https://github.com/szmania/{repoName}/releases";
-            Program.Logger.Debug($"Version tag not found in any user repo. Falling back to main releases page: {fallbackUrl}");
+            CrusaderWarsEnvironment.Logger.Debug($"Version tag not found in any user repo. Falling back to main releases page: {fallbackUrl}");
             return fallbackUrl;
         }
     }

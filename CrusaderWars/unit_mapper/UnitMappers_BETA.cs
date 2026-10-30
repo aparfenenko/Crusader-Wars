@@ -282,7 +282,7 @@ namespace CrusaderWars.unit_mapper
                 DialogIcon.Error);
             }
             if (ck3ModNames.Count > ck3ModFileNames.Count)
-                Program.Logger.Debug($"Warning: 'ck3_mod_names' has {ck3ModNames.Count} entries but 'ck3_mod_file_names' has {ck3ModFileNames.Count}. Extra names ignored.");
+                CrusaderWarsEnvironment.Logger.Debug($"Warning: 'ck3_mod_names' has {ck3ModNames.Count} entries but 'ck3_mod_file_names' has {ck3ModFileNames.Count}. Extra names ignored.");
             var ck3ModPairs = new List<(string fileName, string? displayName)>();
             for (int i = 0; i < ck3ModFileNames.Count; i++)
                 ck3ModPairs.Add((ck3ModFileNames[i], i < ck3ModNames.Count ? ck3ModNames[i] : null));
@@ -438,7 +438,7 @@ namespace CrusaderWars.unit_mapper
         public static void ClearProvinceMapCache()
         {
             _provinceMapCache.Clear();
-            Program.Logger.Debug("Province settlement map cache has been cleared for the new battle.");
+            CrusaderWarsEnvironment.Logger.Debug("Province settlement map cache has been cleared for the new battle.");
         }
 
         public static int GetDeterministicIndex(string input, int listCount)
@@ -531,18 +531,18 @@ namespace CrusaderWars.unit_mapper
                             // File has a tag for an inactive sub-mod, so we skip it.
                             if (!string.IsNullOrEmpty(addonForTag))
                             {
-                                Program.Logger.Debug($"Skipping file '{fileName}' because its submod_addon_tag tag '{addonForTag}' is not active.");
+                                CrusaderWarsEnvironment.Logger.Debug($"Skipping file '{fileName}' because its submod_addon_tag tag '{addonForTag}' is not active.");
                             }
                             if (!string.IsNullOrEmpty(submodTag))
                             {
-                                Program.Logger.Debug($"Skipping file '{fileName}' because its submod_tag '{submodTag}' is not active.");
+                                CrusaderWarsEnvironment.Logger.Debug($"Skipping file '{fileName}' because its submod_tag '{submodTag}' is not active.");
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Program.Logger.Debug($"Error reading XML file '{fileName}' for sorting/filtering. Skipping. Error: {ex.Message}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Error reading XML file '{fileName}' for sorting/filtering. Skipping. Error: {ex.Message}");
                 }
             }
 
@@ -752,7 +752,7 @@ namespace CrusaderWars.unit_mapper
                                     }
                                     else
                                     {
-                                        Program.Logger.Debug($"Warning: Missing or invalid 'siege_effort_cost' for siege engine '{siegeEngine.Key}'. Defaulting to 0.");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Warning: Missing or invalid 'siege_effort_cost' for siege engine '{siegeEngine.Key}'. Defaulting to 0.");
                                         siegeEngine.SiegeEffortCost = 0;
                                     }
                                     if (!string.IsNullOrEmpty(siegeEngine.Key))
@@ -1082,11 +1082,11 @@ namespace CrusaderWars.unit_mapper
         };
         public static int GetMax(Unit unit)
         {
-            Program.Logger.Debug($"Entering GetMax for unit: {unit.GetName()} (Type: {unit.GetRegimentType()}, Faction: {unit.GetAttilaFaction()})");
+            CrusaderWarsEnvironment.Logger.Debug($"Entering GetMax for unit: {unit.GetName()} (Type: {unit.GetRegimentType()}, Faction: {unit.GetAttilaFaction()})");
 
             if (LoadedUnitMapper_FolderPath == null)
             {
-                Program.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot get unit max.");
+                CrusaderWarsEnvironment.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot get unit max.");
                 return 0; // Or throw an exception
             }
 
@@ -1099,7 +1099,7 @@ namespace CrusaderWars.unit_mapper
             {
                 if (Path.GetExtension(xml_file) == ".xml")
                 {
-                    Program.Logger.Debug($"Processing XML file: {Path.GetFileName(xml_file)}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Processing XML file: {Path.GetFileName(xml_file)}");
                     XmlDocument FactionsFile = new XmlDocument();
                     FactionsFile.Load(xml_file);
                     if (FactionsFile.DocumentElement == null) continue; // Added null check
@@ -1108,12 +1108,12 @@ namespace CrusaderWars.unit_mapper
                     {
                         if (element is XmlComment) continue;
                         string faction = element.Attributes?["name"]?.Value ?? string.Empty;
-                        // Program.Logger.Debug($"Checking faction node: {faction}");
+                        // CrusaderWarsEnvironment.Logger.Debug($"Checking faction node: {faction}");
 
                         //Store Default unit max first
                         if (faction == "Default" || faction == "DEFAULT")
                         {
-                            Program.Logger.Debug($"Matched 'Default' faction.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Matched 'Default' faction.");
                             foreach (XmlNode node in element.ChildNodes)
                             {
                                 if (node is XmlComment) continue;
@@ -1127,7 +1127,7 @@ namespace CrusaderWars.unit_mapper
                                         if (node.Attributes?["max"]?.Value is string maxAttrValue)
                                         {
                                             max = MaxType.GetMax(maxAttrValue);
-                                            Program.Logger.Debug($"Assigned max for Default Levy (from attribute '{maxAttrValue}'): {max}");
+                                            CrusaderWarsEnvironment.Logger.Debug($"Assigned max for Default Levy (from attribute '{maxAttrValue}'): {max}");
                                         }
                                         continue;
                                     }
@@ -1142,7 +1142,7 @@ namespace CrusaderWars.unit_mapper
                                         if (node.Attributes?["max"]?.Value is string maxAttrValue)
                                         {
                                             max = MaxType.GetMax(maxAttrValue);
-                                            Program.Logger.Debug($"Assigned max for Default Garrison (from attribute '{maxAttrValue}'): {max}");
+                                            CrusaderWarsEnvironment.Logger.Debug($"Assigned max for Default Garrison (from attribute '{maxAttrValue}'): {max}");
                                         }
                                         continue;
                                     }
@@ -1154,11 +1154,11 @@ namespace CrusaderWars.unit_mapper
                                     if (node.Attributes?["max"]?.Value is string maxAttrValue)
                                     {
                                         max = MaxType.GetMax(maxAttrValue);
-                                        Program.Logger.Debug($"Assigned max for Default unit '{unit.GetName()}' (from attribute '{maxAttrValue}'): {max}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Assigned max for Default unit '{unit.GetName()}' (from attribute '{maxAttrValue}'): {max}");
                                     }
                                     else
                                     {
-                                        Program.Logger.Debug($"WARNING: Unit '{unit.GetName()}' in 'Default' faction found, but 'max' attribute is missing. Keeping previous max value: {max}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"WARNING: Unit '{unit.GetName()}' in 'Default' faction found, but 'max' attribute is missing. Keeping previous max value: {max}");
                                         break;
                                     }
                                 }
@@ -1167,7 +1167,7 @@ namespace CrusaderWars.unit_mapper
                         //Then stores culture specific unit max
                         else if (faction == unit.GetAttilaFaction())
                         {
-                            Program.Logger.Debug($"Matched specific faction: {faction}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Matched specific faction: {faction}.");
                             foreach (XmlNode node in element.ChildNodes)
                             {
                                 if (node is XmlComment) continue;
@@ -1178,7 +1178,7 @@ namespace CrusaderWars.unit_mapper
                                     if (unit.GetRegimentType() == RegimentType.Levy && node.Attributes?["max"]?.Value is string maxAttrValue)
                                     {
                                         max = MaxType.GetMax(maxAttrValue);
-                                        Program.Logger.Debug($"Assigned max for specific faction '{faction}' Levy (from attribute '{maxAttrValue}'): {max}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Assigned max for specific faction '{faction}' Levy (from attribute '{maxAttrValue}'): {max}");
                                         continue;
                                     }
                                     else
@@ -1190,7 +1190,7 @@ namespace CrusaderWars.unit_mapper
                                     if (unit.GetRegimentType() == RegimentType.Garrison && node.Attributes?["max"]?.Value is string maxAttrValue) // Changed from unit.GetName() == "Garrison"
                                     {
                                         max = MaxType.GetMax(maxAttrValue);
-                                        Program.Logger.Debug($"Assigned max for specific faction '{faction}' Garrison (from attribute '{maxAttrValue}'): {max}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Assigned max for specific faction '{faction}' Garrison (from attribute '{maxAttrValue}'): {max}");
                                         continue;
                                     }
                                     else
@@ -1203,11 +1203,11 @@ namespace CrusaderWars.unit_mapper
                                     if (node?.Attributes?["max"]?.Value is string maxAttrValue)
                                     {
                                         max = MaxType.GetMax(maxAttrValue);
-                                        Program.Logger.Debug($"Assigned max for specific faction '{faction}' unit '{unit.GetName()}' (from attribute '{maxAttrValue}'): {max}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Assigned max for specific faction '{faction}' unit '{unit.GetName()}' (from attribute '{maxAttrValue}'): {max}");
                                     }
                                     else
                                     {
-                                        Program.Logger.Debug($"WARNING: Unit '{unit.GetName()}' in faction '{faction}' found, but 'max' attribute is missing. Keeping previous max value: {max}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"WARNING: Unit '{unit.GetName()}' in faction '{faction}' found, but 'max' attribute is missing. Keeping previous max value: {max}");
                                         break;
                                     }
                                 }
@@ -1217,20 +1217,20 @@ namespace CrusaderWars.unit_mapper
                 }
             }
 
-            Program.Logger.Debug($"Exiting GetMax for unit: {unit.GetName()}. Final max value: {max}");
+            CrusaderWarsEnvironment.Logger.Debug($"Exiting GetMax for unit: {unit.GetName()}. Final max value: {max}");
             if (max == 0)
             {
-                Program.Logger.Debug($"WARNING: GetMax returned 0 for unit '{unit.GetName()}'. This might indicate a missing mapping.");
+                CrusaderWarsEnvironment.Logger.Debug($"WARNING: GetMax returned 0 for unit '{unit.GetName()}'. This might indicate a missing mapping.");
             }
             return max;
         }
 
         public static string GetSubculture(string attila_faction)
         {
-            Program.Logger.Debug($"Getting subculture for faction: '{attila_faction}'");
+            CrusaderWarsEnvironment.Logger.Debug($"Getting subculture for faction: '{attila_faction}'");
             if (LoadedUnitMapper_FolderPath == null)
             {
-                Program.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot get subculture.");
+                CrusaderWarsEnvironment.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot get subculture.");
                 return ""; // Return empty string if not found
             }
 
@@ -1254,7 +1254,7 @@ namespace CrusaderWars.unit_mapper
                     if (specificNode?.Attributes?["subculture"]?.Value is string foundSpecificSubculture)
                     {
                         specific_subculture = foundSpecificSubculture;
-                        Program.Logger.Debug($"Found specific subculture '{specific_subculture}' for faction '{attila_faction}' in file '{Path.GetFileName(xml_file)}'.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found specific subculture '{specific_subculture}' for faction '{attila_faction}' in file '{Path.GetFileName(xml_file)}'.");
                     }
 
                     // Check for default faction
@@ -1262,7 +1262,7 @@ namespace CrusaderWars.unit_mapper
                     if (defaultNode?.Attributes?["subculture"]?.Value is string foundDefaultSubculture)
                     {
                         default_subculture = foundDefaultSubculture;
-                        Program.Logger.Debug($"Found default subculture '{default_subculture}' in file '{Path.GetFileName(xml_file)}'.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found default subculture '{default_subculture}' in file '{Path.GetFileName(xml_file)}'.");
                     }
                 }
             }
@@ -1274,11 +1274,11 @@ namespace CrusaderWars.unit_mapper
 
             if (!string.IsNullOrEmpty(default_subculture))
             {
-                Program.Logger.Debug($"No specific subculture found for faction '{attila_faction}'. Using 'Default' subculture '{default_subculture}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"No specific subculture found for faction '{attila_faction}'. Using 'Default' subculture '{default_subculture}'.");
                 return default_subculture;
             }
 
-            Program.Logger.Debug($"WARNING: No subculture found for faction '{attila_faction}' or for 'Default' faction.");
+            CrusaderWarsEnvironment.Logger.Debug($"WARNING: No subculture found for faction '{attila_faction}' or for 'Default' faction.");
             return ""; // Return empty if nothing found
         }
 
@@ -1304,7 +1304,7 @@ namespace CrusaderWars.unit_mapper
                 }
                 else
                 {
-                    Program.Logger.Debug($"WARNING: Missing or invalid 'percentage' attribute for levy in faction '{attila_faction}'. Defaulting to 0.");
+                    CrusaderWarsEnvironment.Logger.Debug($"WARNING: Missing or invalid 'percentage' attribute for levy in faction '{attila_faction}'. Defaulting to 0.");
                 }
 
                 if (levies_node.Attributes?["key"]?.Value is string keyStr)
@@ -1313,7 +1313,7 @@ namespace CrusaderWars.unit_mapper
                 }
                 else
                 {
-                    Program.Logger.Debug($"WARNING: Missing 'key' attribute for levy in faction '{attila_faction}'. Defaulting to empty string.");
+                    CrusaderWarsEnvironment.Logger.Debug($"WARNING: Missing 'key' attribute for levy in faction '{attila_faction}'. Defaulting to empty string.");
                 }
 
                 name = $"Levy_{porcentage}";
@@ -1349,7 +1349,7 @@ namespace CrusaderWars.unit_mapper
                 }
                 else
                 {
-                    Program.Logger.Debug($"WARNING: Missing or invalid 'percentage' attribute for garrison in faction '{attila_faction}'. Defaulting to 0.");
+                    CrusaderWarsEnvironment.Logger.Debug($"WARNING: Missing or invalid 'percentage' attribute for garrison in faction '{attila_faction}'. Defaulting to 0.");
                 }
 
                 if (garrison_node.Attributes?["key"]?.Value is string keyStr && !string.IsNullOrEmpty(keyStr))
@@ -1358,7 +1358,7 @@ namespace CrusaderWars.unit_mapper
                 }
                 else
                 {
-                    Program.Logger.Debug($"WARNING: Missing or empty 'key' attribute for a garrison entry in faction '{attila_faction}'. This entry will be skipped.");
+                    CrusaderWarsEnvironment.Logger.Debug($"WARNING: Missing or empty 'key' attribute for a garrison entry in faction '{attila_faction}'. This entry will be skipped.");
                     continue;
                 }
 
@@ -1368,7 +1368,7 @@ namespace CrusaderWars.unit_mapper
                 }
                 else
                 {
-                    Program.Logger.Debug($"WARNING: Missing or invalid 'level' attribute for garrison in faction '{attila_faction}'. Defaulting to 1.");
+                    CrusaderWarsEnvironment.Logger.Debug($"WARNING: Missing or invalid 'level' attribute for garrison in faction '{attila_faction}'. Defaulting to 1.");
                 }
 
                 name = $"Garrison_{percentage}"; // Naming convention for garrison units
@@ -1385,18 +1385,18 @@ namespace CrusaderWars.unit_mapper
 
         public static (List<(int percentage, string unit_key, string name, string max)>, string) GetFactionLevies(string attila_faction)
         {
-            Program.Logger.Debug($"Getting faction levies: '{attila_faction}'");
+            CrusaderWarsEnvironment.Logger.Debug($"Getting faction levies: '{attila_faction}'");
             EnsureFactionCacheLoaded();
 
             if (_levyCache != null && _levyCache.TryGetValue(attila_faction, out var specificLevies))
             {
-                Program.Logger.Debug($"Found specific levy definitions for faction '{attila_faction}' in cache.");
+                CrusaderWarsEnvironment.Logger.Debug($"Found specific levy definitions for faction '{attila_faction}' in cache.");
                 return specificLevies;
             }
 
             if (_levyCache != null && _levyCache.TryGetValue("Default", out var defaultLevies))
             {
-                Program.Logger.Debug($"No specific levy definitions found for faction '{attila_faction}'. Using 'Default' definitions from cache.");
+                CrusaderWarsEnvironment.Logger.Debug($"No specific levy definitions found for faction '{attila_faction}'. Using 'Default' definitions from cache.");
                 return defaultLevies;
             }
 
@@ -1407,23 +1407,23 @@ namespace CrusaderWars.unit_mapper
         {
             if (!BattleState.IsSiegeBattle)
             {
-                Program.Logger.Debug("GetFactionGarrison called for a non-siege battle. Returning empty list as a safeguard.");
+                CrusaderWarsEnvironment.Logger.Debug("GetFactionGarrison called for a non-siege battle. Returning empty list as a safeguard.");
                 return new List<(int, string, string, string)>();
             }
 
-            Program.Logger.Debug($"Getting faction garrison for: '{attila_faction}' at holding level: {holdingLevel}");
+            CrusaderWarsEnvironment.Logger.Debug($"Getting faction garrison for: '{attila_faction}' at holding level: {holdingLevel}");
             EnsureFactionCacheLoaded();
 
             List<(int percentage, string unit_key, string name, string max, int level)> garrisonDefinitions = new List<(int percentage, string unit_key, string name, string max, int level)>();
 
             if (_garrisonCache != null && _garrisonCache.TryGetValue(attila_faction, out var specificGarrisons))
             {
-                Program.Logger.Debug($"Found specific garrison definitions for faction '{attila_faction}' in cache.");
+                CrusaderWarsEnvironment.Logger.Debug($"Found specific garrison definitions for faction '{attila_faction}' in cache.");
                 garrisonDefinitions = specificGarrisons;
             }
             else if (_garrisonCache != null && _garrisonCache.TryGetValue("Default", out var defaultGarrisons))
             {
-                Program.Logger.Debug($"No specific garrison definitions found for faction '{attila_faction}'. Using 'Default' definitions from cache.");
+                CrusaderWarsEnvironment.Logger.Debug($"No specific garrison definitions found for faction '{attila_faction}'. Using 'Default' definitions from cache.");
                 garrisonDefinitions = defaultGarrisons;
             }
 
@@ -1436,7 +1436,7 @@ namespace CrusaderWars.unit_mapper
             {
                 // If suitable garrisons are found, use the highest level among them
                 int highestAvailableLevel = suitableGarrisons.Max(g => g.level);
-                Program.Logger.Debug($"Found suitable garrisons. Using highest available level: {highestAvailableLevel}");
+                CrusaderWarsEnvironment.Logger.Debug($"Found suitable garrisons. Using highest available level: {highestAvailableLevel}");
                 finalGarrisonComposition = suitableGarrisons.Where(g => g.level == highestAvailableLevel).Select(g => (g.percentage, g.unit_key, g.name, g.max)).ToList();
             }
             else
@@ -1448,7 +1448,7 @@ namespace CrusaderWars.unit_mapper
                 }
 
                 int lowestAvailableLevel = garrisonDefinitions.Min(g => g.level);
-                Program.Logger.Debug($"No garrisons found at or below holding level {holdingLevel}. Falling back to lowest available level: {lowestAvailableLevel}");
+                CrusaderWarsEnvironment.Logger.Debug($"No garrisons found at or below holding level {holdingLevel}. Falling back to lowest available level: {lowestAvailableLevel}");
                 finalGarrisonComposition = garrisonDefinitions.Where(g => g.level == lowestAvailableLevel).Select(g => (g.percentage, g.unit_key, g.name, g.max)).ToList();
             }
 
@@ -1457,7 +1457,7 @@ namespace CrusaderWars.unit_mapper
                 throw new Exception($"Unit Mapper Error: After filtering, no garrison units remain for faction '{attila_faction}'. This indicates a configuration issue.");
             }
 
-            Program.Logger.Debug($"Final garrison composition for '{attila_faction}' includes {finalGarrisonComposition.Count} unit types.");
+            CrusaderWarsEnvironment.Logger.Debug($"Final garrison composition for '{attila_faction}' includes {finalGarrisonComposition.Count} unit types.");
             return finalGarrisonComposition;
         }
 
@@ -1468,7 +1468,7 @@ namespace CrusaderWars.unit_mapper
             // This method is now deprecated as garrison units are directly provided by GetFactionGarrison
             // However, if it's still called, we need a fallback.
             // For now, it will return NOT_FOUND_KEY, as the new system provides full unit keys.
-            Program.Logger.Debug($"WARNING: GetGarrisonUnit is deprecated. Called for unitType: {unitType}, culture: {culture}, heritage: {heritage}. Returning NOT_FOUND_KEY.");
+            CrusaderWarsEnvironment.Logger.Debug($"WARNING: GetGarrisonUnit is deprecated. Called for unitType: {unitType}, culture: {culture}, heritage: {heritage}. Returning NOT_FOUND_KEY.");
             return NOT_FOUND_KEY;
         }
 
@@ -1476,7 +1476,7 @@ namespace CrusaderWars.unit_mapper
         {
             if (LoadedUnitMapper_FolderPath == null)
             {
-                Program.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot search in titles file.");
+                CrusaderWarsEnvironment.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot search in titles file.");
                 return (NOT_FOUND_KEY, false);
             }
 
@@ -1530,7 +1530,7 @@ namespace CrusaderWars.unit_mapper
         {
             if (LoadedUnitMapper_FolderPath == null)
             {
-                Program.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot search in faction files.");
+                CrusaderWarsEnvironment.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot search in faction files.");
                 return (NOT_FOUND_KEY, false);
             }
 
@@ -1560,14 +1560,14 @@ namespace CrusaderWars.unit_mapper
                     if (foundIsSiege) isPotentiallySiege = true; // Remember if it's ever marked as siege
                     if (foundKey != NOT_FOUND_KEY)
                     {
-                        Program.Logger.Debug($"  - INFO: Found mapping for unit '{unit.GetName()}' in faction '{unit.GetAttilaFaction()}' from file '{Path.GetFileName(xml_file)}'.");
+                        CrusaderWarsEnvironment.Logger.Debug($"  - INFO: Found mapping for unit '{unit.GetName()}' in faction '{unit.GetAttilaFaction()}' from file '{Path.GetFileName(xml_file)}'.");
                         return (foundKey, foundIsSiege);
                     }
                 }
             }
 
             // Priority 2: If no specific mapping found, search for a default mapping in reverse file order
-            Program.Logger.Debug($"  - INFO: Unit '{unit.GetName()}' not found in its specific faction '{unit.GetAttilaFaction()}'. Searching for fallback mapping in 'Default' faction.");
+            CrusaderWarsEnvironment.Logger.Debug($"  - INFO: Unit '{unit.GetName()}' not found in its specific faction '{unit.GetAttilaFaction()}'. Searching for fallback mapping in 'Default' faction.");
             foreach (var xml_file in files_paths)
             {
                 XmlDocument FactionsFile = new XmlDocument();
@@ -1582,7 +1582,7 @@ namespace CrusaderWars.unit_mapper
                     if (foundIsSiege) isPotentiallySiege = true; // Remember if it's ever marked as siege
                     if (foundKey != NOT_FOUND_KEY)
                     {
-                        Program.Logger.Debug($"  - INFO: Found 'Default' fallback mapping for unit '{unit.GetName()}' from file '{Path.GetFileName(xml_file)}'.");
+                        CrusaderWarsEnvironment.Logger.Debug($"  - INFO: Found 'Default' fallback mapping for unit '{unit.GetName()}' from file '{Path.GetFileName(xml_file)}'.");
                         return (foundKey, foundIsSiege);
                     }
                 }
@@ -1593,7 +1593,7 @@ namespace CrusaderWars.unit_mapper
 
         private static string SelectRankedUnitKey(List<(int rank, string key)> candidates, int requiredRank, string? keyToExclude = null)
         {
-            Program.Logger.Debug($"      - SelectRankedUnitKey: Called with {candidates.Count} candidates, required rank <= {requiredRank}.");
+            CrusaderWarsEnvironment.Logger.Debug($"      - SelectRankedUnitKey: Called with {candidates.Count} candidates, required rank <= {requiredRank}.");
             if (!candidates.Any()) return NOT_FOUND_KEY;
 
             // NEW: Exclude the problematic key if provided
@@ -1602,14 +1602,14 @@ namespace CrusaderWars.unit_mapper
                 candidates = candidates.Where(c => c.key != keyToExclude).ToList();
                 if (!candidates.Any())
                 {
-                    Program.Logger.Debug($"      - SelectRankedUnitKey: All candidates were excluded (key: {keyToExclude}).");
+                    CrusaderWarsEnvironment.Logger.Debug($"      - SelectRankedUnitKey: All candidates were excluded (key: {keyToExclude}).");
                     return NOT_FOUND_KEY; // All candidates were the one to be excluded
                 }
             }
 
             // Find all candidates at or below the required rank
             var suitableCandidates = candidates.Where(t => t.rank <= requiredRank).ToList();
-            Program.Logger.Debug($"      - SelectRankedUnitKey: Found {suitableCandidates.Count} suitable candidates with rank <= {requiredRank}.");
+            CrusaderWarsEnvironment.Logger.Debug($"      - SelectRankedUnitKey: Found {suitableCandidates.Count} suitable candidates with rank <= {requiredRank}.");
 
             List<(int rank, string key)> finalSelectionPool;
 
@@ -1618,25 +1618,25 @@ namespace CrusaderWars.unit_mapper
                 // Find the best rank among the suitable candidates
                 int bestRank = suitableCandidates.Max(t => t.rank);
                 finalSelectionPool = suitableCandidates.Where(t => t.rank == bestRank).ToList();
-                Program.Logger.Debug($"      - SelectRankedUnitKey: Best suitable rank is {bestRank}. Final pool has {finalSelectionPool.Count} units.");
+                CrusaderWarsEnvironment.Logger.Debug($"      - SelectRankedUnitKey: Best suitable rank is {bestRank}. Final pool has {finalSelectionPool.Count} units.");
             }
             else
             {
                 // Fallback: No suitable rank found, so use the lowest available rank overall
                 int lowestRank = candidates.Min(t => t.rank);
                 finalSelectionPool = candidates.Where(t => t.rank == lowestRank).ToList();
-                Program.Logger.Debug($"      - SelectRankedUnitKey: No suitable rank found. Falling back to lowest available rank {lowestRank}. Final pool has {finalSelectionPool.Count} units.");
+                CrusaderWarsEnvironment.Logger.Debug($"      - SelectRankedUnitKey: No suitable rank found. Falling back to lowest available rank {lowestRank}. Final pool has {finalSelectionPool.Count} units.");
             }
 
             // Deterministically select one candidate from the final pool
             if (finalSelectionPool.Any())
             {
                 string selectedKey = finalSelectionPool.OrderBy(c => c.key).First().key;
-                Program.Logger.Debug($"      - SelectRankedUnitKey: Deterministically selected '{selectedKey}' from the final pool.");
+                CrusaderWarsEnvironment.Logger.Debug($"      - SelectRankedUnitKey: Deterministically selected '{selectedKey}' from the final pool.");
                 return selectedKey;
             }
 
-            Program.Logger.Debug("      - SelectRankedUnitKey: Final selection pool was empty. Returning NOT_FOUND_KEY.");
+            CrusaderWarsEnvironment.Logger.Debug("      - SelectRankedUnitKey: Final selection pool was empty. Returning NOT_FOUND_KEY.");
             return NOT_FOUND_KEY;
         }
 
@@ -1645,7 +1645,7 @@ namespace CrusaderWars.unit_mapper
         {
             if (unit.GetRegimentType() == RegimentType.Commander)
             {
-                Program.Logger.Debug($"    - FindUnitKeyInFaction: Searching for COMMANDER unit in faction '{factionElement.Attributes?["name"]?.Value ?? "Unknown"}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"    - FindUnitKeyInFaction: Searching for COMMANDER unit in faction '{factionElement.Attributes?["name"]?.Value ?? "Unknown"}'.");
                 var generalRanks = new List<(int rank, string key)>();
                 foreach (XmlNode generalNode in factionElement.SelectNodes("General"))
                 {
@@ -1663,24 +1663,24 @@ namespace CrusaderWars.unit_mapper
 
                 if (generalRanks.Any())
                 {
-                    Program.Logger.Debug($"    - FindUnitKeyInFaction: Found {generalRanks.Count} possible general units: [{string.Join(", ", generalRanks.Select(g => $"{g.key} (rank {g.rank})"))}]");
+                    CrusaderWarsEnvironment.Logger.Debug($"    - FindUnitKeyInFaction: Found {generalRanks.Count} possible general units: [{string.Join(", ", generalRanks.Select(g => $"{g.key} (rank {g.rank})"))}]");
                     // Map CK3 title Rank to a required rank level for the general unit
                     int requiredRank = 1;
                     if (unit.CharacterRank >= 4) requiredRank = 3; // King or Emperor gets rank 3 general
                     else if (unit.CharacterRank == 3) requiredRank = 2; // Duke gets rank 2 general
-                    Program.Logger.Debug($"    - FindUnitKeyInFaction: Commander's CK3 rank is {unit.CharacterRank}, required Attila rank is {requiredRank}.");
+                    CrusaderWarsEnvironment.Logger.Debug($"    - FindUnitKeyInFaction: Commander's CK3 rank is {unit.CharacterRank}, required Attila rank is {requiredRank}.");
 
                     string selectedKey = SelectRankedUnitKey(generalRanks, requiredRank, keyToExclude);
                     if (selectedKey != NOT_FOUND_KEY)
                     {
-                        Program.Logger.Debug($"    - FindUnitKeyInFaction: Selected general unit key '{selectedKey}'.");
+                        CrusaderWarsEnvironment.Logger.Debug($"    - FindUnitKeyInFaction: Selected general unit key '{selectedKey}'.");
                         return (selectedKey, false);
                     }
-                    Program.Logger.Debug($"    - FindUnitKeyInFaction: No suitable general unit key found for rank {requiredRank}.");
+                    CrusaderWarsEnvironment.Logger.Debug($"    - FindUnitKeyInFaction: No suitable general unit key found for rank {requiredRank}.");
                 }
                 else
                 {
-                    Program.Logger.Debug($"    - FindUnitKeyInFaction: No <General> nodes found in this faction block.");
+                    CrusaderWarsEnvironment.Logger.Debug($"    - FindUnitKeyInFaction: No <General> nodes found in this faction block.");
                 }
             }
             else if (unit.GetRegimentType() == RegimentType.Knight)
@@ -1784,7 +1784,7 @@ namespace CrusaderWars.unit_mapper
             // Check for manual replacements first.
             if (key != NOT_FOUND_KEY && key is not null && BattleState.ManualUnitReplacements.TryGetValue((key, unit.IsPlayer()), out var manualReplacement))
             {
-                Program.Logger.Debug($"Manual Replace: Applying replacement for unit key '{key}' with '{manualReplacement.replacementKey}' for {(unit.IsPlayer() ? "player" : "enemy")} alliance.");
+                CrusaderWarsEnvironment.Logger.Debug($"Manual Replace: Applying replacement for unit key '{key}' with '{manualReplacement.replacementKey}' for {(unit.IsPlayer() ? "player" : "enemy")} alliance.");
                 unit.SetIsSiege(manualReplacement.isSiege);
                 return (manualReplacement.replacementKey, manualReplacement.isSiege);
             }
@@ -1792,7 +1792,7 @@ namespace CrusaderWars.unit_mapper
             // Check if the determined key has an autofix replacement.
             if (key != NOT_FOUND_KEY && key is not null && BattleProcessor.AutofixReplacements.TryGetValue(key, out var replacement))
             {
-                Program.Logger.Debug($"Autofix: Applying replacement for unit key '{key}' with '{replacement.replacementKey}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"Autofix: Applying replacement for unit key '{key}' with '{replacement.replacementKey}'.");
                 unit.SetIsSiege(replacement.isSiege);
                 return (replacement.replacementKey, replacement.isSiege);
             }
@@ -1819,7 +1819,7 @@ namespace CrusaderWars.unit_mapper
 
                 if (BattleState.ManualUnitReplacements.TryGetValue((initial_key, unit.IsPlayer()), out var manualReplacement))
                 {
-                    Program.Logger.Debug($"Manual Replace (Pre-check): Applying replacement for pre-set garrison unit key '{initial_key}' with '{manualReplacement.replacementKey}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Manual Replace (Pre-check): Applying replacement for pre-set garrison unit key '{initial_key}' with '{manualReplacement.replacementKey}'.");
                     unit.SetIsSiege(manualReplacement.isSiege);
                     return (manualReplacement.replacementKey, manualReplacement.isSiege);
                 }
@@ -1841,7 +1841,7 @@ namespace CrusaderWars.unit_mapper
 
             if (result.isSiege && !BattleState.IsSiegeBattle && !siegeEnginesInFieldBattles)
             {
-                Program.Logger.Debug($"Excluding siege unit type '{unit.GetName()}' from field battle as per option.");
+                CrusaderWarsEnvironment.Logger.Debug($"Excluding siege unit type '{unit.GetName()}' from field battle as per option.");
                 return ProcessUnitKeyResult(unit, NOT_FOUND_KEY, true); // Exclude it.
             }
 
@@ -1851,13 +1851,13 @@ namespace CrusaderWars.unit_mapper
                 var (default_key, defaultIsSiege) = GetDefaultUnitKey(unit);
                 if (default_key != NOT_FOUND_KEY)
                 {
-                    Program.Logger.Debug($"  - INFO: Could not map CK3 Unit '{unit.GetName()}' (Type: {unit.GetRegimentType()}). Substituting with default Attila unit '{default_key}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"  - INFO: Could not map CK3 Unit '{unit.GetName()}' (Type: {unit.GetRegimentType()}). Substituting with default Attila unit '{default_key}'.");
                     result = (default_key, defaultIsSiege);
 
                     // 4. Re-check for exclusion if the default unit is a siege unit
                     if (result.isSiege && !BattleState.IsSiegeBattle && !siegeEnginesInFieldBattles)
                     {
-                        Program.Logger.Debug($"Excluding default substitute (which is a siege unit, key: {result.unit_key}) for '{unit.GetName()}' from field battle as per option.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Excluding default substitute (which is a siege unit, key: {result.unit_key}) for '{unit.GetName()}' from field battle as per option.");
                         return ProcessUnitKeyResult(unit, NOT_FOUND_KEY, true); // Exclude it.
                     }
                 }
@@ -1866,11 +1866,11 @@ namespace CrusaderWars.unit_mapper
                     // No specific key, no default key. Log and return NOT_FOUND.
                     if (unit.GetRegimentType() == RegimentType.Levy || unit.GetRegimentType() == RegimentType.Garrison)
                     {
-                        Program.Logger.Debug($"  - INFO: No single key mapping for '{unit.GetName()}' (Type: {unit.GetRegimentType()}). This is expected as they are processed as a composition later.");
+                        CrusaderWarsEnvironment.Logger.Debug($"  - INFO: No single key mapping for '{unit.GetName()}' (Type: {unit.GetRegimentType()}). This is expected as they are processed as a composition later.");
                     }
                     else
                     {
-                        Program.Logger.Debug($"  - ERROR: Could not map CK3 Unit '{unit.GetName()}' (Type: {unit.GetRegimentType()}). All mapping attempts including default fallback failed.");
+                        CrusaderWarsEnvironment.Logger.Debug($"  - ERROR: Could not map CK3 Unit '{unit.GetName()}' (Type: {unit.GetRegimentType()}). All mapping attempts including default fallback failed.");
                     }
                     result = (NOT_FOUND_KEY, result.isSiege); // Keep the isSiege info from initial search
                 }
@@ -1913,7 +1913,7 @@ namespace CrusaderWars.unit_mapper
                 case "CAVALRY":
                     return maxCategory;
                 default:
-                    Program.Logger.Debug($"Could not determine max category for MAA unit '{unit.GetName()}'. Defaulting to INFANTRY.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Could not determine max category for MAA unit '{unit.GetName()}'. Defaulting to INFANTRY.");
                     return "INFANTRY"; // Fallback
             }
         }
@@ -1922,7 +1922,7 @@ namespace CrusaderWars.unit_mapper
         {
             if (LoadedUnitMapper_FolderPath == null)
             {
-                Program.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot get default unit key.");
+                CrusaderWarsEnvironment.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot get default unit key.");
                 return (NOT_FOUND_KEY, false);
             }
 
@@ -1946,7 +1946,7 @@ namespace CrusaderWars.unit_mapper
 
             if (defaultFactionNode == null)
             {
-                Program.Logger.Debug("Error: Could not find a 'Default' faction in any unit mapper file.");
+                CrusaderWarsEnvironment.Logger.Debug("Error: Could not find a 'Default' faction in any unit mapper file.");
                 return (NOT_FOUND_KEY, false);
             }
 
@@ -2056,7 +2056,7 @@ namespace CrusaderWars.unit_mapper
         {
             if (LoadedUnitMapper_FolderPath == null)
             {
-                Program.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot get replacement unit key.");
+                CrusaderWarsEnvironment.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot get replacement unit key.");
                 return (NOT_FOUND_KEY, false);
             }
 
@@ -2117,14 +2117,14 @@ namespace CrusaderWars.unit_mapper
 
         public static string GetAttilaFaction(string CultureName, string HeritageName)
         {
-            Program.Logger.Debug($"Searching faction for Culture:{CultureName}, Heritage:{HeritageName}");
+            CrusaderWarsEnvironment.Logger.Debug($"Searching faction for Culture:{CultureName}, Heritage:{HeritageName}");
             if (string.IsNullOrEmpty(CultureName))
             {
-                Program.Logger.Debug("WARNING: CultureName is null/empty");
+                CrusaderWarsEnvironment.Logger.Debug("WARNING: CultureName is null/empty");
             }
             if (string.IsNullOrEmpty(HeritageName))
             {
-                Program.Logger.Debug("WARNING: HeritageName is null/empty");
+                CrusaderWarsEnvironment.Logger.Debug("WARNING: HeritageName is null/empty");
             }
 
             (string faction, string file) heritage_mapping = ("", "");
@@ -2132,12 +2132,12 @@ namespace CrusaderWars.unit_mapper
 
             if (string.IsNullOrEmpty(LoadedUnitMapper_FolderPath))
             {
-                Program.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot get Attila faction.");
+                CrusaderWarsEnvironment.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot get Attila faction.");
                 throw new Exception("Unit mapper folder path not configured");
             }
 
             string cultures_folder_path = LoadedUnitMapper_FolderPath + @"\Cultures";
-            Program.Logger.Debug($"Searching for Attila faction for Culture '{CultureName}', Heritage '{HeritageName}' in: {cultures_folder_path}");
+            CrusaderWarsEnvironment.Logger.Debug($"Searching for Attila faction for Culture '{CultureName}', Heritage '{HeritageName}' in: {cultures_folder_path}");
 
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
             var files_paths = GetSortedFilePaths(cultures_folder_path, priorityFilePattern);
@@ -2146,7 +2146,7 @@ namespace CrusaderWars.unit_mapper
                 if (Path.GetExtension(xml_file) == ".xml")
                 {
                     string currentFile = Path.GetFileName(xml_file);
-                    Program.Logger.Debug($"Scanning cultures file: {currentFile}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Scanning cultures file: {currentFile}");
                     XmlDocument CulturesFile = new XmlDocument();
                     CulturesFile.Load(xml_file);
 
@@ -2172,7 +2172,7 @@ namespace CrusaderWars.unit_mapper
                                     if (!string.IsNullOrEmpty(found_culture_faction))
                                     {
                                         culture_mapping = (found_culture_faction, currentFile);
-                                        Program.Logger.Debug($"  - Found/Updated culture mapping: {CultureName} -> {culture_mapping.faction}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"  - Found/Updated culture mapping: {CultureName} -> {culture_mapping.faction}");
                                         cultureMatchFoundInThisBlock = true;
 
                                         // Also update heritage mapping from this file, as it's the most relevant context
@@ -2180,7 +2180,7 @@ namespace CrusaderWars.unit_mapper
                                         if (!string.IsNullOrEmpty(found_heritage_faction_context))
                                         {
                                             heritage_mapping = (found_heritage_faction_context, currentFile);
-                                            Program.Logger.Debug($"  - Contextual heritage mapping updated: {HeritageName} -> {heritage_mapping.faction}");
+                                            CrusaderWarsEnvironment.Logger.Debug($"  - Contextual heritage mapping updated: {HeritageName} -> {heritage_mapping.faction}");
                                         }
                                     }
                                 }
@@ -2194,7 +2194,7 @@ namespace CrusaderWars.unit_mapper
                                 if (!string.IsNullOrEmpty(found_heritage_faction) && string.IsNullOrEmpty(culture_mapping.faction))
                                 {
                                     heritage_mapping = (found_heritage_faction, currentFile);
-                                    Program.Logger.Debug($"  - Found/Updated heritage mapping: {HeritageName} -> {heritage_mapping.faction}.");
+                                    CrusaderWarsEnvironment.Logger.Debug($"  - Found/Updated heritage mapping: {HeritageName} -> {heritage_mapping.faction}.");
                                 }
                             }
                         }
@@ -2206,12 +2206,12 @@ namespace CrusaderWars.unit_mapper
             if (!string.IsNullOrEmpty(culture_mapping.faction))
             {
                 faction = culture_mapping.faction;
-                Program.Logger.Debug($"Resolved faction for '{CultureName}/{HeritageName}' to '{faction}' using specific culture mapping from '{culture_mapping.file}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"Resolved faction for '{CultureName}/{HeritageName}' to '{faction}' using specific culture mapping from '{culture_mapping.file}'.");
             }
             else if (!string.IsNullOrEmpty(heritage_mapping.faction))
             {
                 faction = heritage_mapping.faction;
-                Program.Logger.Debug($"Resolved faction for '{CultureName}/{HeritageName}' to '{faction}' using heritage mapping from '{heritage_mapping.file}' (no specific culture match).");
+                CrusaderWarsEnvironment.Logger.Debug($"Resolved faction for '{CultureName}/{HeritageName}' to '{faction}' using heritage mapping from '{heritage_mapping.file}' (no specific culture match).");
             }
 
             if (string.IsNullOrEmpty(faction))
@@ -2240,7 +2240,7 @@ namespace CrusaderWars.unit_mapper
                                         faction = factionValue;
                                         if (!string.IsNullOrEmpty(faction))
                                         {
-                                            Program.Logger.Debug($"Resolved faction for '{CultureName}/{HeritageName}' to '{faction}' using fallback 'Default/Default' mapping from '{Path.GetFileName(xml_file)}'.");
+                                            CrusaderWarsEnvironment.Logger.Debug($"Resolved faction for '{CultureName}/{HeritageName}' to '{faction}' using fallback 'Default/Default' mapping from '{Path.GetFileName(xml_file)}'.");
                                             break;
                                         }
                                     }
@@ -2255,11 +2255,11 @@ namespace CrusaderWars.unit_mapper
 
             if (string.IsNullOrEmpty(faction))
             {
-                Program.Logger.Debug($"ERROR: Faction not found for Culture '{CultureName}', Heritage '{HeritageName}'. All fallbacks failed.");
+                CrusaderWarsEnvironment.Logger.Debug($"ERROR: Faction not found for Culture '{CultureName}', Heritage '{HeritageName}'. All fallbacks failed.");
             }
             else
             {
-                Program.Logger.Debug($"Final faction for '{CultureName}/{HeritageName}' is '{faction}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"Final faction for '{CultureName}/{HeritageName}' is '{faction}'.");
             }
 
             return faction;
@@ -2293,12 +2293,12 @@ namespace CrusaderWars.unit_mapper
                 BattleStateBridge.BesiegedDeploymentHeight = "1350";
             }
 
-            Program.Logger.Debug($"Attempting to get settlement map for Faction: '{faction}', BattleType: '{battleType}', Province: '{provinceName}'");
+            CrusaderWarsEnvironment.Logger.Debug($"Attempting to get settlement map for Faction: '{faction}', BattleType: '{battleType}', Province: '{provinceName}'");
 
             bool forceGeneric = BattleState.AutofixForceGenericMap;
             if (forceGeneric)
             {
-                Program.Logger.Debug("Autofix: Forcing use of generic settlement map.");
+                CrusaderWarsEnvironment.Logger.Debug("Autofix: Forcing use of generic settlement map.");
             }
 
             string cacheKey = $"{provinceName}_{battleType}";
@@ -2307,7 +2307,7 @@ namespace CrusaderWars.unit_mapper
 
             if (_provinceMapCache.TryGetValue(cacheKey, out var cachedMap))
             {
-                Program.Logger.Debug($"Found cached settlement map for '{cacheKey}'. Coordinates: ({cachedMap.X}, {cachedMap.Y})");
+                CrusaderWarsEnvironment.Logger.Debug($"Found cached settlement map for '{cacheKey}'. Coordinates: ({cachedMap.X}, {cachedMap.Y})");
                 return cachedMap;
             }
 
@@ -2323,7 +2323,7 @@ namespace CrusaderWars.unit_mapper
 
                 if (uniqueMapByProvName != null && uniqueMapByProvName.Variants.Any())
                 {
-                    Program.Logger.Debug($"Found unique settlement map by 'province_names' attribute for Province '{provinceName}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Found unique settlement map by 'province_names' attribute for Province '{provinceName}'.");
                     int deterministicIndex = GetDeterministicIndex(provinceName, uniqueMapByProvName.Variants.Count);
                     selectedVariant = uniqueMapByProvName.Variants[deterministicIndex];
                 }
@@ -2341,7 +2341,7 @@ namespace CrusaderWars.unit_mapper
                     var uniqueMatch = uniqueMap.Variants.FirstOrDefault(v => MatchesVariantKey(v, provinceName));
                     if (uniqueMatch != null)
                     {
-                        Program.Logger.Debug($"Found unique settlement map variant '{uniqueMatch.Key}' for Province '{provinceName}'.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found unique settlement map variant '{uniqueMatch.Key}' for Province '{provinceName}'.");
                         selectedVariant = uniqueMatch;
                         break;
                     }
@@ -2366,7 +2366,7 @@ namespace CrusaderWars.unit_mapper
 
                 if (genericMapByProvName != null && genericMapByProvName.Variants.Any())
                 {
-                    Program.Logger.Debug($"Found generic settlement map for Faction '{genericMapByProvName.Faction}' by 'province_names' attribute for Province '{provinceName}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Found generic settlement map for Faction '{genericMapByProvName.Faction}' by 'province_names' attribute for Province '{provinceName}'.");
                     int deterministicIndex = GetDeterministicIndex(provinceName, genericMapByProvName.Variants.Count);
                     selectedVariant = genericMapByProvName.Variants[deterministicIndex];
                 }
@@ -2398,7 +2398,7 @@ namespace CrusaderWars.unit_mapper
                     {
                         int deterministicIndex = GetDeterministicIndex(provinceName, allGenericVariants.Count);
                         selectedVariant = allGenericVariants[deterministicIndex];
-                        Program.Logger.Debug($"Deterministically selected settlement map variant '{selectedVariant.Key}' for Faction '{usedFactionForLog}', BattleType '{battleType}'.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Deterministically selected settlement map variant '{selectedVariant.Key}' for Faction '{usedFactionForLog}', BattleType '{battleType}'.");
                     }
                 }
             }
@@ -2409,29 +2409,29 @@ namespace CrusaderWars.unit_mapper
                 if (!string.IsNullOrEmpty(selectedVariant.BesiegedDeploymentZoneWidth))
                 {
                     BattleStateBridge.BesiegedDeploymentWidth = selectedVariant.BesiegedDeploymentZoneWidth;
-                    Program.Logger.Debug($"Overriding besieged deployment width to: {selectedVariant.BesiegedDeploymentZoneWidth}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Overriding besieged deployment width to: {selectedVariant.BesiegedDeploymentZoneWidth}");
                 }
                 if (!string.IsNullOrEmpty(selectedVariant.BesiegedDeploymentZoneHeight))
                 {
                     BattleStateBridge.BesiegedDeploymentHeight = selectedVariant.BesiegedDeploymentZoneHeight;
-                    Program.Logger.Debug($"Overriding besieged deployment height to: {selectedVariant.BesiegedDeploymentZoneHeight}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Overriding besieged deployment height to: {selectedVariant.BesiegedDeploymentZoneHeight}");
                 }
 
-                Program.Logger.Debug($"Coordinates: ({selectedVariant.X}, {selectedVariant.Y})");
+                CrusaderWarsEnvironment.Logger.Debug($"Coordinates: ({selectedVariant.X}, {selectedVariant.Y})");
                 _provinceMapCache[cacheKey] = (selectedVariant.X, selectedVariant.Y, selectedVariant.BesiegerOrientations);
                 return (selectedVariant.X, selectedVariant.Y, selectedVariant.BesiegerOrientations);
             }
             else
             {
                 // Final Fallback
-                Program.Logger.Debug($"No suitable settlement map variant found for Faction: '{faction}', BattleType: '{battleType}', Province: '{provinceName}'. Returning null.");
+                CrusaderWarsEnvironment.Logger.Debug($"No suitable settlement map variant found for Faction: '{faction}', BattleType: '{battleType}', Province: '{provinceName}'. Returning null.");
                 return null;
             }
         }
 
         public static string? GetSiegeBattleType(string faction, string battleType, string provinceName)
         {
-            Program.Logger.Debug($"Attempting to get siege battle type for Faction: '{faction}', BattleType: '{battleType}', Province: '{provinceName}'");
+            CrusaderWarsEnvironment.Logger.Debug($"Attempting to get siege battle type for Faction: '{faction}', BattleType: '{battleType}', Province: '{provinceName}'");
 
             bool forceGeneric = BattleState.AutofixForceGenericMap;
 
@@ -2444,7 +2444,7 @@ namespace CrusaderWars.unit_mapper
 
                 if (uniqueMapByProvName != null)
                 {
-                    Program.Logger.Debug($"Found siege battle type '{uniqueMapByProvName.BattleType}' from unique map by province name.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Found siege battle type '{uniqueMapByProvName.BattleType}' from unique map by province name.");
                     return uniqueMapByProvName.BattleType;
                 }
             }
@@ -2461,7 +2461,7 @@ namespace CrusaderWars.unit_mapper
                     var uniqueMatch = uniqueMap.Variants.FirstOrDefault(v => MatchesVariantKey(v, provinceName));
                     if (uniqueMatch != null)
                     {
-                        Program.Logger.Debug($"Found siege battle type '{uniqueMap.BattleType}' from unique map by variant key '{uniqueMatch.Key}'.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found siege battle type '{uniqueMap.BattleType}' from unique map by variant key '{uniqueMatch.Key}'.");
                         return uniqueMap.BattleType;
                     }
                 }
@@ -2485,7 +2485,7 @@ namespace CrusaderWars.unit_mapper
 
                 if (genericMapByProvName != null)
                 {
-                    Program.Logger.Debug($"Found siege battle type '{genericMapByProvName.BattleType}' from generic map by province name for faction '{genericMapByProvName.Faction}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Found siege battle type '{genericMapByProvName.BattleType}' from generic map by province name for faction '{genericMapByProvName.Faction}'.");
                     return genericMapByProvName.BattleType;
                 }
             }
@@ -2501,7 +2501,7 @@ namespace CrusaderWars.unit_mapper
 
                 if (matchingGenericMaps.Any())
                 {
-                    Program.Logger.Debug($"Found siege battle type '{matchingGenericMaps.First().BattleType}' from generic map for faction '{faction}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Found siege battle type '{matchingGenericMaps.First().BattleType}' from generic map for faction '{faction}'.");
                     return matchingGenericMaps.First().BattleType;
                 }
 
@@ -2513,12 +2513,12 @@ namespace CrusaderWars.unit_mapper
 
                 if (matchingGenericMaps.Any())
                 {
-                    Program.Logger.Debug($"Found siege battle type '{matchingGenericMaps.First().BattleType}' from generic map for 'Default' faction.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Found siege battle type '{matchingGenericMaps.First().BattleType}' from generic map for 'Default' faction.");
                     return matchingGenericMaps.First().BattleType;
                 }
             }
 
-            Program.Logger.Debug($"No specific siege battle type found for Faction: '{faction}', BattleType: '{battleType}', Province: '{provinceName}'. Returning null.");
+            CrusaderWarsEnvironment.Logger.Debug($"No specific siege battle type found for Faction: '{faction}', BattleType: '{battleType}', Province: '{provinceName}'. Returning null.");
             return null; // Fallback
         }
 
@@ -2610,7 +2610,7 @@ namespace CrusaderWars.unit_mapper
             {
                 if (LoadedUnitMapper_FolderPath == null)
                 {
-                    Program.Logger.Debug("LoadedUnitMapper_FolderPath is null. Cannot set mapper image.");
+                    CrusaderWarsEnvironment.Logger.Debug("LoadedUnitMapper_FolderPath is null. Cannot set mapper image.");
                     throw new InvalidOperationException("LoadedUnitMapper_FolderPath is not set.");
                 }
 
@@ -2624,13 +2624,13 @@ namespace CrusaderWars.unit_mapper
                 }
                 else
                 {
-                    Program.Logger.Debug($"No image found in {mapperFolderPath}. Falling back to default image.");
+                    CrusaderWarsEnvironment.Logger.Debug($"No image found in {mapperFolderPath}. Falling back to default image.");
                     throw new FileNotFoundException($"No .png image found in {mapperFolderPath}");
                 }
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error setting mapper image: {ex.Message}. Using default image.");
+                CrusaderWarsEnvironment.Logger.Debug($"Error setting mapper image: {ex.Message}. Using default image.");
                 // In case of error or no image found, use default image
                 string default_image_path = Directory.GetCurrentDirectory() + "\\settings\\main_attila_map.png";
                 File.Copy(default_image_path, destination_path, true);
@@ -2648,7 +2648,7 @@ namespace CrusaderWars.unit_mapper
 
             if (LoadedUnitMapper_FolderPath == null)
             {
-                Program.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot determine if unit is siege type.");
+                CrusaderWarsEnvironment.Logger.Debug("Error: LoadedUnitMapper_FolderPath is not set. Cannot determine if unit is siege type.");
                 return false;
             }
 
@@ -2778,7 +2778,7 @@ namespace CrusaderWars.unit_mapper
                 }
                 catch (Exception ex)
                 {
-                    Program.Logger.Debug($"Error reading or parsing faction file '{Path.GetFileName(xml_file)}' in GetAllAvailableUnits: {ex.Message}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Error reading or parsing faction file '{Path.GetFileName(xml_file)}' in GetAllAvailableUnits: {ex.Message}");
                 }
             }
 
@@ -2814,7 +2814,7 @@ namespace CrusaderWars.unit_mapper
                 }
                 catch (Exception ex)
                 {
-                    Program.Logger.Debug($"Error reading or parsing faction file '{Path.GetFileName(xml_file)}' in IsUnitKeySiege: {ex.Message}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Error reading or parsing faction file '{Path.GetFileName(xml_file)}' in IsUnitKeySiege: {ex.Message}");
                 }
             }
 
@@ -2849,7 +2849,7 @@ namespace CrusaderWars.unit_mapper
                 }
                 catch (Exception ex)
                 {
-                    Program.Logger.Debug($"Error reading or parsing faction file '{Path.GetFileName(xml_file)}' in GetMenAtArmMaxCategory: {ex.Message}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Error reading or parsing faction file '{Path.GetFileName(xml_file)}' in GetMenAtArmMaxCategory: {ex.Message}");
                 }
             }
 

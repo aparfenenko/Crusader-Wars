@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using CrusaderWars.twbattle;
 using CrusaderWars.data.battle_results;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.data.save_file
 {
@@ -20,14 +21,14 @@ namespace CrusaderWars.data.save_file
         {
             attacker_armies.Clear();
             defender_armies.Clear();
-            Program.Logger.Debug("Reading battle armies from CK3 save data...");
+            CrusaderWarsEnvironment.Logger.Debug("Reading battle armies from CK3 save data...");
             try
             {
                 ReadSaveFileTraits();
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error reading traits: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error reading traits: {ex.Message}");
                 throw new Exception("Couldn't read traits data", ex);
             }
 
@@ -38,7 +39,7 @@ namespace CrusaderWars.data.save_file
 
                 if (combatBlock != null)
                 {
-                    Program.Logger.Debug("Found combat block. Populating mobile armies from it.");
+                    CrusaderWarsEnvironment.Logger.Debug("Found combat block. Populating mobile armies from it.");
                     BattleResult.Player_Combat = combatBlock;
                     BattleState.HasReliefArmy = reliefIds.Any();
 
@@ -53,11 +54,11 @@ namespace CrusaderWars.data.save_file
                         reliefArmy.SetAsReinforcement(true);
                         defender_armies.Add(reliefArmy);
                     }
-                    Program.Logger.Debug($"Populated from combat block: {attacker_armies.Count} besiegers, {defender_armies.Count} relief forces.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Populated from combat block: {attacker_armies.Count} besiegers, {defender_armies.Count} relief forces.");
                 }
                 else
                 {
-                    Program.Logger.Debug("No combat block found. Using Units.txt to find besieging armies (simple siege).");
+                    CrusaderWarsEnvironment.Logger.Debug("No combat block found. Using Units.txt to find besieging armies (simple siege).");
                     // Determine the player's actual side, accounting for the log swap when the player is besieged.
                     DataSearchSides playerSide;
                     // If the player is the main participant or commander of the LeftSide (the besiegers in the log),
@@ -66,12 +67,12 @@ namespace CrusaderWars.data.save_file
                         CK3LogData.LeftSide.GetCommander().id == DataSearch.Player_Character.GetID())
                     {
                         playerSide = DataSearchSides.LeftSide;
-                        Program.Logger.Debug("Player is on LeftSide in the log.");
+                        CrusaderWarsEnvironment.Logger.Debug("Player is on LeftSide in the log.");
                     }
                     else
                     {
                         playerSide = DataSearchSides.RightSide;
-                        Program.Logger.Debug("Player is not on LeftSide in the log, so assigning to RightSide.");
+                        CrusaderWarsEnvironment.Logger.Debug("Player is not on LeftSide in the log, so assigning to RightSide.");
                     }
 
                     // Create sets of character IDs for quick lookup
@@ -82,13 +83,13 @@ namespace CrusaderWars.data.save_file
                     {
                         attackerCharIDs.Add(CK3LogData.LeftSide.GetCommander().id);
                         attackerCharIDs.Add(DataSearch.Player_Character.GetID());
-                        Program.Logger.Debug($"Player is on LeftSide, adding Player ID {DataSearch.Player_Character.GetID()} to attacker character set.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Player is on LeftSide, adding Player ID {DataSearch.Player_Character.GetID()} to attacker character set.");
                     }
                     else
                     {
                         defenderCharIDs.Add(CK3LogData.LeftSide.GetCommander().id);
                         defenderCharIDs.Add(DataSearch.Player_Character.GetID());
-                        Program.Logger.Debug($"Player is on RightSide, adding Player ID {DataSearch.Player_Character.GetID()} to defender character set.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Player is on RightSide, adding Player ID {DataSearch.Player_Character.GetID()} to defender character set.");
                     }
 
                     // Pre-parse Armies.txt to find all merged sub-armies
@@ -110,11 +111,11 @@ namespace CrusaderWars.data.save_file
                                 }
                             }
                         }
-                        Program.Logger.Debug($"Identified {mergedSubArmyIDs.Count} merged sub-armies.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Identified {mergedSubArmyIDs.Count} merged sub-armies.");
                     }
                     catch (Exception ex)
                     {
-                        Program.Logger.Debug($"Error pre-parsing Armies.txt for merged armies: {ex.Message}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Error pre-parsing Armies.txt for merged armies: {ex.Message}");
                     }
 
 
@@ -138,7 +139,7 @@ namespace CrusaderWars.data.save_file
                     }
                     catch (Exception ex)
                     {
-                        Program.Logger.Debug($"Error pre-parsing Armies.txt to map commanders: {ex.Message}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Error pre-parsing Armies.txt to map commanders: {ex.Message}");
                         throw new Exception("Could not map armies to commanders, cannot identify siege participants.", ex);
                     }
 
@@ -181,15 +182,15 @@ namespace CrusaderWars.data.save_file
                     }
                     catch (Exception ex)
                     {
-                        Program.Logger.Debug($"Error reading besieger armies from Units.txt: {ex.Message}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Error reading besieger armies from Units.txt: {ex.Message}");
                     }
 
                     // 2. Filter out merged sub-armies to get only top-level commanders
                     var topLevelBesiegerIDs = potentialBesiegerArmyIDs.Where(id => !mergedSubArmyIDs.Contains(id)).ToList();
                     var topLevelReliefIDs = potentialReliefArmyIDs.Where(id => !mergedSubArmyIDs.Contains(id)).ToList();
 
-                    Program.Logger.Debug($"Found {potentialBesiegerArmyIDs.Count} potential besieger armies, filtered to {topLevelBesiegerIDs.Count} top-level armies.");
-                    Program.Logger.Debug($"Found {potentialReliefArmyIDs.Count} potential relief armies, filtered to {topLevelReliefIDs.Count} top-level armies.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Found {potentialBesiegerArmyIDs.Count} potential besieger armies, filtered to {topLevelBesiegerIDs.Count} top-level armies.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Found {potentialReliefArmyIDs.Count} potential relief armies, filtered to {topLevelReliefIDs.Count} top-level armies.");
 
                     // 3. Create Army objects for the top-level armies
                     var besiegerForce = new List<Army>();
@@ -198,7 +199,7 @@ namespace CrusaderWars.data.save_file
                         string combatSide = "attacker"; // Besiegers are always attackers in Attila
                         Army army = new Army(armyID, combatSide, false); // isMainArmy will be set later
                         besiegerForce.Add(army);
-                        Program.Logger.Debug($"Created top-level besieger army object for ID {armyID}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Created top-level besieger army object for ID {armyID}.");
                     }
 
                     var reliefForce = new List<Army>();
@@ -207,7 +208,7 @@ namespace CrusaderWars.data.save_file
                         string combatSide = "defender"; // Relief forces are defenders in Attila
                         Army army = new Army(armyID, combatSide, false); // isMainArmy will be set later
                         reliefForce.Add(army);
-                        Program.Logger.Debug($"Created top-level relief army object for ID {armyID}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Created top-level relief army object for ID {armyID}.");
                     }
 
 
@@ -215,7 +216,7 @@ namespace CrusaderWars.data.save_file
                     foreach (var army in reliefForce)
                     {
                         army.SetAsReinforcement(true);
-                        Program.Logger.Debug($"Army {army.ID} flagged as reinforcement.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Army {army.ID} flagged as reinforcement.");
                     }
 
                     // 3. Assign forces to Attila attacker/defender roles
@@ -224,7 +225,7 @@ namespace CrusaderWars.data.save_file
                         throw new Exception("Could not find any besieger or relief forces for the siege battle.");
                     }
 
-                    Program.Logger.Debug("Assigning besieger to Attila attacker role and relief to defender role.");
+                    CrusaderWarsEnvironment.Logger.Debug("Assigning besieger to Attila attacker role and relief to defender role.");
                     attacker_armies.AddRange(besiegerForce);
                     defender_armies.AddRange(reliefForce); // Add relief forces to defender_armies
                 }
@@ -237,7 +238,7 @@ namespace CrusaderWars.data.save_file
                     int garrisonSize = twbattle.Sieges.GetGarrisonSize();
                     if (garrisonSize > 0)
                     {
-                        Program.Logger.Debug($"Found garrison of size {garrisonSize}. Creating garrison placeholder army.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found garrison of size {garrisonSize}. Creating garrison placeholder army.");
                         string garrisonCultureID = twbattle.Sieges.GetGarrisonCulture();
                         string garrisonHeritage = twbattle.Sieges.GetGarrisonHeritage();
 
@@ -254,12 +255,12 @@ namespace CrusaderWars.data.save_file
                 }
                 catch (Exception ex)
                 {
-                    Program.Logger.Debug($"Failed to create garrison placeholder army: {ex.Message}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Failed to create garrison placeholder army: {ex.Message}");
                 }
             }
 if (BattleResult.Player_Combat is not null)
             {
-                Program.Logger.Debug("Field battle detected. Reading armies from combat data.");
+                CrusaderWarsEnvironment.Logger.Debug("Field battle detected. Reading armies from combat data.");
                 ReadCombatArmies(BattleResult.Player_Combat);
             }
 
@@ -276,11 +277,11 @@ if (BattleResult.Player_Combat is not null)
             CorrectRegimentSoldiers();
 
             // Log army counts before proceeding
-            Program.Logger.Debug($"Armies after initialization: attacker={attacker_armies.Count}, defender={defender_armies.Count}");
+            CrusaderWarsEnvironment.Logger.Debug($"Armies after initialization: attacker={attacker_armies.Count}, defender={defender_armies.Count}");
 
             if (attacker_armies.Count == 0 || defender_armies.Count == 0)
             {
-                Program.Logger.Debug("ERROR: No armies were initialized");
+                CrusaderWarsEnvironment.Logger.Debug("ERROR: No armies were initialized");
                 throw new Exception("No armies found in save data. Possible corrupt save or unsupported game state.");
             }
 
@@ -320,18 +321,18 @@ if (BattleResult.Player_Combat is not null)
                         if (mainBesieger == null)
                         {
                             mainBesieger = besiegers.OrderByDescending(a => a.GetTotalSoldiers()).FirstOrDefault();
-                            if (mainBesieger != null) Program.Logger.Debug($"Main besieger commander's army not found. Using largest army as main: {mainBesieger.ID}");
+                            if (mainBesieger != null) CrusaderWarsEnvironment.Logger.Debug($"Main besieger commander's army not found. Using largest army as main: {mainBesieger.ID}");
                         }
 
                         if (mainBesieger != null)
                         {
                             mainBesieger.isMainArmy = true;
-                            Program.Logger.Debug($"Main besieger army flagged: {mainBesieger.ID}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Main besieger army flagged: {mainBesieger.ID}");
                         }
                         else // Fallback if still null
                         {
                             besiegers[0].isMainArmy = true;
-                            Program.Logger.Debug($"Could not determine main besieger. Using first army in list as main: {besiegers[0].ID}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Could not determine main besieger. Using first army in list as main: {besiegers[0].ID}");
                         }
                     }
 
@@ -349,25 +350,25 @@ if (BattleResult.Player_Combat is not null)
                         if (mainReliefForce == null)
                         {
                             mainReliefForce = reliefForces.OrderByDescending(a => a.GetTotalSoldiers()).FirstOrDefault();
-                            if (mainReliefForce != null) Program.Logger.Debug($"Main relief force commander's army not found. Using largest relief army as main: {mainReliefForce.ID}");
+                            if (mainReliefForce != null) CrusaderWarsEnvironment.Logger.Debug($"Main relief force commander's army not found. Using largest relief army as main: {mainReliefForce.ID}");
                         }
 
                         if (mainReliefForce != null)
                         {
                             mainReliefForce.isMainArmy = true;
-                            Program.Logger.Debug($"Main relief force army flagged: {mainReliefForce.ID}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Main relief force army flagged: {mainReliefForce.ID}");
                         }
                         else // Fallback if still null
                         {
                             reliefForces[0].isMainArmy = true;
-                            Program.Logger.Debug($"Could not determine main relief force. Using first in list as main: {reliefForces[0].ID}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Could not determine main relief force. Using first in list as main: {reliefForces[0].ID}");
                         }
                     }
                     else if (garrison != null)
                     {
                         // If there are no relief forces, the garrison is the main defending "army".
                         garrison.isMainArmy = true;
-                        Program.Logger.Debug($"Garrison flagged as main defending army: {garrison.ID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Garrison flagged as main defending army: {garrison.ID}");
                     }
                 }
 
@@ -375,19 +376,19 @@ if (BattleResult.Player_Combat is not null)
                 Print.PrintArmiesData(attacker_armies);
                 Print.PrintArmiesData(defender_armies);
 
-                Program.Logger.Debug($"Finished reading battle armies. Found {attacker_armies.Count} attacker armies and {defender_armies.Count} defender armies.");
+                CrusaderWarsEnvironment.Logger.Debug($"Finished reading battle armies. Found {attacker_armies.Count} attacker armies and {defender_armies.Count} defender armies.");
                 return (attacker_armies, defender_armies);
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error processing army data: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error processing army data: {ex.Message}");
                 throw new Exception("Error processing army data", ex);
             }
         }
 
         public static string? FindWarID()
         {
-            Program.Logger.Debug("Finding WarID by matching battle participants with war participants...");
+            CrusaderWarsEnvironment.Logger.Debug("Finding WarID by matching battle participants with war participants...");
 
             try
             {
@@ -397,17 +398,17 @@ if (BattleResult.Player_Combat is not null)
 
                 if (string.IsNullOrEmpty(leftParticipantId) || string.IsNullOrEmpty(rightParticipantId))
                 {
-                    Program.Logger.Debug("Could not find main participants in CK3LogData. Cannot determine WarID.");
+                    CrusaderWarsEnvironment.Logger.Debug("Could not find main participants in CK3LogData. Cannot determine WarID.");
                     return null;
                 }
 
-                Program.Logger.Debug($"Battle participants - Left: {leftParticipantId}, Right: {rightParticipantId}");
+                CrusaderWarsEnvironment.Logger.Debug($"Battle participants - Left: {leftParticipantId}, Right: {rightParticipantId}");
 
                 // Read the Wars.txt file
                 string warsFilePath = Writter.DataFilesPaths.Wars_Path();
                 if (!File.Exists(warsFilePath))
                 {
-                    Program.Logger.Debug($"Wars file not found at {warsFilePath}. Cannot determine WarID.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Wars file not found at {warsFilePath}. Cannot determine WarID.");
                     return null;
                 }
 
@@ -426,7 +427,7 @@ if (BattleResult.Player_Combat is not null)
                     if (!warIdMatch.Success) continue;
 
                     string warId = warIdMatch.Groups[1].Value;
-                    Program.Logger.Debug($"Checking war ID: {warId}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Checking war ID: {warId}");
 
                     // Extract attacker and defender participant lists using robust block parsing
                     var attackerParticipants = new HashSet<string>();
@@ -462,17 +463,17 @@ if (BattleResult.Player_Combat is not null)
 
                     if (isMatch)
                     {
-                        Program.Logger.Debug($"Found matching war. WarID: {warId}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found matching war. WarID: {warId}");
                         return warId;
                     }
                 }
 
-                Program.Logger.Debug("No matching war found for the current battle participants.");
+                CrusaderWarsEnvironment.Logger.Debug("No matching war found for the current battle participants.");
                 return null;
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error finding WarID: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error finding WarID: {ex.Message}");
                 return null;
             }
         }
@@ -480,7 +481,7 @@ if (BattleResult.Player_Combat is not null)
 
         static void ClearNullArmyRegiments()
         {
-            Program.Logger.Debug("Clearing null army regiments...");
+            CrusaderWarsEnvironment.Logger.Debug("Clearing null army regiments...");
             // Clear Empty Regiments
             for (int i = 0; i < attacker_armies.Count; i++)
             {
@@ -490,33 +491,33 @@ if (BattleResult.Player_Combat is not null)
             {
                 defender_armies[i].ClearNullArmyRegiments();
             }
-            Program.Logger.Debug("Finished clearing null army regiments.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished clearing null army regiments.");
         }
 
         static void CheckForNullCultures()
         {
-            Program.Logger.Debug("ATTACKER  WITH NULL CULTURE REGIMENTS:\n");
+            CrusaderWarsEnvironment.Logger.Debug("ATTACKER  WITH NULL CULTURE REGIMENTS:\n");
             foreach (Regiment regiment in attacker_armies.SelectMany(army => army.ArmyRegiments).SelectMany(armyRegiment => armyRegiment.Regiments))
             {
                 if (regiment?.Culture == null)
                 {
-                    Program.Logger.Debug($"WARNING - REGIMENT {regiment?.ID ?? "unknown"} HAS A NULL CULTURE");
+                    CrusaderWarsEnvironment.Logger.Debug($"WARNING - REGIMENT {regiment?.ID ?? "unknown"} HAS A NULL CULTURE");
                 }
             }
 
-            Program.Logger.Debug("DEFENDER  WITH NULL CULTURE REGIMENTS:\n");
+            CrusaderWarsEnvironment.Logger.Debug("DEFENDER  WITH NULL CULTURE REGIMENTS:\n");
             foreach (Regiment regiment in defender_armies.SelectMany(army => army.ArmyRegiments).SelectMany(armyRegiment => armyRegiment.Regiments))
             {
                 if (regiment?.Culture == null)
                 {
-                    Program.Logger.Debug($"WARNING - REGIMENT {regiment?.ID ?? "unknown"} HAS A NULL CULTURE");
+                    CrusaderWarsEnvironment.Logger.Debug($"WARNING - REGIMENT {regiment?.ID ?? "unknown"} HAS A NULL CULTURE");
                 }
             }
         }
 
         static void ReadSaveFileTraits()
         {
-            Program.Logger.Debug("Reading save file traits...");
+            CrusaderWarsEnvironment.Logger.Debug("Reading save file traits...");
             MatchCollection allTraits = Regex.Matches(File.ReadAllText(Writter.DataFilesPaths.Traits_Path()), @" (\w+)");
             save_file_traits = new List<(string name, int index)>();
 
@@ -525,14 +526,14 @@ if (BattleResult.Player_Combat is not null)
                 //save_file_traits[i] = (allTraits[i].Groups[1].Value, i);
                 save_file_traits.Add((allTraits[i].Groups[1].Value, i));
             }
-            Program.Logger.Debug($"Finished reading save file traits. Found {save_file_traits.Count} traits.");
+            CrusaderWarsEnvironment.Logger.Debug($"Finished reading save file traits. Found {save_file_traits.Count} traits.");
         }
 
         public static int GetTraitIndex(string trait_name)
         {
             int index;
             index = save_file_traits.FirstOrDefault(x => x.name == trait_name).index;
-            Program.Logger.Debug($"GetTraitIndex for '{trait_name}': found index {index}");
+            CrusaderWarsEnvironment.Logger.Debug($"GetTraitIndex for '{trait_name}': found index {index}");
             return index;
 
         }
@@ -540,14 +541,14 @@ if (BattleResult.Player_Combat is not null)
         public static string GetTraitKey(int trait_index)
         {
             string key = save_file_traits.FirstOrDefault(x => x.index == trait_index).name ?? "";
-            Program.Logger.Debug($"GetTraitKey for index '{trait_index}': found key '{key}'");
+            CrusaderWarsEnvironment.Logger.Debug($"GetTraitKey for index '{trait_index}': found key '{key}'");
             return key;
 
         }
 
         static void ReadCourtPositions()
         {
-            Program.Logger.Debug("Reading court positions...");
+            CrusaderWarsEnvironment.Logger.Debug("Reading court positions...");
             string profession = "";
             string employeeID = "";
             using (StreamReader sr = new StreamReader(Writter.DataFilesPaths.CourtPositions_Path()))
@@ -580,20 +581,20 @@ if (BattleResult.Player_Combat is not null)
 
                         if (army != null)
                         {
-                            Program.Logger.Debug($"Assigning court position '{profession}' to employee '{employeeID}' for employer '{employerID}' in army '{army.ID}'.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Assigning court position '{profession}' to employee '{employeeID}' for employer '{employerID}' in army '{army.ID}'.");
                             army.Commander?.AddCourtPosition(profession, employeeID);
                         }
 
                     }
                 }
             }
-            Program.Logger.Debug("Finished reading court positions.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished reading court positions.");
         }
 
 
         static void ReadCharacters()
         {
-            Program.Logger.Debug("Reading characters data...");
+            CrusaderWarsEnvironment.Logger.Debug("Reading characters data...");
             bool searchStarted = false;
             bool isKnight = false, isCommander = false, isMainCommander = false, isOwner = false;
             Army? searchingArmy = null;
@@ -622,7 +623,7 @@ if (BattleResult.Player_Combat is not null)
                         var searchingData = Armies_Functions.SearchCharacters(line_id, attacker_armies);
                         if (searchingData.searchStarted)
                         {
-                            Program.Logger.Debug($"Found character '{line_id}' in battle armies. Starting data extraction.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found character '{line_id}' in battle armies. Starting data extraction.");
                             searchStarted = true;
                             isKnight = searchingData.isKnight;
                             isMainCommander = searchingData.isMainCommander;
@@ -637,7 +638,7 @@ if (BattleResult.Player_Combat is not null)
                             searchingData = Armies_Functions.SearchCharacters(line_id, defender_armies);
                             if (searchingData.searchStarted)
                             {
-                                Program.Logger.Debug($"Found character '{line_id}' in battle armies. Starting data extraction.");
+                                CrusaderWarsEnvironment.Logger.Debug($"Found character '{line_id}' in battle armies. Starting data extraction.");
                                 searchStarted = true;
                                 isKnight = searchingData.isKnight;
                                 isMainCommander = searchingData.isMainCommander;
@@ -828,7 +829,7 @@ if (BattleResult.Player_Combat is not null)
                     {
                         if (isCommander && searchingArmy != null && nonMainCommander_BaseSkills != null && nonMainCommander_Culture != null && searchingArmy.CommanderID != null)
                         {
-                            Program.Logger.Debug($"Creating non-main commander '{nonMainCommander_Name}' ({searchingArmy.CommanderID}) for army '{searchingArmy.ID}'.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Creating non-main commander '{nonMainCommander_Name}' ({searchingArmy.CommanderID}) for army '{searchingArmy.ID}'.");
                             searchingArmy.SetCommander(new CommanderSystem(nonMainCommander_Name, searchingArmy.CommanderID, nonMainCommander_Prowess, nonMainCommander_Rank, nonMainCommander_BaseSkills, nonMainCommander_Culture));
                             if (nonMainCommander_Traits != null)
                             {
@@ -857,12 +858,12 @@ if (BattleResult.Player_Combat is not null)
                     }
                 }
             }
-            Program.Logger.Debug("Finished reading characters data.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished reading characters data.");
         }
 
         private static void SetMAARegimentCultures(List<Army> armies)
         {
-            Program.Logger.Debug("Setting MAA regiment cultures...");
+            CrusaderWarsEnvironment.Logger.Debug("Setting MAA regiment cultures...");
             foreach (var army in armies)
             {
                 if (army == null || army.Owner == null || army.Owner.GetCulture() == null) continue;
@@ -879,16 +880,16 @@ if (BattleResult.Player_Combat is not null)
                         if (regiment == null || (!string.IsNullOrEmpty(regiment.Culture?.ID))) continue;
 
                         regiment.SetCulture(ownerCultureId);
-                        Program.Logger.Debug($"Set culture '{ownerCultureId}' for MAA regiment '{regiment.ID}' in army '{army.ID}'");
+                        CrusaderWarsEnvironment.Logger.Debug($"Set culture '{ownerCultureId}' for MAA regiment '{regiment.ID}' in army '{army.ID}'");
                     }
                 }
             }
-            Program.Logger.Debug("Finished setting MAA regiment cultures.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished setting MAA regiment cultures.");
         }
 
         static Accolade? GetAccolade(string accoladeID)
         {
-            Program.Logger.Debug($"Searching for accolade with ID: {accoladeID}");
+            CrusaderWarsEnvironment.Logger.Debug($"Searching for accolade with ID: {accoladeID}");
             bool searchStarted = false;
             string primaryAttribute = "";
             string secundaryAttribute = "";
@@ -917,18 +918,18 @@ if (BattleResult.Player_Combat is not null)
                     else if (searchStarted && line == "\t\t}")
                     {
                         searchStarted = false;
-                        Program.Logger.Debug($"Found accolade {accoladeID}: Primary={primaryAttribute}, Secondary={secundaryAttribute}, Glory={glory}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found accolade {accoladeID}: Primary={primaryAttribute}, Secondary={secundaryAttribute}, Glory={glory}");
                         return new Accolade(accoladeID, primaryAttribute, secundaryAttribute, glory);
                     }
                 }
             }
-            Program.Logger.Debug($"Accolade with ID {accoladeID} not found.");
+            CrusaderWarsEnvironment.Logger.Debug($"Accolade with ID {accoladeID} not found.");
             return null;
         }
 
         static string GetTitleKey(string title_id)
         {
-            Program.Logger.Debug($"Getting title key for title ID: {title_id}");
+            CrusaderWarsEnvironment.Logger.Debug($"Getting title key for title ID: {title_id}");
             bool searchStarted = false;
             string titleKey = "";
             using (StreamReader sr = new StreamReader(Writter.DataFilesPaths.LandedTitles()))
@@ -943,19 +944,19 @@ if (BattleResult.Player_Combat is not null)
                     else if (searchStarted && line.StartsWith("\tkey=")) //# KEY
                     {
                         titleKey = Regex.Match(line, "=(.+)").Groups[1].Value;
-                        Program.Logger.Debug($"Found title key '{titleKey}' for title ID '{title_id}'.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found title key '{titleKey}' for title ID '{title_id}'.");
                         return titleKey;
                     }
 
                 }
-                Program.Logger.Debug($"Title key for title ID '{title_id}' not found.");
+                CrusaderWarsEnvironment.Logger.Debug($"Title key for title ID '{title_id}' not found.");
                 return titleKey;
             }
         }
 
         private static (List<string> besiegerIds, List<string> reliefIds, string? combatBlock) FindSiegeCombatBlockAndExtractArmies()
         {
-            Program.Logger.Debug("Searching for siege combat block in Combats.txt...");
+            CrusaderWarsEnvironment.Logger.Debug("Searching for siege combat block in Combats.txt...");
             try
             {
                 string combatsContent = File.ReadAllText(Writter.DataFilesPaths.Combats_Path());
@@ -1006,7 +1007,7 @@ if (BattleResult.Player_Combat is not null)
 
                     if (isMatch)
                     {
-                        Program.Logger.Debug("Found matching combat block based on besieger presence and province.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found matching combat block based on besieger presence and province.");
                         var attackerIds = new List<string>();
                         var defenderIds = new List<string>();
 
@@ -1033,35 +1034,35 @@ if (BattleResult.Player_Combat is not null)
 
                         if (besiegerIsAttacker)
                         {
-                            Program.Logger.Debug("Besieger found in attacker block.");
+                            CrusaderWarsEnvironment.Logger.Debug("Besieger found in attacker block.");
                             besiegerIds = attackerIds;
                             reliefIds = defenderIds;
                         }
                         else // besiegerIsDefender must be true
                         {
-                            Program.Logger.Debug("Besieger found in defender block.");
+                            CrusaderWarsEnvironment.Logger.Debug("Besieger found in defender block.");
                             besiegerIds = defenderIds;
                             reliefIds = attackerIds;
                         }
 
-                        Program.Logger.Debug($"Extracted Besieger IDs: [{string.Join(", ", besiegerIds)}], Relief IDs: [{string.Join(", ", reliefIds)}]");
+                        CrusaderWarsEnvironment.Logger.Debug($"Extracted Besieger IDs: [{string.Join(", ", besiegerIds)}], Relief IDs: [{string.Join(", ", reliefIds)}]");
                         return (besiegerIds, reliefIds, block);
                     }
                 }
 
-                Program.Logger.Debug("No matching siege combat block found.");
+                CrusaderWarsEnvironment.Logger.Debug("No matching siege combat block found.");
                 return (new List<string>(), new List<string>(), null);
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error reading or parsing Combats.txt for siege battle: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error reading or parsing Combats.txt for siege battle: {ex.Message}");
                 return (new List<string>(), new List<string>(), null);
             }
         }
 
         static void ReadOriginsKeys()
         {
-            Program.Logger.Debug("Reading origins keys from landed titles...");
+            CrusaderWarsEnvironment.Logger.Debug("Reading origins keys from landed titles...");
             bool searchStarted = false;
             string originKey = "";
             string id = "";
@@ -1089,12 +1090,12 @@ if (BattleResult.Player_Combat is not null)
 
                 }
             }
-            Program.Logger.Debug("Finished reading origins keys.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished reading origins keys.");
         }
 
         private static void CorrectRegimentSoldiers()
         {
-            Program.Logger.Debug("Correcting regiment soldiers to use starting values from combat data...");
+            CrusaderWarsEnvironment.Logger.Debug("Correcting regiment soldiers to use starting values from combat data...");
 
             // Process attacker armies
             foreach (var army in attacker_armies)
@@ -1114,26 +1115,26 @@ if (BattleResult.Player_Combat is not null)
 
                     if (string.IsNullOrEmpty(totalSoldiersStr) || totalSoldiersStr == "0")
                     {
-                        Program.Logger.Debug($"Skipping soldier correction for ArmyRegiment {armyRegiment.ID} in army {army.ID}: no valid combat or current count found. Using value from Regiments.txt.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Skipping soldier correction for ArmyRegiment {armyRegiment.ID} in army {army.ID}: no valid combat or current count found. Using value from Regiments.txt.");
                         continue;
                     }
 
                     if (string.IsNullOrEmpty(totalSoldiersStr) || totalSoldiersStr == "0")
                     {
-                        Program.Logger.Debug($"Skipping soldier correction for ArmyRegiment {armyRegiment.ID} in army {army.ID}: no valid combat or current count found. Using value from Regiments.txt.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Skipping soldier correction for ArmyRegiment {armyRegiment.ID} in army {army.ID}: no valid combat or current count found. Using value from Regiments.txt.");
                         continue;
                     }
 
                     if (string.IsNullOrEmpty(totalSoldiersStr))
                     {
-                        Program.Logger.Debug($"No soldier count found for ArmyRegiment {armyRegiment.ID} in army {army.ID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"No soldier count found for ArmyRegiment {armyRegiment.ID} in army {army.ID}");
                         continue;
                     }
 
                     int totalSoldiers;
                     if (!int.TryParse(totalSoldiersStr, out totalSoldiers))
                     {
-                        Program.Logger.Debug($"Failed to parse soldier count '{totalSoldiersStr}' for ArmyRegiment {armyRegiment.ID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Failed to parse soldier count '{totalSoldiersStr}' for ArmyRegiment {armyRegiment.ID}");
                         continue;
                     }
 
@@ -1157,7 +1158,7 @@ if (BattleResult.Player_Combat is not null)
                         regiment.SetSoldiers(soldiersForThisChunk.ToString());
                         soldiersToDistribute -= soldiersForThisChunk;
 
-                        Program.Logger.Debug($"Set {soldiersForThisChunk} soldiers for regiment {regiment.ID} (chunk {i}) in ArmyRegiment {armyRegiment.ID}. Max: {maxForChunk}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Set {soldiersForThisChunk} soldiers for regiment {regiment.ID} (chunk {i}) in ArmyRegiment {armyRegiment.ID}. Max: {maxForChunk}");
                     }
 
                     // Second pass: if we still have soldiers left, add them to the last chunk
@@ -1174,7 +1175,7 @@ if (BattleResult.Player_Combat is not null)
 
                             int newSoldierCount = currentSoldiers + soldiersToDistribute;
                             lastRegiment.SetSoldiers(newSoldierCount.ToString());
-                            Program.Logger.Debug($"Warning: Had to exceed max limit for last regiment {lastRegiment.ID} in ArmyRegiment {armyRegiment.ID}. Added {soldiersToDistribute} extra soldiers.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Warning: Had to exceed max limit for last regiment {lastRegiment.ID} in ArmyRegiment {armyRegiment.ID}. Added {soldiersToDistribute} extra soldiers.");
                         }
                     }
                 }
@@ -1198,14 +1199,14 @@ if (BattleResult.Player_Combat is not null)
 
                     if (string.IsNullOrEmpty(totalSoldiersStr))
                     {
-                        Program.Logger.Debug($"No soldier count found for ArmyRegiment {armyRegiment.ID} in army {army.ID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"No soldier count found for ArmyRegiment {armyRegiment.ID} in army {army.ID}");
                         continue;
                     }
 
                     int totalSoldiers;
                     if (!int.TryParse(totalSoldiersStr, out totalSoldiers))
                     {
-                        Program.Logger.Debug($"Failed to parse soldier count '{totalSoldiersStr}' for ArmyRegiment {armyRegiment.ID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Failed to parse soldier count '{totalSoldiersStr}' for ArmyRegiment {armyRegiment.ID}");
                         continue;
                     }
 
@@ -1229,7 +1230,7 @@ if (BattleResult.Player_Combat is not null)
                         regiment.SetSoldiers(soldiersForThisChunk.ToString());
                         soldiersToDistribute -= soldiersForThisChunk;
 
-                        Program.Logger.Debug($"Set {soldiersForThisChunk} soldiers for regiment {regiment.ID} (chunk {i}) in ArmyRegiment {armyRegiment.ID}. Max: {maxForChunk}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Set {soldiersForThisChunk} soldiers for regiment {regiment.ID} (chunk {i}) in ArmyRegiment {armyRegiment.ID}. Max: {maxForChunk}");
                     }
 
                     // Second pass: if we still have soldiers left, add them to the last chunk
@@ -1246,13 +1247,13 @@ if (BattleResult.Player_Combat is not null)
 
                             int newSoldierCount = currentSoldiers + soldiersToDistribute;
                             lastRegiment.SetSoldiers(newSoldierCount.ToString());
-                            Program.Logger.Debug($"Warning: Had to exceed max limit for last regiment {lastRegiment.ID} in ArmyRegiment {armyRegiment.ID}. Added {soldiersToDistribute} extra soldiers.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Warning: Had to exceed max limit for last regiment {lastRegiment.ID} in ArmyRegiment {armyRegiment.ID}. Added {soldiersToDistribute} extra soldiers.");
                         }
                     }
                 }
             }
 
-            Program.Logger.Debug("Finished correcting regiment soldiers.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished correcting regiment soldiers.");
         }
 
         static void SetRegimentsOriginsKeys(string title_id, string originKey)
@@ -1297,7 +1298,7 @@ if (BattleResult.Player_Combat is not null)
 
         static (int rank, string titleName) GetCommanderNobleRankAndTitleName(string commanderTitleID)
         {
-            Program.Logger.Debug($"Getting commander rank and title name for title ID: {commanderTitleID}");
+            CrusaderWarsEnvironment.Logger.Debug($"Getting commander rank and title name for title ID: {commanderTitleID}");
             bool searchStarted = false;
             int rankInt = 1; string titleName = "";
             using (StreamReader sr = new StreamReader(Writter.DataFilesPaths.LandedTitles()))
@@ -1339,24 +1340,24 @@ if (BattleResult.Player_Combat is not null)
                         string name = Regex.Match(line, "\"(.+)\"").Groups[1].Value;
                         titleName = name;
 
-                        Program.Logger.Debug($"Found rank '{rankInt}' and title name '{titleName}' for title ID '{commanderTitleID}'.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found rank '{rankInt}' and title name '{titleName}' for title ID '{commanderTitleID}'.");
                         return (rankInt, titleName);
                     }
                 }
-                Program.Logger.Debug($"Could not find rank/title for title ID '{commanderTitleID}'. Returning default.");
+                CrusaderWarsEnvironment.Logger.Debug($"Could not find rank/title for title ID '{commanderTitleID}'. Returning default.");
                 return (1, string.Empty);
             }
         }
 
         static void RemoveCommandersAsKnights()
         {
-            Program.Logger.Debug("Removing commanders from knight regiments...");
+            CrusaderWarsEnvironment.Logger.Debug("Removing commanders from knight regiments...");
             foreach (Army army in attacker_armies)
             {
                 ArmyRegiment? commanderRegiment = army.ArmyRegiments.FirstOrDefault(x => x.MAA_Name == army.CommanderID);
                 if (commanderRegiment != null)
                 {
-                    Program.Logger.Debug($"Removing commander '{army.CommanderID}' from knight regiments in attacker army '{army.ID}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Removing commander '{army.CommanderID}' from knight regiments in attacker army '{army.ID}'.");
                     army.ArmyRegiments.Remove(commanderRegiment);
                 }
             }
@@ -1365,17 +1366,17 @@ if (BattleResult.Player_Combat is not null)
                 ArmyRegiment? commanderRegiment = army.ArmyRegiments.FirstOrDefault(x => x.MAA_Name == army.CommanderID);
                 if (commanderRegiment != null)
                 {
-                    Program.Logger.Debug($"Removing commander '{army.CommanderID}' from knight regiments in defender army '{army.ID}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Removing commander '{army.CommanderID}' from knight regiments in defender army '{army.ID}'.");
                     army.ArmyRegiments.Remove(commanderRegiment);
                 }
             }
-            Program.Logger.Debug("Finished removing commanders from knight regiments.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished removing commanders from knight regiments.");
         }
 
 
         public static List<Army>? GetSideArmies(string side, List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug($"Getting armies for side: {side}");
+            CrusaderWarsEnvironment.Logger.Debug($"Getting armies for side: {side}");
             List<Army>? left_side = null, right_side = null;
             foreach (var army in attacker_armies)
             {
@@ -1416,26 +1417,26 @@ if (BattleResult.Player_Combat is not null)
 
             if (side == "left")
             {
-                Program.Logger.Debug($"Returning {left_side?.Count ?? 0} armies for left side.");
+                CrusaderWarsEnvironment.Logger.Debug($"Returning {left_side?.Count ?? 0} armies for left side.");
                 return left_side;
             }
             else
             {
-                Program.Logger.Debug($"Returning {right_side?.Count ?? 0} armies for right side.");
+                CrusaderWarsEnvironment.Logger.Debug($"Returning {right_side?.Count ?? 0} armies for right side.");
                 return right_side;
             }
         }
 
         static void CreateMainCommanders()
         {
-            Program.Logger.Debug("Creating main commanders...");
+            CrusaderWarsEnvironment.Logger.Debug("Creating main commanders...");
             var left_side_armies = GetSideArmies("left", attacker_armies, defender_armies);
             var right_side_armies = GetSideArmies("right", attacker_armies, defender_armies);
 
             if (left_side_armies != null)
             {
                 var left_main_commander_data = CK3LogData.LeftSide.GetCommander();
-                Program.Logger.Debug($"Setting left side main commander: {left_main_commander_data.name} ({left_main_commander_data.id})");
+                CrusaderWarsEnvironment.Logger.Debug($"Setting left side main commander: {left_main_commander_data.name} ({left_main_commander_data.id})");
                 var mainArmy = left_side_armies.FirstOrDefault(x => x.isMainArmy && !x.IsGarrison());
                 if (mainArmy != null)
                 {
@@ -1446,25 +1447,25 @@ if (BattleResult.Player_Combat is not null)
             if (right_side_armies != null)
             {
                 var right_main_commander_data = CK3LogData.RightSide.GetCommander();
-                Program.Logger.Debug($"Setting right side main commander: {right_main_commander_data.name} ({right_main_commander_data.id})");
+                CrusaderWarsEnvironment.Logger.Debug($"Setting right side main commander: {right_main_commander_data.name} ({right_main_commander_data.id})");
                 var mainArmy = right_side_armies.FirstOrDefault(x => x.isMainArmy && !x.IsGarrison());
                 if (mainArmy != null)
                 {
                     mainArmy.SetCommander(new CommanderSystem(right_main_commander_data.name, right_main_commander_data.id, right_main_commander_data.prowess, right_main_commander_data.martial, right_main_commander_data.rank, true));
                 }
             }
-            Program.Logger.Debug("Finished creating main commanders.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished creating main commanders.");
         }
         static void CreateKnights()
         {
-            Program.Logger.Debug("Creating knights...");
+            CrusaderWarsEnvironment.Logger.Debug("Creating knights...");
             RemoveCommandersAsKnights();
 
             var left_side_armies = GetSideArmies("left", attacker_armies, defender_armies);
             var right_side_armies = GetSideArmies("right", attacker_armies, defender_armies);
 
             var KnightsList = new List<Knight>();
-            Program.Logger.Debug("Creating knights for left side armies...");
+            CrusaderWarsEnvironment.Logger.Debug("Creating knights for left side armies...");
             if (left_side_armies != null)
             {
                 for (int x = 0; x < left_side_armies.Count; x++)
@@ -1502,7 +1503,7 @@ if (BattleResult.Player_Combat is not null)
                         leftEffectivenss = leftSideKnights[0].effectiveness;
                     }
 
-                    Program.Logger.Debug($"Creating KnightSystem for left side army {left_side_armies[x].ID} with {KnightsList.Count} knights.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Creating KnightSystem for left side army {left_side_armies[x].ID} with {KnightsList.Count} knights.");
                     KnightSystem leftSide = new KnightSystem(KnightsList, leftEffectivenss);
                     if (left_side_armies == attacker_armies)
                     {
@@ -1519,7 +1520,7 @@ if (BattleResult.Player_Combat is not null)
 
 
             KnightsList = new List<Knight>();
-            Program.Logger.Debug("Creating knights for right side armies...");
+            CrusaderWarsEnvironment.Logger.Debug("Creating knights for right side armies...");
             if (right_side_armies != null)
             {
                 for (int x = 0; x < right_side_armies.Count; x++)
@@ -1557,7 +1558,7 @@ if (BattleResult.Player_Combat is not null)
                         rightEffectivenss = rightSideKnights[0].effectiveness;
                     }
 
-                    Program.Logger.Debug($"Creating KnightSystem for right side army {right_side_armies[x].ID} with {KnightsList.Count} knights.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Creating KnightSystem for right side army {right_side_armies[x].ID} with {KnightsList.Count} knights.");
                     KnightSystem rightSide = new KnightSystem(KnightsList, rightEffectivenss);
 
                     if (right_side_armies == attacker_armies)
@@ -1571,20 +1572,20 @@ if (BattleResult.Player_Combat is not null)
                     KnightsList = new List<Knight>();
                 }
             }
-            Program.Logger.Debug("Finished creating knights.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished creating knights.");
         }
 
         private static void CreateUnits()
         {
-            Program.Logger.Debug("Creating and organizing units from regiments...");
+            CrusaderWarsEnvironment.Logger.Debug("Creating and organizing units from regiments...");
             Armies_Functions.CreateUnits(attacker_armies);
             Armies_Functions.CreateUnits(defender_armies);
-            Program.Logger.Debug("Finished creating units.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished creating units.");
         }
 
         private static void ReadMercenaries()
         {
-            Program.Logger.Debug("Reading mercenaries data...");
+            CrusaderWarsEnvironment.Logger.Debug("Reading mercenaries data...");
             bool isSearchStarted = false;
             using (StreamReader sr = new StreamReader(Writter.DataFilesPaths.Mercenaries_Path()))
             {
@@ -1687,7 +1688,7 @@ if (BattleResult.Player_Combat is not null)
 
                 }
             }
-            Program.Logger.Debug("Finished reading mercenaries data.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished reading mercenaries data.");
 
             //HOLY ORDER REGIMENTS
 
@@ -1720,16 +1721,16 @@ if (BattleResult.Player_Combat is not null)
 
         private static void ReadCultureManager()
         {
-            Program.Logger.Debug("Reading culture manager data...");
+            CrusaderWarsEnvironment.Logger.Debug("Reading culture manager data...");
             Armies_Functions.ReadArmiesCultures(attacker_armies);
             Armies_Functions.ReadArmiesCultures(defender_armies);
-            Program.Logger.Debug("Finished reading culture manager data.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished reading culture manager data.");
         }
 
         private static void ReadCountiesManager()
         {
 
-            Program.Logger.Debug("Reading counties manager data...");
+            CrusaderWarsEnvironment.Logger.Debug("Reading counties manager data...");
             List<(string county_key, string culture_id)> FoundCounties = new List<(string county_key, string culture_id)>();
 
             bool isSearchStared = false;
@@ -1776,7 +1777,7 @@ if (BattleResult.Player_Combat is not null)
                 Armies_Functions.PopulateRegimentsWithCultures(FoundCounties, defender_armies);
 
             }
-            Program.Logger.Debug("Finished reading counties manager data.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished reading counties manager data.");
         }
 
 
@@ -2328,7 +2329,7 @@ if (BattleResult.Player_Combat is not null)
 
         private static string? FindReliefFieldCombatBlock()
         {
-            Program.Logger.Debug("Searching for relief field combat block in Combats.txt...");
+            CrusaderWarsEnvironment.Logger.Debug("Searching for relief field combat block in Combats.txt...");
             try
             {
                 string combatsContent = File.ReadAllText(Writter.DataFilesPaths.Combats_Path());
@@ -2342,11 +2343,11 @@ if (BattleResult.Player_Combat is not null)
 
                 if (!mobileArmyIdsInBattle.Any())
                 {
-                    Program.Logger.Debug("No mobile armies found in the battle. Cannot search for a field combat block.");
+                    CrusaderWarsEnvironment.Logger.Debug("No mobile armies found in the battle. Cannot search for a field combat block.");
                     return null;
                 }
 
-                Program.Logger.Debug($"Mobile armies in battle: [{string.Join(", ", mobileArmyIdsInBattle)}]");
+                CrusaderWarsEnvironment.Logger.Debug($"Mobile armies in battle: [{string.Join(", ", mobileArmyIdsInBattle)}]");
 
                 foreach (string block in combatBlocks)
                 {
@@ -2382,17 +2383,17 @@ if (BattleResult.Player_Combat is not null)
                     // 5. Compare the set of IDs
                     if (mobileArmyIdsInBattle.SetEquals(armyIdsInBlock))
                     {
-                        Program.Logger.Debug($"Found matching field combat block for province {BattleResult.ProvinceID}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found matching field combat block for province {BattleResult.ProvinceID}.");
                         return block;
                     }
                 }
 
-                Program.Logger.Debug("No matching relief field combat block found.");
+                CrusaderWarsEnvironment.Logger.Debug("No matching relief field combat block found.");
                 return null;
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error reading or parsing Combats.txt for relief battle: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error reading or parsing Combats.txt for relief battle: {ex.Message}");
                 return null;
             }
         }

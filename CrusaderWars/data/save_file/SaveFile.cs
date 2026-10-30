@@ -142,7 +142,7 @@ namespace CrusaderWars.data.save_file
                     if (file == gamestatePath)
                     {
                         string backupPath = file + ".bak";
-                        Program.Logger.Debug($"Backing up original gamestate to {backupPath}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Backing up original gamestate to {backupPath}");
                         File.Copy(file, backupPath, true);
                     }
                     File.Delete(file);

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CrusaderWars.armies.commander_traits;
 using CrusaderWars.data.save_file;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars
 {
@@ -345,7 +346,7 @@ namespace CrusaderWars
                 if (str.Contains($"Commander{ID} from Army"))
                 {
                     hasFallen = true;
-                    Program.Logger.Debug($"Commander {ID} has fallen!");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {ID} has fallen!");
 
                     reader.Close();
                     logFile.Close();
@@ -387,44 +388,44 @@ namespace CrusaderWars
                 // Determine which option to set based on its percentage chance
                 if (RandomNumber <= slainThreshold)
                 {
-                    Program.Logger.Debug($"Commander {ID} has been slain in battle (chance: {slainChance}%).");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {ID} has been slain in battle (chance: {slainChance}%).");
                     return (true, false, traits_line);
                 }
 
                 string newTraits = traits_line;
                 if (RandomNumber <= woundedThreshold)
                 {
-                    Program.Logger.Debug($"Commander {ID} got Wounded");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {ID} got Wounded");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.Wounded().ToString());
                 }
                 else if (RandomNumber <= severelyInjuredThreshold)
                 {
-                    Program.Logger.Debug($"Commander {ID} got Severely Injured");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {ID} got Severely Injured");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.Severely_Injured().ToString());
                 }
                 else if (RandomNumber <= brutallyMauledThreshold)
                 {
-                    Program.Logger.Debug($"Commander {ID} got Brutally Mauled");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {ID} got Brutally Mauled");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.Brutally_Mauled().ToString());
                 }
                 else if (RandomNumber <= maimedThreshold)
                 {
-                    Program.Logger.Debug($"Commander {ID} got Maimed");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {ID} got Maimed");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.Maimed().ToString());
                 }
                 else if (RandomNumber <= oneLeggedThreshold)
                 {
-                    Program.Logger.Debug($"Commander {ID} got One Legged");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {ID} got One Legged");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.One_Legged().ToString());
                 }
                 else if (RandomNumber <= oneEyedThreshold)
                 {
-                    Program.Logger.Debug($"Commander {ID} got One Eyed");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {ID} got One Eyed");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.One_Eyed().ToString());
                 }
                 else if (RandomNumber <= disfiguredThreshold)
                 {
-                    Program.Logger.Debug($"Commander {ID} got Disfigured");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {ID} got Disfigured");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.Disfigured().ToString());
                 }
 
@@ -436,7 +437,7 @@ namespace CrusaderWars
                 if (isCaptured)
                 {
                     string side = wasOnLosingSide ? "losing" : "winning";
-                    Program.Logger.Debug($"Commander {ID} has been captured from the {side} side (chance: {effectivePrisonerChance}%).");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {ID} has been captured from the {side} side (chance: {effectivePrisonerChance}%).");
                 }
 
                 return (false, isCaptured, newTraits);

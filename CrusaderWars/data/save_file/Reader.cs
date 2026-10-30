@@ -11,6 +11,7 @@ using CrusaderWars.data.save_file;
 using CrusaderWars.twbattle;
 using CrusaderWars; // Added to access the consolidated Data class
 using CrusaderWars.data.battle_results;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.data.save_file
 {
@@ -27,7 +28,7 @@ namespace CrusaderWars.data.save_file
 
         public static void ReadMetaData()
         {
-            Program.Logger.Debug("Reading metadata.txt...");
+            CrusaderWarsEnvironment.Logger.Debug("Reading metadata.txt...");
             string metaDataPath = @".\data\save_file_data\metadata.txt";
             if (File.Exists(metaDataPath))
             {
@@ -46,7 +47,7 @@ namespace CrusaderWars.data.save_file
                             if (match.Success)
                             {
                                 DataSearch.Player_Heir_ID = match.Groups[1].Value;
-                                Program.Logger.Debug($"Found player heir ID: {DataSearch.Player_Heir_ID}");
+                                CrusaderWarsEnvironment.Logger.Debug($"Found player heir ID: {DataSearch.Player_Heir_ID}");
                             }
                         }
                         else if (trimmedLine.Contains("}"))
@@ -64,7 +65,7 @@ namespace CrusaderWars.data.save_file
                         if (match.Success)
                         {
                             metaPlayerName = match.Groups[1].Value;
-                            Program.Logger.Debug($"Found meta_player_name: {metaPlayerName}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found meta_player_name: {metaPlayerName}");
                         }
                     }
                     else if (trimmedLine.StartsWith("meta_date="))
@@ -75,25 +76,25 @@ namespace CrusaderWars.data.save_file
                             Date.Year = int.Parse(match.Groups[1].Value);
                             Date.Month = int.Parse(match.Groups[2].Value);
                             Date.Day = int.Parse(match.Groups[3].Value);
-                            Program.Logger.Debug($"Found date: {Date.Year}.{Date.Month}.{Date.Day}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found date: {Date.Year}.{Date.Month}.{Date.Day}");
                             dateFound = true;
                         }
                     }
                 }
                 if (!dateFound)
                 {
-                    Program.Logger.Debug("date not found in metadata.txt.");
+                    CrusaderWarsEnvironment.Logger.Debug("date not found in metadata.txt.");
                 }
             }
             if (string.IsNullOrEmpty(metaPlayerName))
             {
-                Program.Logger.Debug("meta_player_name not found in metadata.txt.");
+                CrusaderWarsEnvironment.Logger.Debug("meta_player_name not found in metadata.txt.");
             }
         }
 
         static void ClearFilesData()
         {
-            Program.Logger.Debug("Clearing all temporary save file data...");
+            CrusaderWarsEnvironment.Logger.Debug("Clearing all temporary save file data...");
             //Clear Battle Results File
             File.WriteAllText(Writter.DataFilesPaths.CombatResults_Path(), "");
             //Clear Battle Results TEMP File
@@ -165,7 +166,7 @@ namespace CrusaderWars.data.save_file
             File.WriteAllText(Writter.DataTEMPFilesPaths.VassalContracts_Path(), "");
             File.WriteAllText(Writter.DataFilesPaths.Opinions_Path(), "");
             File.WriteAllText(Writter.DataTEMPFilesPaths.Opinions_Path(), "");
-            Program.Logger.Debug("Finished clearing all temporary save file data.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished clearing all temporary save file data.");
         }
 
         /// <summary>  
@@ -174,13 +175,13 @@ namespace CrusaderWars.data.save_file
         /// <param name="savePath">Path to the ck3 save file</param>  
         public static void ReadFile(string savePath)
         {
-            Program.Logger.Debug($"Starting to read save file: {Path.GetFullPath(savePath)}");
+            CrusaderWarsEnvironment.Logger.Debug($"Starting to read save file: {Path.GetFullPath(savePath)}");
             ReadMetaData();
             //Clean all data in save file data files
-            Program.Logger.Debug("Clearing previous save data from temp files...");
+            CrusaderWarsEnvironment.Logger.Debug("Clearing previous save data from temp files...");
             ClearFilesData();
             // Data.Reset(); // Reset all static data containers and extraction flags -- REMOVED as per plan
-            Program.Logger.Debug("Previous save data cleared.");
+            CrusaderWarsEnvironment.Logger.Debug("Previous save data cleared.");
             long startMemoryt = GC.GetTotalMemory(false);
 
             using (FileStream saveFile = File.Open(savePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
@@ -193,7 +194,7 @@ namespace CrusaderWars.data.save_file
                     lineCount++;
                     if (lineCount % 500000 == 0)
                     {
-                        Program.Logger.Debug($"... Read {lineCount} lines from save file ...");
+                        CrusaderWarsEnvironment.Logger.Debug($"... Read {lineCount} lines from save file ...");
                     }
 
                     if (twbattle.BattleState.IsSiegeBattle && !string.IsNullOrEmpty(BattleResult.ProvinceID))
@@ -229,7 +230,7 @@ namespace CrusaderWars.data.save_file
                 }
                 long endMemoryt = GC.GetTotalMemory(false);
                 long memoryUsaget = endMemoryt - startMemoryt;
-                Program.Logger.Debug($"Finished reading save file. Memory Usage: {memoryUsaget / 1048576} megabytes");
+                CrusaderWarsEnvironment.Logger.Debug($"Finished reading save file. Memory Usage: {memoryUsaget / 1048576} megabytes");
                 reader.Close();
                 saveFile.Close();
             }

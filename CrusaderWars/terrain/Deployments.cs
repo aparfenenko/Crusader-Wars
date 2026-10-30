@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using CrusaderWars.client;
 using CrusaderWars.twbattle;
 using CrusaderWars.unit_mapper;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.terrain
 {
@@ -181,25 +182,25 @@ namespace CrusaderWars.terrain
             if (BattleState.AutofixAttackerDirectionOverride != null)
             {
                 attacker_direction = BattleState.AutofixAttackerDirectionOverride;
-                Program.Logger.Debug($"Autofix override: Attacker direction set to '{attacker_direction}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"Autofix override: Attacker direction set to '{attacker_direction}'.");
             }
             else
             {
                 string[] coords;
                 if (besiegerOrientations != null && besiegerOrientations.Any())
                 {
-                    Program.Logger.Debug($"Using map-defined besieger orientations: [{string.Join(", ", besiegerOrientations)}]");
+                    CrusaderWarsEnvironment.Logger.Debug($"Using map-defined besieger orientations: [{string.Join(", ", besiegerOrientations)}]");
                     coords = besiegerOrientations.ToArray();
                 }
                 else
                 {
-                    Program.Logger.Debug("No map-defined besieger orientations. Using all directions.");
+                    CrusaderWarsEnvironment.Logger.Debug("No map-defined besieger orientations. Using all directions.");
                     coords = new string[] { "N", "S", "E", "W" };
                 }
                 int index = _random.Next(0, coords.Length);
                 attacker_direction = coords[index];
                 BattleState.OriginalSiegeAttackerDirection = attacker_direction; // Store the initial direction
-                Program.Logger.Debug($"Initial siege attacker direction set to '{attacker_direction}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"Initial siege attacker direction set to '{attacker_direction}'.");
             }
 
             // 2. Determine Defender Direction
@@ -208,7 +209,7 @@ namespace CrusaderWars.terrain
             if (attacker_direction == defender_direction)
             {
                 defender_direction = Directions.GetOppositeDirection(attacker_direction);
-                Program.Logger.Debug($"Attacker and defender directions were the same. Changed defender direction to '{defender_direction}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"Attacker and defender directions were the same. Changed defender direction to '{defender_direction}'.");
             }
 
             // 3. Create Deployments
@@ -284,10 +285,10 @@ namespace CrusaderWars.terrain
             string globalAttackerDir = Deployments.beta_GeDirection("attacker");
             bool isAttacker = (direction == globalAttackerDir);
 
-            Program.Logger.Debug($"--- DeploymentArea ---");
-            Program.Logger.Debug($"Direction: '{direction}', Global Attacker Direction: '{globalAttackerDir}', Is Attacker: {isAttacker}");
-            Program.Logger.Debug($"Attacker Override is {(attackerOverride == null ? "NULL" : "PRESENT")}");
-            Program.Logger.Debug($"Defender Override is {(defenderOverride == null ? "NULL" : "PRESENT")}");
+            CrusaderWarsEnvironment.Logger.Debug($"--- DeploymentArea ---");
+            CrusaderWarsEnvironment.Logger.Debug($"Direction: '{direction}', Global Attacker Direction: '{globalAttackerDir}', Is Attacker: {isAttacker}");
+            CrusaderWarsEnvironment.Logger.Debug($"Attacker Override is {(attackerOverride == null ? "NULL" : "PRESENT")}");
+            CrusaderWarsEnvironment.Logger.Debug($"Defender Override is {(defenderOverride == null ? "NULL" : "PRESENT")}");
 
 
             if (isAttacker && attackerOverride != null)
@@ -296,7 +297,7 @@ namespace CrusaderWars.terrain
                 centerY = attackerOverride.Y;
                 width = attackerOverride.Width;
                 height = attackerOverride.Height;
-                Program.Logger.Debug($"Applying manual override for Attacker zone: X={centerX}, Y={centerY}, W={width}, H={height}");
+                CrusaderWarsEnvironment.Logger.Debug($"Applying manual override for Attacker zone: X={centerX}, Y={centerY}, W={width}, H={height}");
             }
             else if (!isAttacker && defenderOverride != null)
             {
@@ -304,7 +305,7 @@ namespace CrusaderWars.terrain
                 centerY = defenderOverride.Y;
                 width = defenderOverride.Width;
                 height = defenderOverride.Height;
-                Program.Logger.Debug($"Applying manual override for Defender zone: X={centerX}, Y={centerY}, W={width}, H={height}");
+                CrusaderWarsEnvironment.Logger.Debug($"Applying manual override for Defender zone: X={centerX}, Y={centerY}, W={width}, H={height}");
             }
             else
             {
@@ -558,7 +559,7 @@ namespace CrusaderWars.terrain
             float clampedX = Math.Clamp(newX, _deploymentArea.MinX, _deploymentArea.MaxX);
             if (clampedX != newX)
             {
-                Program.Logger.Debug($"WARNING: Unit X coordinate ({newX}) exceeded deployment boundary. Clamped to {clampedX}. Army may be too large for the deployment zone.");
+                CrusaderWarsEnvironment.Logger.Debug($"WARNING: Unit X coordinate ({newX}) exceeded deployment boundary. Clamped to {clampedX}. Army may be too large for the deployment zone.");
             }
             this.X = (int)clampedX;
         }
@@ -584,7 +585,7 @@ namespace CrusaderWars.terrain
             float clampedY = Math.Clamp(newY, _deploymentArea.MinY, _deploymentArea.MaxY);
             if (clampedY != newY)
             {
-                Program.Logger.Debug($"WARNING: Unit Y coordinate ({newY}) exceeded deployment boundary. Clamped to {clampedY}. Army may be too large for the deployment zone.");
+                CrusaderWarsEnvironment.Logger.Debug($"WARNING: Unit Y coordinate ({newY}) exceeded deployment boundary. Clamped to {clampedY}. Army may be too large for the deployment zone.");
             }
             this.Y = (int)clampedY;
         }

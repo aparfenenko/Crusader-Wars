@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using CrusaderWars.armies;
 using CrusaderWars.data.save_file;
 using CrusaderWars.unit_mapper;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars
 {
@@ -172,7 +173,7 @@ namespace CrusaderWars
                     unit.ChangeSoldiers((int)num_ratio);
                 }
 
-                Program.Logger.Debug("Army scaled by " + (double)ratio + '%');
+                CrusaderWarsEnvironment.Logger.Debug("Army scaled by " + (double)ratio + '%');
             }
 
         }
@@ -211,7 +212,7 @@ namespace CrusaderWars
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine($"ARMY - {ID} | {CombatSide}");
-            Program.Logger.Debug($"ARMY - {ID} | {CombatSide}");
+            CrusaderWarsEnvironment.Logger.Debug($"ARMY - {ID} | {CombatSide}");
 
             if (Commander != null)
             {
@@ -219,7 +220,7 @@ namespace CrusaderWars
                 var commanderUnit = Units.FirstOrDefault(u => u.GetRegimentType() == RegimentType.Commander);
                 string commanderKey = commanderUnit?.GetAttilaUnitKey() ?? "not_found";
                 sb.AppendLine($"## GENERAL | Name: {Commander.Name} | Soldiers: {Commander.GetUnitSoldiers()} | NobleRank: {Commander.Rank} | ArmyXP: +{Commander.GetUnitsExperience()} | Culture: {Commander.GetCultureName()} | Heritage: {Commander.GetHeritageName()} | Attila Faction: {commanderFaction} | Attila unit Key: {commanderKey}");
-                Program.Logger.Debug($"GENERAL | Name: {Commander.Name} | Soldiers: {Commander.GetUnitSoldiers()} | NobleRank: {Commander.Rank} | ArmyXP: +{Commander.GetUnitsExperience()} | Culture: {Commander.GetCultureName()} | Heritage: {Commander.GetHeritageName()} | Attila Faction: {commanderFaction} | Attila unit Key: {commanderKey}");
+                CrusaderWarsEnvironment.Logger.Debug($"GENERAL | Name: {Commander.Name} | Soldiers: {Commander.GetUnitSoldiers()} | NobleRank: {Commander.Rank} | ArmyXP: +{Commander.GetUnitsExperience()} | Culture: {Commander.GetCultureName()} | Heritage: {Commander.GetHeritageName()} | Attila Faction: {commanderFaction} | Attila unit Key: {commanderKey}");
             }
             if (Knights?.GetKnightsList() != null)
             {
@@ -231,12 +232,12 @@ namespace CrusaderWars
                     if (knight.IsAccolade())
                     {
                         sb.AppendLine($"## ACCOLADE | Name: {knight.GetName()} | Soldiers: {knight.GetSoldiers()} | Culture: {knight.GetCultureName()} | Heritage: {knight.GetHeritageName()} | Attila Faction: {knightFaction} | Attila unit Key: {knightKey}");
-                        Program.Logger.Debug($"ACCOLADE | Name: {knight.GetName()} | Soldiers: {knight.GetSoldiers()} | Culture: {knight.GetCultureName()} | Heritage: {knight.GetHeritageName()} | Attila Faction: {knightFaction} | Attila unit Key: {knightKey}");
+                        CrusaderWarsEnvironment.Logger.Debug($"ACCOLADE | Name: {knight.GetName()} | Soldiers: {knight.GetSoldiers()} | Culture: {knight.GetCultureName()} | Heritage: {knight.GetHeritageName()} | Attila Faction: {knightFaction} | Attila unit Key: {knightKey}");
                     }
                     else
                     {
                         sb.AppendLine($"## KNIGHT | Name: {knight.GetName()} | Soldiers: {knight.GetSoldiers()} | Culture: {knight.GetCultureName()} | Heritage: {knight.GetHeritageName()} | Attila Faction: {knightFaction} | Attila unit Key: {knightKey}");
-                        Program.Logger.Debug($"KNIGHT | Name: {knight.GetName()} | Soldiers: {knight.GetSoldiers()} | Culture: {knight.GetCultureName()} | Heritage: {knight.GetHeritageName()} | Attila Faction: {knightFaction} | Attila unit Key: {knightKey}");
+                        CrusaderWarsEnvironment.Logger.Debug($"KNIGHT | Name: {knight.GetName()} | Soldiers: {knight.GetSoldiers()} | Culture: {knight.GetCultureName()} | Heritage: {knight.GetHeritageName()} | Attila Faction: {knightFaction} | Attila unit Key: {knightKey}");
                     }
                 }
             }
@@ -257,11 +258,11 @@ namespace CrusaderWars
                     $"Culture: {culture} | Heritage: {heritage} | Attila Faction: {unit.GetAttilaFaction()} | " +
                     $"Attila unit Key: {unit.GetAttilaUnitKey()}");
 
-                Program.Logger.Debug($"{unitName} | Soldiers: {unit.GetSoldiers()} | " +
+                CrusaderWarsEnvironment.Logger.Debug($"{unitName} | Soldiers: {unit.GetSoldiers()} | " +
                     $"Culture: {culture} | Heritage: {heritage} | Attila Faction: {unit.GetAttilaFaction()} | " +
                     $"Attila unit Key: {unit.GetAttilaUnitKey()}");
             }
-            Program.Logger.Debug("");
+            CrusaderWarsEnvironment.Logger.Debug("");
             sb.AppendLine();
 
             File.AppendAllText(@".\data\battle.log", sb.ToString());

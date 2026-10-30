@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CrusaderWars.data.save_file;
 using CrusaderWars.client; // Added for ModOptions
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars
 {
@@ -167,7 +168,7 @@ namespace CrusaderWars
             if (casualty_percentage >= 1.0)
             {
                 hasFallen = true;
-                Program.Logger.Debug($"Knight {Name} ({ID}) commanding an MAA unit has fallen. Unit Casualties: 100%.");
+                CrusaderWarsEnvironment.Logger.Debug($"Knight {Name} ({ID}) commanding an MAA unit has fallen. Unit Casualties: 100%.");
                 return;
             }
 
@@ -188,11 +189,11 @@ namespace CrusaderWars
             if (random_roll <= final_chance_to_fall)
             {
                 hasFallen = true;
-                Program.Logger.Debug($"Knight {Name} ({ID}) commanding an MAA unit has fallen. Unit Casualties: {casualty_percentage:P2}, Prowess: {Prowess}, Survival Bonus: {prowess_survival_bonus:P2}, Final Chance: {final_chance_to_fall:P2}, Roll: {random_roll:P2}.");
+                CrusaderWarsEnvironment.Logger.Debug($"Knight {Name} ({ID}) commanding an MAA unit has fallen. Unit Casualties: {casualty_percentage:P2}, Prowess: {Prowess}, Survival Bonus: {prowess_survival_bonus:P2}, Final Chance: {final_chance_to_fall:P2}, Roll: {random_roll:P2}.");
             }
             else
             {
-                Program.Logger.Debug($"Knight {Name} ({ID}) commanding an MAA unit survived. Unit Casualties: {casualty_percentage:P2}, Prowess: {Prowess}, Survival Bonus: {prowess_survival_bonus:P2}, Final Chance: {final_chance_to_fall:P2}, Roll: {random_roll:P2}.");
+                CrusaderWarsEnvironment.Logger.Debug($"Knight {Name} ({ID}) commanding an MAA unit survived. Unit Casualties: {casualty_percentage:P2}, Prowess: {Prowess}, Survival Bonus: {prowess_survival_bonus:P2}, Final Chance: {final_chance_to_fall:P2}, Roll: {random_roll:P2}.");
             }
         }
 
@@ -226,44 +227,44 @@ namespace CrusaderWars
                 // Determine which option to set based on its percentage chance
                 if (RandomNumber <= slainThreshold)
                 {
-                    Program.Logger.Debug($"Knight {ID} has been slain in battle (chance: {slainChance}%).");
+                    CrusaderWarsEnvironment.Logger.Debug($"Knight {ID} has been slain in battle (chance: {slainChance}%).");
                     return (true, false, traits_line);
                 }
 
                 string newTraits = traits_line;
                 if (RandomNumber <= woundedThreshold)
                 {
-                    Program.Logger.Debug("A Knight was Wounded");
+                    CrusaderWarsEnvironment.Logger.Debug("A Knight was Wounded");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.Wounded().ToString());
                 }
                 else if (RandomNumber <= severelyInjuredThreshold)
                 {
-                    Program.Logger.Debug("A Knight was Severely Injured");
+                    CrusaderWarsEnvironment.Logger.Debug("A Knight was Severely Injured");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.Severely_Injured().ToString());
                 }
                 else if (RandomNumber <= brutallyMauledThreshold)
                 {
-                    Program.Logger.Debug("A Knight was Brutally Mauled");
+                    CrusaderWarsEnvironment.Logger.Debug("A Knight was Brutally Mauled");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.Brutally_Mauled().ToString());
                 }
                 else if (RandomNumber <= maimedThreshold)
                 {
-                    Program.Logger.Debug("A Knight was Maimed");
+                    CrusaderWarsEnvironment.Logger.Debug("A Knight was Maimed");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.Maimed().ToString());
                 }
                 else if (RandomNumber <= oneLeggedThreshold)
                 {
-                    Program.Logger.Debug("A Knight got One Legged");
+                    CrusaderWarsEnvironment.Logger.Debug("A Knight got One Legged");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.One_Legged().ToString());
                 }
                 else if (RandomNumber <= oneEyedThreshold)
                 {
-                    Program.Logger.Debug("A Knight got One Eyed");
+                    CrusaderWarsEnvironment.Logger.Debug("A Knight got One Eyed");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.One_Eyed().ToString());
                 }
                 else if (RandomNumber <= disfiguredThreshold)
                 {
-                    Program.Logger.Debug("A Knight got Disfigured");
+                    CrusaderWarsEnvironment.Logger.Debug("A Knight got Disfigured");
                     newTraits = CharacterWounds.VerifyTraits(traits_line, WoundedTraits.Disfigured().ToString());
                 }
 
@@ -275,7 +276,7 @@ namespace CrusaderWars
                 if (isCaptured)
                 {
                     string side = wasOnLosingSide ? "losing" : "winning";
-                    Program.Logger.Debug($"Knight {ID} has been captured from the {side} side (chance: {effectivePrisonerChance}%).");
+                    CrusaderWarsEnvironment.Logger.Debug($"Knight {ID} has been captured from the {side} side (chance: {effectivePrisonerChance}%).");
                 }
 
                 return (false, isCaptured, newTraits);
@@ -303,7 +304,7 @@ namespace CrusaderWars
             // Safely get effectiveness from the KnightSystem
             if (_knightSystem == null)
             {
-                Program.Logger.Debug("WARNING: Knight's KnightSystem is not set. Cannot calculate effectiveness boost.");
+                CrusaderWarsEnvironment.Logger.Debug("WARNING: Knight's KnightSystem is not set. Cannot calculate effectiveness boost.");
                 return prowess_level;
             }
             int effectiveness = _knightSystem.Effectiveness; // Modified: Get from _knightSystem
@@ -596,7 +597,7 @@ namespace CrusaderWars
             {
                 if (Knights.Remove(knightToRemove))
                 {
-                    Program.Logger.Debug($"Removed knight {knightToRemove.GetName()} ({knightToRemove.GetID()}) from KnightSystem.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Removed knight {knightToRemove.GetName()} ({knightToRemove.GetID()}) from KnightSystem.");
                 }
             }
         }

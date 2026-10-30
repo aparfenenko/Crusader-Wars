@@ -11,6 +11,7 @@ using CrusaderWars.data.save_file;
 using CrusaderWars.twbattle;
 using CrusaderWars.data.battle_results;
 using CrusaderWars.unit_mapper;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars
 {
@@ -71,7 +72,7 @@ namespace CrusaderWars
 
         public static void Reset()
         {
-            Program.Logger.Debug("Resetting all data containers and extraction flags.");
+            CrusaderWarsEnvironment.Logger.Debug("Resetting all data containers and extraction flags.");
             // Clear lists and reset values
             Date.Reset();
             twbattle.Sieges.Reset();
@@ -140,14 +141,14 @@ namespace CrusaderWars
             if (line.Contains("provinces={"))
             {
                 isSearchPermitted = true;
-                Program.Logger.Debug("GetterKeys: province search permitted.");
+                CrusaderWarsEnvironment.Logger.Debug("GetterKeys: province search permitted.");
             }
 
 
             if (isSearchPermitted && line.Contains($"\t{province_id}={{"))
             {
                 isSearchBuildingsPermitted = true;
-                Program.Logger.Debug($"GetterKeys: province buildings search permitted for province {province_id}.");
+                CrusaderWarsEnvironment.Logger.Debug($"GetterKeys: province buildings search permitted for province {province_id}.");
             }
 
             if (isSearchBuildingsPermitted)
@@ -156,13 +157,13 @@ namespace CrusaderWars
                 {
                     string culture = Regex.Match(line, @"culture=(.+)").Groups[1].Value.Trim('"');
                     twbattle.Sieges.SetHoldingCulture(culture);
-                    Program.Logger.Debug($"GetterKeys: Found culture: {culture}");
+                    CrusaderWarsEnvironment.Logger.Debug($"GetterKeys: Found culture: {culture}");
                 }
 
                 if (line.Contains("buildings={"))
                 {
                     isExtractBuildingsPermitted = true;
-                    Program.Logger.Debug("GetterKeys: building extraction permitted.");
+                    CrusaderWarsEnvironment.Logger.Debug("GetterKeys: building extraction permitted.");
                 }
             }
 
@@ -173,7 +174,7 @@ namespace CrusaderWars
 
                     string building_key = Regex.Match(line, @"=(.+)").Groups[1].Value.Trim('"').Trim('/');
                     Data.Province_Buildings.Add(building_key);
-                    Program.Logger.Debug($"GetterKeys: Found building key: {building_key}");
+                    CrusaderWarsEnvironment.Logger.Debug($"GetterKeys: Found building key: {building_key}");
                 }
 
 
@@ -188,18 +189,18 @@ namespace CrusaderWars
                 if (int.TryParse(fort_level, out int level))
                 {
                     twbattle.Sieges.SetFortLevel(level);
-                    Program.Logger.Debug($"GetterKeys: Found fort level: {level}");
+                    CrusaderWarsEnvironment.Logger.Debug($"GetterKeys: Found fort level: {level}");
                 }
                 else
                 {
                     twbattle.Sieges.SetFortLevel(0);
-                    Program.Logger.Debug("GetterKeys: Could not parse fort level, setting to 0.");
+                    CrusaderWarsEnvironment.Logger.Debug("GetterKeys: Could not parse fort level, setting to 0.");
                 }
 
                 isExtractBuildingsPermitted = false;
                 isSearchBuildingsPermitted = false;
                 isSearchPermitted = false;
-                Program.Logger.Debug("GetterKeys: Finished province search, resetting flags.");
+                CrusaderWarsEnvironment.Logger.Debug("GetterKeys: Finished province search, resetting flags.");
                 return;
 
             }
@@ -220,7 +221,7 @@ namespace CrusaderWars
                 {
                     if (line.Contains("traits_lookup={"))
                     {
-                        Program.Logger.Debug("Found start of traits_lookup block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of traits_lookup block.");
                         Start_TraitsFound = true;
                     }
                 }
@@ -229,8 +230,8 @@ namespace CrusaderWars
                 {
                     if (line == "provinces={")
                     {
-                        Program.Logger.Debug("Found end of traits_lookup block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Traits.Length} characters to Traits.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of traits_lookup block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Traits.Length} characters to Traits.txt");
                         File.WriteAllText(@".\data\save_file_data\Traits.txt", Data.SB_Traits.ToString());
                         Data.SB_Traits = new StringBuilder();
                         GC.Collect();
@@ -262,7 +263,7 @@ namespace CrusaderWars
                 {
                     if (line == "\tcombats={")
                     {
-                        Program.Logger.Debug("Found start of combats block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of combats block.");
                         Start_CombatsFound = true;
                     }
                 }
@@ -272,8 +273,8 @@ namespace CrusaderWars
                     Data.SB_Combats.AppendLine(line); // Moved to the beginning of the block
                     if (line == "\t}") // Modified: Match specific indentation
                     {
-                        Program.Logger.Debug("Found end of combats block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Combats.Length} characters to Combats.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of combats block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Combats.Length} characters to Combats.txt");
                         //Write Combats Data to txt file
                         File.WriteAllText(@".\data\save_file_data\Combats.txt", Data.SB_Combats.ToString());
                         Data.SB_Combats = new StringBuilder();
@@ -305,7 +306,7 @@ namespace CrusaderWars
                 {
                     if (line == "\tcombat_results={")
                     {
-                        Program.Logger.Debug("Found start of combat_results block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of combat_results block.");
                         Start_BattleResultsFound = true;
                     }
                 }
@@ -317,8 +318,8 @@ namespace CrusaderWars
                     Data.SB_CombatResults.AppendLine(line); // Moved to the beginning of the block
                     if (line == "\t}") // Modified: Match specific indentation
                     {
-                        Program.Logger.Debug("Found end of combat_results block.");
-                        Program.Logger.Debug($"Writing {Data.SB_CombatResults.Length} characters to CombatResults.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of combat_results block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_CombatResults.Length} characters to CombatResults.txt");
                         //Write CombatResults Data to txt file
                         File.WriteAllText(@".\data\save_file_data\CombatResults.txt", Data.SB_CombatResults.ToString());
                         Data.SB_CombatResults = new StringBuilder();
@@ -349,7 +350,7 @@ namespace CrusaderWars
                 {
                     if (line == "\tregiments={")
                     {
-                        Program.Logger.Debug("Found start of regiments block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of regiments block.");
                         Start_RegimentsFound = true;
                     }
                 }
@@ -359,8 +360,8 @@ namespace CrusaderWars
 
                     if (line == "\tarmy_regiments={")
                     {
-                        Program.Logger.Debug("Found end of regiments block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Regiments.Length} characters to Regiments.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of regiments block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Regiments.Length} characters to Regiments.txt");
                         //Write Regiments Data to txt file
                         File.WriteAllText(@".\data\save_file_data\Regiments.txt", Data.SB_Regiments.ToString());
                         Data.SB_Regiments = new StringBuilder();
@@ -392,7 +393,7 @@ namespace CrusaderWars
                 {
                     if (line == "\tarmy_regiments={")
                     {
-                        Program.Logger.Debug("Found start of army_regiments block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of army_regiments block.");
                         Start_ArmyRegimentsFound = true;
                     }
                 }
@@ -402,8 +403,8 @@ namespace CrusaderWars
 
                     if (line == "\tarmies={")
                     {
-                        Program.Logger.Debug("Found end of army_regiments block.");
-                        Program.Logger.Debug($"Writing {Data.SB_ArmyRegiments.Length} characters to ArmyRegiments.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of army_regiments block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_ArmyRegiments.Length} characters to ArmyRegiments.txt");
                         //Write ArmyRegiments Data to txt file
                         File.WriteAllText(@".\data\save_file_data\ArmyRegiments.txt", Data.SB_ArmyRegiments.ToString());
                         Data.SB_ArmyRegiments = new StringBuilder();
@@ -435,7 +436,7 @@ namespace CrusaderWars
                 {
                     if (line == "\tarmies={")
                     {
-                        Program.Logger.Debug("Found start of armies block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of armies block.");
                         Start_ArmiesFound = true;
                     }
                 }
@@ -445,8 +446,8 @@ namespace CrusaderWars
 
                     if (line == "\t}")
                     {
-                        Program.Logger.Debug("Found end of armies block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Armies.Length} characters to Armies.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of armies block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Armies.Length} characters to Armies.txt");
                         //Write Armies Data to txt file
                         File.WriteAllText(@".\data\save_file_data\Armies.txt", Data.SB_Armies.ToString());
                         Data.SB_Armies = new StringBuilder();
@@ -479,7 +480,7 @@ namespace CrusaderWars
                     //Match start = Regex.Match(line, @"living={");
                     if (line == "living={")
                     {
-                        Program.Logger.Debug("Found start of living block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of living block.");
                         Start_LivingFound = true;
                     }
                 }
@@ -488,8 +489,8 @@ namespace CrusaderWars
                 {
                     if (line == "dead_unprunable={")
                     {
-                        Program.Logger.Debug("Found end of living block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Living.Length} characters to Living.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of living block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Living.Length} characters to Living.txt");
                         //Write Living Data to txt file
                         File.WriteAllText(@".\data\save_file_data\Living.txt", Data.SB_Living.ToString());
                         Data.SB_Living = new StringBuilder();
@@ -523,7 +524,7 @@ namespace CrusaderWars
                     //Match start = Regex.Match(line, @"living={");
                     if (line == "\tcounties={")
                     {
-                        Program.Logger.Debug("Found start of counties block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of counties block.");
                         Start_CountiesFound = true;
                     }
                 }
@@ -532,8 +533,8 @@ namespace CrusaderWars
                 {
                     if (line == "}")
                     {
-                        Program.Logger.Debug("Found end of counties block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Counties.Length} characters to Counties.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of counties block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Counties.Length} characters to Counties.txt");
                         //Write Counties Data to txt file
                         File.WriteAllText(@".\data\save_file_data\Counties.txt", Data.SB_Counties.ToString());
                         Data.SB_Counties = new StringBuilder();
@@ -566,7 +567,7 @@ namespace CrusaderWars
                     //Match start = Regex.Match(line, @"living={");
                     if (line == "units={")
                     {
-                        Program.Logger.Debug("Found start of units block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of units block.");
                         Start_UnitsFound = true;
                     }
                 }
@@ -575,8 +576,8 @@ namespace CrusaderWars
                 {
                     if (line == "}")
                     {
-                        Program.Logger.Debug("Found end of units block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Units.Length} characters to Units.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of units block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Units.Length} characters to Units.txt");
                         //Write Units Data to txt file
                         File.WriteAllText(@".\data\save_file_data\Units.txt", Data.SB_Units.ToString());
                         Data.SB_Units = new StringBuilder();
@@ -609,7 +610,7 @@ namespace CrusaderWars
                 {
                     if (line == "court_positions={")
                     {
-                        Program.Logger.Debug("Found start of court_positions block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of court_positions block.");
                         Start_CourtPositionsFound = true;
                         courtPositionsBraceCount = 0;
                     }
@@ -627,8 +628,8 @@ namespace CrusaderWars
 
                     if (courtPositionsBraceCount == 0 && Start_CourtPositionsFound)
                     {
-                        Program.Logger.Debug("Found end of court_positions block by bracket counting.");
-                        Program.Logger.Debug($"Writing {Data.SB_CourtPositions.Length} characters to CourtPositions.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of court_positions block by bracket counting.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_CourtPositions.Length} characters to CourtPositions.txt");
                         File.WriteAllText(@".\data\save_file_data\CourtPositions.txt", Data.SB_CourtPositions.ToString());
                         Data.SB_CourtPositions = new StringBuilder();
                         GC.Collect();
@@ -658,7 +659,7 @@ namespace CrusaderWars
                     //Match start = Regex.Match(line, @"living={");
                     if (line == "culture_manager={")
                     {
-                        Program.Logger.Debug("Found start of culture_manager block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of culture_manager block.");
                         Start_CulturesFound = true;
                     }
                 }
@@ -667,8 +668,8 @@ namespace CrusaderWars
                 {
                     if (line == "}")
                     {
-                        Program.Logger.Debug("Found end of culture_manager block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Cultures.Length} characters to Cultures.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of culture_manager block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Cultures.Length} characters to Cultures.txt");
                         //Write Cultures Data to txt file
                         File.WriteAllText(@".\data\save_file_data\Cultures.txt", Data.SB_Cultures.ToString());
                         Data.SB_Cultures = new StringBuilder();
@@ -703,7 +704,7 @@ namespace CrusaderWars
                     //Match start = Regex.Match(line, @"living={");
                     if (line == "mercenary_company_manager={")
                     {
-                        Program.Logger.Debug("Found start of mercenary_company_manager block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of mercenary_company_manager block.");
                         Start_MercenariesFound = true;
                     }
                 }
@@ -713,8 +714,8 @@ namespace CrusaderWars
 
                     if (line == "}")
                     {
-                        Program.Logger.Debug("Found end of mercenary_company_manager block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Mercenaries.Length} characters to Mercenaries.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of mercenary_company_manager block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Mercenaries.Length} characters to Mercenaries.txt");
                         //Write Mercenaries Data to txt file
                         File.WriteAllText(@".\data\save_file_data\Mercenaries.txt", Data.SB_Mercenaries.ToString());
                         Data.SB_Mercenaries = new StringBuilder();
@@ -749,7 +750,7 @@ namespace CrusaderWars
                     //Match start = Regex.Match(line, @"living={");
                     if (line == "\tlanded_titles={")
                     {
-                        Program.Logger.Debug("Found start of landed_titles block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of landed_titles block.");
                         Start_LandedTitlesFound = true;
                     }
                 }
@@ -759,8 +760,8 @@ namespace CrusaderWars
 
                     if (line.StartsWith("\tindex="))
                     {
-                        Program.Logger.Debug("Found end of landed_titles block.");
-                        Program.Logger.Debug($"Writing {Data.SB_LandedTitles.Length} characters to LandedTitles.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of landed_titles block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_LandedTitles.Length} characters to LandedTitles.txt");
                         //Write Landed Titles Data to txt file
                         File.WriteAllText(@".\data\save_file_data\LandedTitles.txt", Data.SB_LandedTitles.ToString());
                         Data.SB_LandedTitles = new StringBuilder();
@@ -796,7 +797,7 @@ namespace CrusaderWars
                     //Match start = Regex.Match(line, @"living={");
                     if (line == "accolades={")
                     {
-                        Program.Logger.Debug("Found start of accolades block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of accolades block.");
                         Start_AccoladesFound = true;
                     }
                 }
@@ -806,8 +807,8 @@ namespace CrusaderWars
 
                     if (line.StartsWith("tax_slot_manager={"))
                     {
-                        Program.Logger.Debug("Found end of accolades block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Accolades.Length} characters to Accolades.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of accolades block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Accolades.Length} characters to Accolades.txt");
                         //Write Accolades Data to txt file
                         File.WriteAllText(@".\data\save_file_data\Accolades.txt", Data.SB_Accolades.ToString());
                         Data.SB_Accolades = new StringBuilder();
@@ -841,7 +842,7 @@ namespace CrusaderWars
                 {
                     if (line == "dynasties={")
                     {
-                        Program.Logger.Debug("Found start of dynasties block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of dynasties block.");
                         Start_DynastiesFound = true;
                         dynastiesBraceCount = 0; // Reset before counting
                     }
@@ -866,8 +867,8 @@ namespace CrusaderWars
 
                     if (dynastiesBraceCount == 0 && Start_DynastiesFound)
                     {
-                        Program.Logger.Debug("Found end of dynasties block by bracket counting.");
-                        Program.Logger.Debug($"Writing {Data.SB_Dynasties.Length} characters to Dynasties.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of dynasties block by bracket counting.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Dynasties.Length} characters to Dynasties.txt");
                         File.WriteAllText(@".\data\save_file_data\Dynasties.txt", Data.SB_Dynasties.ToString());
                         Data.SB_Dynasties = new StringBuilder();
                         GC.Collect();
@@ -898,7 +899,7 @@ namespace CrusaderWars
                 {
                     if (line.StartsWith("played_character={"))
                     {
-                        Program.Logger.Debug("Found start of played_character block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of played_character block.");
                         Start_PlayedCharacterFound = true;
                         playedCharacterBraceCount = 0; // Reset
                     }
@@ -916,9 +917,9 @@ namespace CrusaderWars
 
                     if (playedCharacterBraceCount == 0 && Start_PlayedCharacterFound)
                     {
-                        Program.Logger.Debug("Found end of played_character block by bracket counting.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of played_character block by bracket counting.");
                         Data.Original_PlayedCharacter_Block = Data.SB_PlayedCharacter.ToString();
-                        Program.Logger.Debug($"Writing {Data.Original_PlayedCharacter_Block.Length} characters to PlayedCharacter.txt");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.Original_PlayedCharacter_Block.Length} characters to PlayedCharacter.txt");
                         File.WriteAllText(@".\data\save_file_data\PlayedCharacter.txt", Data.Original_PlayedCharacter_Block);
                         Data.SB_PlayedCharacter = new StringBuilder();
                         GC.Collect();
@@ -947,7 +948,7 @@ namespace CrusaderWars
                 {
                     if (line.StartsWith("currently_played_characters={"))
                     {
-                        Program.Logger.Debug("Found start of currently_played_characters block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of currently_played_characters block.");
                         Start_CurrentlyPlayedCharactersFound = true;
                     }
                 }
@@ -958,9 +959,9 @@ namespace CrusaderWars
 
                     if (line.Contains("}"))
                     {
-                        Program.Logger.Debug("Found end of currently_played_characters block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of currently_played_characters block.");
                         Data.Original_CurrentlyPlayedCharacters_Block = Data.SB_CurrentlyPlayedCharacters.ToString();
-                        Program.Logger.Debug($"Writing {Data.Original_CurrentlyPlayedCharacters_Block.Length} characters to CurrentlyPlayedCharacters.txt");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.Original_CurrentlyPlayedCharacters_Block.Length} characters to CurrentlyPlayedCharacters.txt");
                         File.WriteAllText(@".\data\save_file_data\CurrentlyPlayedCharacters.txt", Data.Original_CurrentlyPlayedCharacters_Block);
                         Data.SB_CurrentlyPlayedCharacters = new StringBuilder();
                         GC.Collect();
@@ -992,7 +993,7 @@ namespace CrusaderWars
                 {
                     if (line == "sieges={") // Assuming top-level block, similar to "units={"
                     {
-                        Program.Logger.Debug("Found start of sieges block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of sieges block.");
                         Start_SiegesFound = true;
                     }
                 }
@@ -1007,8 +1008,8 @@ namespace CrusaderWars
                     // the end condition is a simple "}".
                     if (line == "}")
                     {
-                        Program.Logger.Debug("Found end of sieges block.");
-                        Program.Logger.Debug($"Writing {Data.SB_Sieges.Length} characters to Sieges.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of sieges block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Sieges.Length} characters to Sieges.txt");
                         File.WriteAllText(@".\data\save_file_data\Sieges.txt", Data.SB_Sieges.ToString());
                         Data.SB_Sieges = new StringBuilder();
                         GC.Collect();
@@ -1038,7 +1039,7 @@ namespace CrusaderWars
                 {
                     if (line == "wars={")
                     {
-                        Program.Logger.Debug("Found start of wars block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of wars block.");
                         Start_WarsFound = true;
                         warsBraceCount = 0; // Reset before counting
                     }
@@ -1062,8 +1063,8 @@ namespace CrusaderWars
 
                     if (warsBraceCount == 0 && Start_WarsFound)
                     {
-                        Program.Logger.Debug("Found end of wars block by bracket counting.");
-                        Program.Logger.Debug($"Writing {Data.SB_Wars.Length} characters to Wars.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of wars block by bracket counting.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Wars.Length} characters to Wars.txt");
                         File.WriteAllText(@".\data\save_file_data\Wars.txt", Data.SB_Wars.ToString());
                         Data.SB_Wars = new StringBuilder();
                         GC.Collect();
@@ -1093,7 +1094,7 @@ namespace CrusaderWars
                 {
                     if (line == "vassal_contracts={")
                     {
-                        Program.Logger.Debug("Found start of vassal_contracts block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of vassal_contracts block.");
                         Start_VassalContractsFound = true;
                         vassalContractsBraceCount = 0;
                     }
@@ -1111,8 +1112,8 @@ namespace CrusaderWars
 
                     if (vassalContractsBraceCount == 0 && Start_VassalContractsFound)
                     {
-                        Program.Logger.Debug("Found end of vassal_contracts block by bracket counting.");
-                        Program.Logger.Debug($"Writing {Data.SB_VassalContracts.Length} characters to VassalContracts.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of vassal_contracts block by bracket counting.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_VassalContracts.Length} characters to VassalContracts.txt");
                         File.WriteAllText(@".\data\save_file_data\VassalContracts.txt", Data.SB_VassalContracts.ToString());
                         Data.SB_VassalContracts = new StringBuilder();
                         GC.Collect();
@@ -1142,7 +1143,7 @@ namespace CrusaderWars
                 {
                     if (line == "opinions={")
                     {
-                        Program.Logger.Debug("Found start of opinions block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found start of opinions block.");
                         Start_OpinionsFound = true;
                         opinionsBraceCount = 0;
                     }
@@ -1160,8 +1161,8 @@ namespace CrusaderWars
 
                     if (opinionsBraceCount == 0 && Start_OpinionsFound)
                     {
-                        Program.Logger.Debug("Found end of opinions block by bracket counting.");
-                        Program.Logger.Debug($"Writing {Data.SB_Opinions.Length} characters to Opinions.txt");
+                        CrusaderWarsEnvironment.Logger.Debug("Found end of opinions block by bracket counting.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Opinions.Length} characters to Opinions.txt");
                         File.WriteAllText(@".\data\save_file_data\Opinions.txt", Data.SB_Opinions.ToString());
                         Data.SB_Opinions = new StringBuilder();
                         GC.Collect();

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using CrusaderWars.twbattle;
 using CrusaderWars.unit_mapper;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.terrain
 {
@@ -664,7 +665,7 @@ namespace CrusaderWars.terrain
                 var terrainItems = UnitMappers_BETA.Terrains.GetNormalMaps().Where(item => item.terrain == terrain).ToList();
                 if (terrainItems.Any())
                 {
-                    Program.Logger.Debug($"Found {terrainItems.Count} map variants for terrain '{terrain}' in unit mapper XML. Using these exclusively.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Found {terrainItems.Count} map variants for terrain '{terrain}' in unit mapper XML. Using these exclusively.");
                     foreach (var item in terrainItems)
                     {
                         allVariants.Add((item.x, item.y, ALL, ALL));
@@ -676,7 +677,7 @@ namespace CrusaderWars.terrain
                 }
                 else
                 {
-                    Program.Logger.Debug($"No map variants found for terrain '{terrain}' in unit mapper XML. Falling back to hardcoded maps.");
+                    CrusaderWarsEnvironment.Logger.Debug($"No map variants found for terrain '{terrain}' in unit mapper XML. Falling back to hardcoded maps.");
                 }
             }
 
@@ -759,13 +760,13 @@ namespace CrusaderWars.terrain
 
         public static (string X, string Y, string[] attackerPositions, string[] defenderPositions) GetBattleMap(string terrain, string provinceName)
         {
-            Program.Logger.Debug($"GetBattleMap called for terrain: '{terrain}', province: '{provinceName}'");
+            CrusaderWarsEnvironment.Logger.Debug($"GetBattleMap called for terrain: '{terrain}', province: '{provinceName}'");
 
             var allVariants = GetAllMapVariantsForTerrain(terrain);
 
             if (!allVariants.Any())
             {
-                Program.Logger.Debug("No terrain matched in GetBattleMap. Returning default map.");
+                CrusaderWarsEnvironment.Logger.Debug("No terrain matched in GetBattleMap. Returning default map.");
                 string[] ALL = { "All", "All" };
                 return ("0.631", "0.199", ALL, ALL);
             }
@@ -773,7 +774,7 @@ namespace CrusaderWars.terrain
             int deterministicIndex = GetDeterministicIndex(provinceName, allVariants.Count);
             var selectedMap = allVariants[deterministicIndex];
 
-            Program.Logger.Debug($"Deterministically selected field map variant #{deterministicIndex + 1} of {allVariants.Count} for terrain '{terrain}'. Coordinates: ({selectedMap.X}, {selectedMap.Y})");
+            CrusaderWarsEnvironment.Logger.Debug($"Deterministically selected field map variant #{deterministicIndex + 1} of {allVariants.Count} for terrain '{terrain}'. Coordinates: ({selectedMap.X}, {selectedMap.Y})");
 
             return selectedMap;
         }

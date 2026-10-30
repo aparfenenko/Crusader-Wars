@@ -16,14 +16,14 @@ namespace CrusaderWars.data.battle_results
         //---------------------------------//
         public static (List<string> AliveList, List<string> KillsList) GetRemainingAndKills(string path_attila_log)
         {
-            Program.Logger.Debug($"Entering GetRemainingAndKills for log file: {path_attila_log}");
+            CrusaderWarsEnvironment.Logger.Debug($"Entering GetRemainingAndKills for log file: {path_attila_log}");
             // Initialize with empty collections
             List<string> aliveList = new();
             List<string> killsList = new();
 
             if (!File.Exists(path_attila_log))
             {
-                Program.Logger.Debug($"Attila log file not found at: {path_attila_log}. Returning empty lists.");
+                CrusaderWarsEnvironment.Logger.Debug($"Attila log file not found at: {path_attila_log}. Returning empty lists.");
                 return (aliveList, killsList);
             }
 
@@ -40,21 +40,21 @@ namespace CrusaderWars.data.battle_results
                 {
                     if (line == "-----REMAINING SOLDIERS-----!!")
                     {
-                        Program.Logger.Debug("Found '-----REMAINING SOLDIERS-----!!' marker.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found '-----REMAINING SOLDIERS-----!!' marker.");
                         aliveSearchStarted = true;
                         killsSearchStarted = false;
                     }
 
                     else if (line == "-----NUMBERS OF KILLS-----!!")
                     {
-                        Program.Logger.Debug("Found '-----NUMBERS OF KILLS-----!!' marker.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found '-----NUMBERS OF KILLS-----!!' marker.");
                         aliveSearchStarted = false;
                         killsSearchStarted = true;
                     }
 
                     else if (line == "-----PRINT ENDED-----!!")
                     {
-                        Program.Logger.Debug("Found '-----PRINT ENDED-----!!' marker. Adding current report.");
+                        CrusaderWarsEnvironment.Logger.Debug("Found '-----PRINT ENDED-----!!' marker. Adding current report.");
                         aliveList.Add(aliveText);
                         killsList.Add(killsText);
                         aliveText = "";
@@ -75,7 +75,7 @@ namespace CrusaderWars.data.battle_results
                 }
             }
 
-            Program.Logger.Debug(
+            CrusaderWarsEnvironment.Logger.Debug(
                 $"Found {aliveList.Count} entries for alive reports and {killsList.Count} entries for kill reports.");
             return (aliveList, killsList);
         }
@@ -83,14 +83,14 @@ namespace CrusaderWars.data.battle_results
         public static string GetAttilaWinner(string path_attila_log, string player_armies_combat_side,
             string enemy_armies_combat_side)
         {
-            Program.Logger.Debug($"Entering GetAttilaWinner for log file: {path_attila_log}");
+            CrusaderWarsEnvironment.Logger.Debug($"Entering GetAttilaWinner for log file: {path_attila_log}");
             string winner = enemy_armies_combat_side; // Default to a loss
 
             try
             {
                 if (!File.Exists(path_attila_log))
                 {
-                    Program.Logger.Debug($"Attila log file not found at: {path_attila_log}. Returning default winner.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Attila log file not found at: {path_attila_log}. Returning default winner.");
                     return winner;
                 }
 
@@ -123,40 +123,40 @@ namespace CrusaderWars.data.battle_results
                 if (lastHeaderIndex != -1)
                 {
                     relevantLogSection = logContent.Substring(lastHeaderIndex);
-                    Program.Logger.Debug("Isolated final battle report section from Attila log.");
+                    CrusaderWarsEnvironment.Logger.Debug("Isolated final battle report section from Attila log.");
                 }
                 else
                 {
                     relevantLogSection = logContent; // Fallback to entire log if header not found
-                    Program.Logger.Debug("Battle report header not found. Analyzing entire Attila log content.");
+                    CrusaderWarsEnvironment.Logger.Debug("Battle report header not found. Analyzing entire Attila log content.");
                 }
 
                 // Search for "Victory" only within the isolated log section
                 if (relevantLogSection.Contains("Victory"))
                 {
                     winner = player_armies_combat_side;
-                    Program.Logger.Debug($"'Victory' keyword found in relevant log section. Winner set to: {winner}");
+                    CrusaderWarsEnvironment.Logger.Debug($"'Victory' keyword found in relevant log section. Winner set to: {winner}");
                 }
                 else
                 {
-                    Program.Logger.Debug(
+                    CrusaderWarsEnvironment.Logger.Debug(
                         $"'Victory' keyword not found in relevant log section. Winner remains default: {winner}");
                 }
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug(
+                CrusaderWarsEnvironment.Logger.Debug(
                     $"Error determining Attila winner: {ex.Message}. Returning default winner ({winner}).");
                 // The 'winner' variable is already initialized to enemy_armies_combat_side, so no need to re-assign.
             }
 
-            Program.Logger.Debug($"Determined Attila winner: {winner}");
+            CrusaderWarsEnvironment.Logger.Debug($"Determined Attila winner: {winner}");
             return winner;
         }
 
         public static (string outcome, string wall_damage) GetSiegeOutcome(string path_attila_log, string left_side_combat_side, string right_side_combat_side)
         {
-            Program.Logger.Debug($"Entering GetSiegeOutcome for log file: {path_attila_log}");
+            CrusaderWarsEnvironment.Logger.Debug($"Entering GetSiegeOutcome for log file: {path_attila_log}");
             string outcome = "Successfully Defended"; // Default for defender
             string wall_damage = "No Damage";
 
@@ -164,7 +164,7 @@ namespace CrusaderWars.data.battle_results
             {
                 if (!File.Exists(path_attila_log))
                 {
-                    Program.Logger.Debug($"Attila log file not found at: {path_attila_log}. Returning default siege outcome.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Attila log file not found at: {path_attila_log}. Returning default siege outcome.");
                     return (outcome, wall_damage);
                 }
 
@@ -233,17 +233,17 @@ namespace CrusaderWars.data.battle_results
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error determining siege outcome: {ex.Message}. Returning default values.");
+                CrusaderWarsEnvironment.Logger.Debug($"Error determining siege outcome: {ex.Message}. Returning default values.");
             }
 
-            Program.Logger.Debug($"Determined Siege Outcome: {outcome}, Wall Damage: {wall_damage}");
+            CrusaderWarsEnvironment.Logger.Debug($"Determined Siege Outcome: {outcome}, Wall Damage: {wall_damage}");
             return (outcome, wall_damage);
         }
 
 
         public static bool HasBattleEnded(string path_attila_log)
         {
-            Program.Logger.Debug($"Checking if battle has ended in log file: {path_attila_log}");
+            CrusaderWarsEnvironment.Logger.Debug($"Checking if battle has ended in log file: {path_attila_log}");
             using (FileStream logFile = File.Open(path_attila_log, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (StreamReader reader = new StreamReader(logFile))
             {
@@ -253,12 +253,12 @@ namespace CrusaderWars.data.battle_results
                 {
                     reader.Close();
                     logFile.Close();
-                    Program.Logger.Debug("Battle has finished marker found. Battle ended.");
+                    CrusaderWarsEnvironment.Logger.Debug("Battle has finished marker found. Battle ended.");
                     return true;
                 }
                 else
                 {
-                    Program.Logger.Debug("Battle has finished marker not found. Battle still in progress.");
+                    CrusaderWarsEnvironment.Logger.Debug("Battle has finished marker not found. Battle still in progress.");
                     return false;
                 }
 
@@ -268,9 +268,9 @@ namespace CrusaderWars.data.battle_results
 
         public static void ClearAttilaLog()
         {
-            Program.Logger.Debug("Entering ClearAttilaLog method.");
+            CrusaderWarsEnvironment.Logger.Debug("Entering ClearAttilaLog method.");
             string path_attila_log = CrusaderWarsEnvironment.Paths.AttilaBattleLogPath;
-            Program.Logger.Debug($"Attila log file path to clear: {path_attila_log}");
+            CrusaderWarsEnvironment.Logger.Debug($"Attila log file path to clear: {path_attila_log}");
 
             bool isCreated = false;
             if (isCreated == false)
@@ -281,7 +281,7 @@ namespace CrusaderWars.data.battle_results
                     logFile.Close();
                 }
             }
-            Program.Logger.Debug("Attila log file cleared successfully.");
+            CrusaderWarsEnvironment.Logger.Debug("Attila log file cleared successfully.");
         }
     }
 }

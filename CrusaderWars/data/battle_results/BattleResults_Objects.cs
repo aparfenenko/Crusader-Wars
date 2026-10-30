@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CrusaderWars.client;
 using CrusaderWars.data.save_file;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars
 {
@@ -60,11 +61,11 @@ namespace CrusaderWars
                 remaining = RemainingSoldiersBeforePursuit;
             else
                 remaining = RemainingSoldiersAfterPursuit;
-            Program.Logger.Debug("CASUALITIES REPORT: " + $"{Type}\n" +
+            CrusaderWarsEnvironment.Logger.Debug("CASUALITIES REPORT: " + $"{Type}\n" +
                              $"Culture: {Culture.GetCultureName()}\n" +
                              $"Starting: {StartingSoldiers}\n" +
                              $"Alive: {remaining}");
-            Program.Logger.Debug("\n\n");
+            CrusaderWarsEnvironment.Logger.Debug("\n\n");
         }
 
         public void SetKills(int i)

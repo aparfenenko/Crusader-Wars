@@ -66,32 +66,32 @@ namespace CrusaderWars
                 if (playerIsOnLeftSide)
                 {
                     playerIsDefender = false; // Player is on the left side, thus attacking
-                    Program.Logger.Debug("Siege battle: Player identified on LeftSide (Attacker).");
+                    CrusaderWarsEnvironment.Logger.Debug("Siege battle: Player identified on LeftSide (Attacker).");
                 }
                 else if (playerIsOnRightSide)
                 {
                     playerIsDefender = true; // Player is on the right side, thus defending
-                    Program.Logger.Debug("Siege battle: Player identified on RightSide (Defender).");
+                    CrusaderWarsEnvironment.Logger.Debug("Siege battle: Player identified on RightSide (Defender).");
                 }
                 else
                 {
                     // Fallback: If player character is not explicitly found on either side,
                     // assume they are defending if their army is not among the attackers.
                     playerIsDefender = !attacker_armies.Any(army => army.Owner != null && army.Owner.GetID() == player_character_id);
-                    Program.Logger.Debug($"Siege battle: Player side not explicitly found in log. Using fallback: playerIsDefender = {playerIsDefender}.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Siege battle: Player side not explicitly found in log. Using fallback: playerIsDefender = {playerIsDefender}.");
                 }
 
                 PlayerIsSiegeDefender = playerIsDefender; // Store the player's role for siege battles
 
                 if (playerIsDefender)
                 {
-                    Program.Logger.Debug("Siege battle: Player is defending. Assigning defender_armies as player side, attacker_armies as enemy side.");
+                    CrusaderWarsEnvironment.Logger.Debug("Siege battle: Player is defending. Assigning defender_armies as player side, attacker_armies as enemy side.");
                     foreach (var army in defender_armies) { army.IsPlayer(true); }
                     foreach (var army in attacker_armies) { army.IsEnemy(true); }
                 }
                 else
                 {
-                    Program.Logger.Debug("Siege battle: Player is attacking. Assigning attacker_armies as player side, defender_armies as enemy side.");
+                    CrusaderWarsEnvironment.Logger.Debug("Siege battle: Player is attacking. Assigning attacker_armies as player side, defender_armies as enemy side.");
                     foreach (var army in attacker_armies) { army.IsPlayer(true); }
                     foreach (var army in defender_armies) { army.IsEnemy(true); }
                 }
@@ -203,9 +203,9 @@ namespace CrusaderWars
         [SupportedOSPlatform("windows")]
         static void FriendliesOnlyArmies(List<Army> temp_attacker_armies, List<Army> temp_defender_armies, Army player_main_army, Army enemy_main_army, int total_soldiers, (string X, string Y, string[] attPositions, string[] defPositions) battleMap, Dictionary<string, int> siegeEngines)
         {
-            Program.Logger.Debug("--- Starting FriendliesOnlyArmies setup ---");
-            Program.Logger.Debug($"Initial armies: {temp_attacker_armies.Count} attackers, {temp_defender_armies.Count} defenders.");
-            Program.Logger.Debug($"Player main army: {player_main_army.ID}, Enemy main army: {enemy_main_army.ID}");
+            CrusaderWarsEnvironment.Logger.Debug("--- Starting FriendliesOnlyArmies setup ---");
+            CrusaderWarsEnvironment.Logger.Debug($"Initial armies: {temp_attacker_armies.Count} attackers, {temp_defender_armies.Count} defenders.");
+            CrusaderWarsEnvironment.Logger.Debug($"Player main army: {player_main_army.ID}, Enemy main army: {enemy_main_army.ID}");
 
             //----------------------------------------------
             //  Merge friendly armies to main army     
@@ -213,22 +213,22 @@ namespace CrusaderWars
             bool isUserAlly = false; Army? userAlliedArmy = null;
             if (player_main_army.Owner?.GetID() == DataSearch.Player_Character?.GetID())
             {
-                Program.Logger.Debug("Player character is the main commander of their side.");
+                CrusaderWarsEnvironment.Logger.Debug("Player character is the main commander of their side.");
                 isUserAlly = false;
                 if (player_main_army.CombatSide == "attacker")
                 {
-                    Program.Logger.Debug($"Merging friendly attacker armies into player's main army ({player_main_army.ID}).");
+                    CrusaderWarsEnvironment.Logger.Debug($"Merging friendly attacker armies into player's main army ({player_main_army.ID}).");
                     player_main_army = ArmiesControl.MergeFriendlies(temp_attacker_armies, player_main_army);
                 }
                 else if (player_main_army.CombatSide == "defender")
                 {
-                    Program.Logger.Debug($"Merging friendly defender armies into player's main army ({player_main_army.ID}).");
+                    CrusaderWarsEnvironment.Logger.Debug($"Merging friendly defender armies into player's main army ({player_main_army.ID}).");
                     player_main_army = ArmiesControl.MergeFriendlies(temp_defender_armies, player_main_army);
                 }
             }
             else // Player character is an ally, not the main commander
             {
-                Program.Logger.Debug("Player character is an ally, not the main commander. Prompting user to change 'Armies Control' setting.");
+                CrusaderWarsEnvironment.Logger.Debug("Player character is an ally, not the main commander. Prompting user to change 'Armies Control' setting.");
 
                 string message = "To control your army as an ally, the 'Armies Control' setting must be 'All Controlled'.\n\n" +
                                  "Do you want to change it automatically and proceed with the battle?";
@@ -237,10 +237,10 @@ namespace CrusaderWars
 
                 if (result == DialogChoice.Yes)
                 {
-                    Program.Logger.Debug("User agreed to change 'Armies Control' to 'All Controlled'.");
+                    CrusaderWarsEnvironment.Logger.Debug("User agreed to change 'Armies Control' to 'All Controlled'.");
                     // Update the setting programmatically
                     Options.SetArmiesControl(ModOptions.ArmiesSetup.All_Controled);
-                    Program.Logger.Debug($"'Armies Control' setting updated to: {ModOptions.SeparateArmies()}");
+                    CrusaderWarsEnvironment.Logger.Debug($"'Armies Control' setting updated to: {ModOptions.SeparateArmies()}");
 
                     // Now call AllControledArmies and return
                     AllControledArmies(temp_attacker_armies, temp_defender_armies, player_main_army!, enemy_main_army!, total_soldiers, battleMap, siegeEngines);
@@ -248,7 +248,7 @@ namespace CrusaderWars
                 }
                 else // User clicked No
                 {
-                    Program.Logger.Debug("User declined to change 'Armies Control' setting. Aborting battle generation.");
+                    CrusaderWarsEnvironment.Logger.Debug("User declined to change 'Armies Control' setting. Aborting battle generation.");
                     CrusaderWarsEnvironment.Dialogs.Show("None of your armies are present in this battle! (If this error is unexpected, confirm your \"Armies Control\" selection in the mod settings)", "Crusader Conflicts: No Player Army",
                     DialogIcon.Error);
                     throw new Exception("Battle aborted: Player declined to change 'Armies Control' setting.");
@@ -257,12 +257,12 @@ namespace CrusaderWars
 
             if (enemy_main_army.CombatSide == "attacker")
             {
-                Program.Logger.Debug($"Merging friendly attacker armies into enemy's main army ({enemy_main_army.ID}).");
+                CrusaderWarsEnvironment.Logger.Debug($"Merging friendly attacker armies into enemy's main army ({enemy_main_army.ID}).");
                 enemy_main_army = ArmiesControl.MergeFriendlies(temp_attacker_armies, enemy_main_army);
             }
             else if (enemy_main_army.CombatSide == "defender")
             {
-                Program.Logger.Debug($"Merging friendly defender armies into enemy's main army ({enemy_main_army.ID}).");
+                CrusaderWarsEnvironment.Logger.Debug($"Merging friendly defender armies into enemy's main army ({enemy_main_army.ID}).");
                 enemy_main_army = ArmiesControl.MergeFriendlies(temp_defender_armies, enemy_main_army);
             }
 
@@ -274,10 +274,10 @@ namespace CrusaderWars
             //----------------------------------------------
             //  Merge armies until there are only three      
             //----------------------------------------------
-            Program.Logger.Debug($"Armies before merging down to three: {temp_attacker_armies.Count} attackers, {temp_defender_armies.Count} defenders.");
+            CrusaderWarsEnvironment.Logger.Debug($"Armies before merging down to three: {temp_attacker_armies.Count} attackers, {temp_defender_armies.Count} defenders.");
             ArmiesControl.MergeArmiesUntilThree(temp_attacker_armies);
             ArmiesControl.MergeArmiesUntilThree(temp_defender_armies);
-            Program.Logger.Debug($"Armies after merging down to three: {temp_attacker_armies.Count} attackers, {temp_defender_armies.Count} defenders.");
+            CrusaderWarsEnvironment.Logger.Debug($"Armies after merging down to three: {temp_attacker_armies.Count} attackers, {temp_defender_armies.Count} defenders.");
 
             // WRITE DECLARATIONS
             if (!isUserAlly)
@@ -288,24 +288,24 @@ namespace CrusaderWars
             //Write essential data
             OpenBattle();
             //Write essential data
-            Program.Logger.Debug("Writing player alliance to battle file...");
+            CrusaderWarsEnvironment.Logger.Debug("Writing player alliance to battle file...");
             OpenPlayerAlliance();
 
             //#### WRITE HUMAN PLAYER ARMY
             if (!isUserAlly)
             {
-                Program.Logger.Debug($"Writing player main army {player_main_army.ID} to file.");
+                CrusaderWarsEnvironment.Logger.Debug($"Writing player main army {player_main_army.ID} to file.");
                 WriteArmy(player_main_army, total_soldiers, player_main_army.IsReinforcementArmy(), "stark", siegeEngines);
             }
             else
             {
-                Program.Logger.Debug($"Writing player allied army {userAlliedArmy!.ID} to file.");
+                CrusaderWarsEnvironment.Logger.Debug($"Writing player allied army {userAlliedArmy!.ID} to file.");
                 WriteArmy(userAlliedArmy!, total_soldiers, userAlliedArmy.IsReinforcementArmy(), "stark", siegeEngines);
             }
 
 
             //#### WRITE AI ALLIED ARMIES
-            Program.Logger.Debug("Writing AI allied armies for player's side...");
+            CrusaderWarsEnvironment.Logger.Debug("Writing AI allied armies for player's side...");
             if (player_main_army.CombatSide == "attacker")
             {
                 if (!isUserAlly)
@@ -318,7 +318,7 @@ namespace CrusaderWars
                 }
                 foreach (var army in temp_attacker_armies.Where(a => a != null))
                 {
-                    Program.Logger.Debug($"Writing attacker/defender allied army {army.ID} to file.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Writing attacker/defender allied army {army.ID} to file.");
                     WriteArmy(army, total_soldiers, army.IsReinforcementArmy(), "stark", siegeEngines);
 
                 }
@@ -335,7 +335,7 @@ namespace CrusaderWars
                 }
                 foreach (var army in temp_defender_armies.Where(a => a != null))
                 {
-                    Program.Logger.Debug($"Writing attacker/defender allied army {army.ID} to file.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Writing attacker/defender allied army {army.ID} to file.");
                     WriteArmy(army, total_soldiers, army.IsReinforcementArmy(), "stark", siegeEngines);
                 }
             }
@@ -345,13 +345,13 @@ namespace CrusaderWars
             //Write essential data
             CloseAlliance();
             //Write essential data
-            Program.Logger.Debug("Writing enemy alliance to battle file...");
+            CrusaderWarsEnvironment.Logger.Debug("Writing enemy alliance to battle file...");
             OpenEnemyAlliance();
 
 
 
             //#### WRITE ENEMY MAIN ARMY
-            Program.Logger.Debug($"Writing enemy main army {enemy_main_army.ID} to file.");
+            CrusaderWarsEnvironment.Logger.Debug($"Writing enemy main army {enemy_main_army.ID} to file.");
             WriteArmy(enemy_main_army, total_soldiers, enemy_main_army.IsReinforcementArmy(), "bolton", siegeEngines);
 
             //#### WRITE ENEMY ALLIED ARMIES
@@ -382,7 +382,7 @@ namespace CrusaderWars
             SetBattleTerrain(battleMap.X, battleMap.Y, Weather.GetWeather(), GetAttilaMap());
             //Write essential data
             CloseBattle();
-            Program.Logger.Debug("--- Finished FriendliesOnlyArmies setup ---");
+            CrusaderWarsEnvironment.Logger.Debug("--- Finished FriendliesOnlyArmies setup ---");
 
         }
 
@@ -532,7 +532,7 @@ namespace CrusaderWars
                 if (coastalMap != null && !string.IsNullOrEmpty(coastalMap.BattleType))
                 {
                     battleType = coastalMap.BattleType;
-                    Program.Logger.Debug($"Coastal battle detected. Setting battle type to '{battleType}' from mapper.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Coastal battle detected. Setting battle type to '{battleType}' from mapper.");
                 }
             }
 
@@ -550,13 +550,13 @@ namespace CrusaderWars
                 if (!string.IsNullOrEmpty(mapperBattleType))
                 {
                     battleType = mapperBattleType;
-                    Program.Logger.Debug($"Siege battle detected. Setting battle type to '{battleType}' from mapper.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Siege battle detected. Setting battle type to '{battleType}' from mapper.");
                 }
                 else
                 {
                     // Fallback to original logic if mapper doesn't specify a type
                     battleType = searchBattleType;
-                    Program.Logger.Debug($"Siege battle detected. No specific battle type in mapper. Falling back to '{battleType}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Siege battle detected. No specific battle type in mapper. Falling back to '{battleType}'.");
                 }
             }
 
@@ -566,7 +566,7 @@ namespace CrusaderWars
         [SupportedOSPlatform("windows")]
         public static void BETA_CreateBattle(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Starting TW:Attila battle file creation...");
+            CrusaderWarsEnvironment.Logger.Debug("Starting TW:Attila battle file creation...");
             //  TEMP OBJETS TO USE HERE
             List<Army> temp_attacker_armies = new List<Army>(),
                        temp_defender_armies = new List<Army>();
@@ -587,12 +587,12 @@ namespace CrusaderWars
             // Fallback logic for main armies
             if (player_main_army == null)
             {
-                Program.Logger.Debug("Main player army not found, attempting to find any player army as fallback.");
+                CrusaderWarsEnvironment.Logger.Debug("Main player army not found, attempting to find any player army as fallback.");
                 player_main_army = temp_attacker_armies.FirstOrDefault(x => x.IsPlayer()) ?? temp_defender_armies.FirstOrDefault(x => x.IsPlayer());
             }
             if (enemy_main_army == null)
             {
-                Program.Logger.Debug("Main enemy army not found, attempting to find any enemy army as fallback.");
+                CrusaderWarsEnvironment.Logger.Debug("Main enemy army not found, attempting to find any enemy army as fallback.");
                 enemy_main_army = temp_attacker_armies.FirstOrDefault(x => x.IsEnemy()) ?? temp_defender_armies.FirstOrDefault(x => x.IsEnemy());
             }
 
@@ -625,7 +625,7 @@ namespace CrusaderWars
             int total_soldiers = 0;
             total_soldiers = temp_attacker_armies.SelectMany(army => army.Units).Sum(unit => unit.GetSoldiers()) +
                              temp_defender_armies.SelectMany(army => army.Units).Sum(unit => unit.GetSoldiers());
-            Program.Logger.Debug($"Total soldiers for battle: {total_soldiers}");
+            CrusaderWarsEnvironment.Logger.Debug($"Total soldiers for battle: {total_soldiers}");
 
             //  BATTLE MAP
             (string X, string Y, string[] attPositions, string[] defPositions) battleMap = ("", "", new string[0], new string[0]); // Initialize as mutable tuple
@@ -634,7 +634,7 @@ namespace CrusaderWars
 
             if (twbattle.BattleState.IsSiegeBattle)
             {
-                Program.Logger.Debug("Siege battle detected. Attempting to find custom settlement map.");
+                CrusaderWarsEnvironment.Logger.Debug("Siege battle detected. Attempting to find custom settlement map.");
                 string defenderAttilaFaction = UnitMappers_BETA.GetAttilaFaction(twbattle.Sieges.GetGarrisonCulture(), twbattle.Sieges.GetGarrisonHeritage());
 
                 string siegeBattleType;
@@ -661,24 +661,24 @@ namespace CrusaderWars
                     BattleState.SiegeBesiegerOrientations = besiegerOrientations;
                     battleMap.attPositions = new string[] { "All", "All" }; // Default for custom maps if not specified
                     battleMap.defPositions = new string[] { "All", "All" }; // Default for custom maps if not specified
-                    Program.Logger.Debug($"Custom settlement map found for Faction '{defenderAttilaFaction}', BattleType '{siegeBattleType}', Province '{provinceName}': ({battleMap.X}, {battleMap.Y})");
+                    CrusaderWarsEnvironment.Logger.Debug($"Custom settlement map found for Faction '{defenderAttilaFaction}', BattleType '{siegeBattleType}', Province '{provinceName}': ({battleMap.X}, {battleMap.Y})");
                 }
                 else
                 {
-                    Program.Logger.Debug($"No custom settlement map found for Faction '{defenderAttilaFaction}', BattleType '{siegeBattleType}', Province '{provinceName}'. Falling back to TerrainGenerator.GetBattleMap().");
+                    CrusaderWarsEnvironment.Logger.Debug($"No custom settlement map found for Faction '{defenderAttilaFaction}', BattleType '{siegeBattleType}', Province '{provinceName}'. Falling back to TerrainGenerator.GetBattleMap().");
                     battleMap = TerrainGenerator.GetBattleMap(); // Fallback to existing logic
                     BattleState.SiegeBesiegerOrientations = null;
                 }
-                Program.Logger.Debug("Setting up siege-specific deployment...");
+                CrusaderWarsEnvironment.Logger.Debug("Setting up siege-specific deployment...");
                 Deployments.beta_SetSiegeDeployment(battleMap, total_soldiers, besiegerOrientations);
 
                 // Generate siege engines for the attacker
                 siegeEngines = SiegeEngineGenerator.Generate(attacker_armies); // Pass attacker_armies
-                Program.Logger.Debug($"Generated {siegeEngines.Count} siege engine types for the attacker.");
+                CrusaderWarsEnvironment.Logger.Debug($"Generated {siegeEngines.Count} siege engine types for the attacker.");
             }
             else
             {
-                Program.Logger.Debug("Land battle detected. Using TerrainGenerator.GetBattleMap().");
+                CrusaderWarsEnvironment.Logger.Debug("Land battle detected. Using TerrainGenerator.GetBattleMap().");
                 battleMap = TerrainGenerator.GetBattleMap(); // Existing logic for land battles
 
                 var playerCommanderTraits = UnitsFile.GetCommanderTraitsObj(true);
@@ -730,7 +730,7 @@ namespace CrusaderWars
 
         private static void WriteArmy(Army army, int total_soldiers, bool isReinforcement, string x, Dictionary<string, int> siegeEngines)
         {
-            Program.Logger.Debug($"Writing army {army.ID} to battle file. Side: {army.CombatSide}, Alliance: {x}, IsReinforcement: {isReinforcement}");
+            CrusaderWarsEnvironment.Logger.Debug($"Writing army {army.ID} to battle file. Side: {army.CombatSide}, Alliance: {x}, IsReinforcement: {isReinforcement}");
 
             // Determine player and enemy realm names dynamically
             string playerRealmName;
@@ -1059,7 +1059,7 @@ namespace CrusaderWars
         {
             if (Position == null)
             {
-                Program.Logger.Debug("CRITICAL: BattleFile.Position was null when trying to add a unit. Aborting unit addition.");
+                CrusaderWarsEnvironment.Logger.Debug("CRITICAL: BattleFile.Position was null when trying to add a unit. Aborting unit addition.");
                 return;
             }
 
@@ -1149,7 +1149,7 @@ namespace CrusaderWars
         {
             if (Position == null)
             {
-                Program.Logger.Debug("CRITICAL: BattleFile.Position was null when trying to add a unit. Aborting unit addition.");
+                CrusaderWarsEnvironment.Logger.Debug("CRITICAL: BattleFile.Position was null when trying to add a unit. Aborting unit addition.");
                 return;
             }
 
@@ -1228,7 +1228,7 @@ namespace CrusaderWars
         {
             if (Position == null)
             {
-                Program.Logger.Debug("CRITICAL: BattleFile.Position was null when trying to add a unit. Aborting unit addition.");
+                CrusaderWarsEnvironment.Logger.Debug("CRITICAL: BattleFile.Position was null when trying to add a unit. Aborting unit addition.");
                 return;
             }
 
@@ -1309,10 +1309,10 @@ namespace CrusaderWars
 
         private static void AddAssaultEquipment(Dictionary<string, int> siegeEngines)
         {
-            Program.Logger.Debug($"Adding {siegeEngines.Count} types of assault equipment.");
+            CrusaderWarsEnvironment.Logger.Debug($"Adding {siegeEngines.Count} types of assault equipment.");
             if (Position == null || Rotation == null)
             {
-                Program.Logger.Debug("CRITICAL: Position or Rotation is null when trying to add assault equipment. Aborting.");
+                CrusaderWarsEnvironment.Logger.Debug("CRITICAL: Position or Rotation is null when trying to add assault equipment. Aborting.");
                 return;
             }
 
@@ -1323,7 +1323,7 @@ namespace CrusaderWars
             {
                 string engineKey = entry.Key;
                 int quantity = entry.Value;
-                Program.Logger.Debug($"Adding {quantity} units of '{engineKey}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"Adding {quantity} units of '{engineKey}'.");
 
                 for (int i = 0; i < quantity; i++)
                 {
@@ -1339,7 +1339,7 @@ namespace CrusaderWars
 
             assaultEquipmentBuilder.Append("</assault_equipment>\n\n");
             File.AppendAllText(battlePath, assaultEquipmentBuilder.ToString());
-            Program.Logger.Debug("Finished adding assault equipment.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished adding assault equipment.");
         }
 
 

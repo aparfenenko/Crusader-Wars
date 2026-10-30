@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CrusaderWars.client;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars
 {
@@ -18,7 +19,7 @@ namespace CrusaderWars
 
         public static void AutoSizeUnits(int total_soldiers)
         {
-            Program.Logger.Debug($"AutoSizeUnits called with total_soldiers: {total_soldiers}");
+            CrusaderWarsEnvironment.Logger.Debug($"AutoSizeUnits called with total_soldiers: {total_soldiers}");
             if (ModOptions.GetBattleScale() == 0)
             {
                 if (total_soldiers <= 10000)
@@ -42,13 +43,13 @@ namespace CrusaderWars
             {
                 BattleScale = ModOptions.GetBattleScale();
             }
-            Program.Logger.Debug($"Determined BattleScale: {BattleScale}");
+            CrusaderWarsEnvironment.Logger.Debug($"Determined BattleScale: {BattleScale}");
 
         }
 
         public static void ResetUnitSizes()
         {
-            Program.Logger.Debug("Resetting unit sizes, BattleScale set to 100.");
+            CrusaderWarsEnvironment.Logger.Debug("Resetting unit sizes, BattleScale set to 100.");
             BattleScale = 100;
         }
     }

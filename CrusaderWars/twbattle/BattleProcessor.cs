@@ -65,27 +65,27 @@ namespace CrusaderWars.twbattle
         public static async Task<bool> ProcessBattle(HomePage form, List<Army> attacker_armies, List<Army> defender_armies, CancellationToken token, bool regenerateAndRestart = true, AutofixState? autofixState = null)
         {
             BattleResult.WarID = ArmiesReader.FindWarID();
-            Program.Logger.Debug("--- BattleProcessor: Checking for Deployment Zone Overrides ---");
+            CrusaderWarsEnvironment.Logger.Debug("--- BattleProcessor: Checking for Deployment Zone Overrides ---");
             if (BattleState.DeploymentZoneOverrideAttacker != null)
             {
                 var ov = BattleState.DeploymentZoneOverrideAttacker;
-                Program.Logger.Debug($"Attacker Override FOUND: X={ov.X}, Y={ov.Y}, W={ov.Width}, H={ov.Height}");
+                CrusaderWarsEnvironment.Logger.Debug($"Attacker Override FOUND: X={ov.X}, Y={ov.Y}, W={ov.Width}, H={ov.Height}");
             }
             else
             {
-                Program.Logger.Debug("Attacker Override NOT FOUND.");
+                CrusaderWarsEnvironment.Logger.Debug("Attacker Override NOT FOUND.");
             }
 
             if (BattleState.DeploymentZoneOverrideDefender != null)
             {
                 var ov = BattleState.DeploymentZoneOverrideDefender;
-                Program.Logger.Debug($"Defender Override FOUND: X={ov.X}, Y={ov.Y}, W={ov.Width}, H={ov.Height}");
+                CrusaderWarsEnvironment.Logger.Debug($"Defender Override FOUND: X={ov.X}, Y={ov.Y}, W={ov.Width}, H={ov.Height}");
             }
             else
             {
-                Program.Logger.Debug("Defender Override NOT FOUND.");
+                CrusaderWarsEnvironment.Logger.Debug("Defender Override NOT FOUND.");
             }
-            Program.Logger.Debug("----------------------------------------------------------");
+            CrusaderWarsEnvironment.Logger.Debug("----------------------------------------------------------");
 
             if (autofixState == null)
             {
@@ -101,7 +101,7 @@ namespace CrusaderWars.twbattle
 
             if (left_side is null || !left_side.Any() || right_side is null || !right_side.Any())
             {
-                Program.Logger.Debug("Could not determine battle sides or one side is empty. Aborting battle processing.");
+                CrusaderWarsEnvironment.Logger.Debug("Could not determine battle sides or one side is empty. Aborting battle processing.");
                 CrusaderWarsEnvironment.Dialogs.Show(form, "Could not determine player and enemy sides for the battle, or one side has no armies. The battle cannot proceed.", "Crusader Conflicts: Battle Error", DialogIcon.Error);
                 return false; // break
             }
@@ -118,7 +118,7 @@ namespace CrusaderWars.twbattle
             }
             else
             {
-                Program.Logger.Debug("'Combine Knights' option is enabled. All knights will be in a combined unit, and none will lead MAA units.");
+                CrusaderWarsEnvironment.Logger.Debug("'Combine Knights' option is enabled. All knights will be in a combined unit, and none will lead MAA units.");
             }
 
             if (!BattleState.IsSiegeBattle)
@@ -129,40 +129,40 @@ namespace CrusaderWars.twbattle
             int left_side_total = left_side.Sum(army => army.GetTotalSoldiers());
             int right_side_total = right_side.Sum(army => army.GetTotalSoldiers());
             string left_side_combat_side = left_side[0].CombatSide;
-            Program.Logger.Debug($"******************** BATTLE SIDES (Original CK3 Sizes) ********************");
-            Program.Logger.Debug($"LEFT SIDE ({left_side_combat_side}) TOTAL SOLDIERS: {left_side_total}");
-            Program.Logger.Debug($"RIGHT SIDE ({right_side[0].CombatSide}) TOTAL SOLDIERS: {right_side_total}");
-            Program.Logger.Debug($"*************************************************************************");
+            CrusaderWarsEnvironment.Logger.Debug($"******************** BATTLE SIDES (Original CK3 Sizes) ********************");
+            CrusaderWarsEnvironment.Logger.Debug($"LEFT SIDE ({left_side_combat_side}) TOTAL SOLDIERS: {left_side_total}");
+            CrusaderWarsEnvironment.Logger.Debug($"RIGHT SIDE ({right_side[0].CombatSide}) TOTAL SOLDIERS: {right_side_total}");
+            CrusaderWarsEnvironment.Logger.Debug($"*************************************************************************");
 
             if (regenerateAndRestart)
             {
                 try
                 {
-                    Program.Logger.Debug("Clearing previous battle files before regeneration...");
+                    CrusaderWarsEnvironment.Logger.Debug("Clearing previous battle files before regeneration...");
                     BattleFile.ClearFile();
                     DeclarationsFile.Erase();
                     BattleScript.EraseScript(twbattle.BattleState.IsSiegeBattle);
                     Data.units_scripts.Clear();
                     BattleResultReader.ClearAttilaLog();
                     UnitsCardsNames.RemoveFiles();
-                    Program.Logger.Debug("Previous battle files cleared.");
+                    CrusaderWarsEnvironment.Logger.Debug("Previous battle files cleared.");
 
-                    Program.Logger.Debug("Creating TW:Attila battle files.");
+                    CrusaderWarsEnvironment.Logger.Debug("Creating TW:Attila battle files.");
                     BattleDetails.ChangeBattleDetails(left_side_total, right_side_total, left_side_combat_side, right_side[0].CombatSide);
 
                     await Games.CloseTotalWarAttilaProcess();
                     form.UpdateLoadingScreenMessage("Creating battle in Total War: Attila...");
 
                     //Create Remaining Soldiers Script
-                    Program.Logger.Debug("Creating battle script...");
+                    CrusaderWarsEnvironment.Logger.Debug("Creating battle script...");
                     BattleScript.CreateScript();
 
                     // Set Battle Scale
                     int total_soldiers = attacker_armies.SelectMany(army => army.Units).Sum(unit => unit.GetSoldiers()) +
                                          defender_armies.SelectMany(army => army.Units).Sum(unit => unit.GetSoldiers());
-                    Program.Logger.Debug($"Total soldiers for battle scale calculation: {total_soldiers}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Total soldiers for battle scale calculation: {total_soldiers}");
                     ArmyProportions.AutoSizeUnits(total_soldiers);
-                    Program.Logger.Debug($"Applying battle scale: {ArmyProportions.BattleScale}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Applying battle scale: {ArmyProportions.BattleScale}");
                     foreach (var army in attacker_armies) army.ScaleUnits(ArmyProportions.BattleScale);
                     foreach (var army in defender_armies) army.ScaleUnits(ArmyProportions.BattleScale);
 
@@ -195,10 +195,10 @@ namespace CrusaderWars.twbattle
                     }
                     catch (Exception ex)
                     {
-                        Program.Logger.Debug($"Failed to write battle log header: {ex.Message}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Failed to write battle log header: {ex.Message}");
                     }
                     //Create Battle
-                    Program.Logger.Debug("Creating battle file...");
+                    CrusaderWarsEnvironment.Logger.Debug("Creating battle file...");
                     BattleFile.BETA_CreateBattle(attacker_armies, defender_armies);
 
                     // NEW: Check for unmapped units and show alert
@@ -262,20 +262,20 @@ namespace CrusaderWars.twbattle
                     BattleScript.CloseScript();
 
                     //Set Commanders Script
-                    Program.Logger.Debug("Setting commanders in script...");
+                    CrusaderWarsEnvironment.Logger.Debug("Setting commanders in script...");
                     BattleScript.SetCommandersLocals();
 
                     //Set Units Kills Script
-                    Program.Logger.Debug("Setting unit kill trackers in script...");
+                    CrusaderWarsEnvironment.Logger.Debug("Setting unit kill trackers in script...");
                     BattleScript.SetLocalsKills(Data.units_scripts);
 
                     //Close Script
                     BattleScript.CloseScript();
 
-                    Program.Logger.Debug("--- FINAL ATTACKER ARMY COMPOSITION FOR ATTILA ---");
+                    CrusaderWarsEnvironment.Logger.Debug("--- FINAL ATTACKER ARMY COMPOSITION FOR ATTILA ---");
                     foreach (var army in attacker_armies)
                     {
-                        Program.Logger.Debug($"Army ID: {army.ID}, Total Soldiers: {army.GetTotalSoldiers()}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Army ID: {army.ID}, Total Soldiers: {army.GetTotalSoldiers()}");
                         if (army.Units != null)
                         {
                             bool leviesLogged = false;
@@ -297,14 +297,14 @@ namespace CrusaderWars.twbattle
                                             string attilaKey = unit.GetAttilaUnitKey();
                                             string faction = unit.GetAttilaFaction();
 
-                                            Program.Logger.Debug($"  - Knight Bodyguard Unit (Total Soldiers: {totalBodyguardSoldiers})");
+                                            CrusaderWarsEnvironment.Logger.Debug($"  - Knight Bodyguard Unit (Total Soldiers: {totalBodyguardSoldiers})");
 
                                             if (!string.IsNullOrEmpty(attilaKey) && attilaKey != UnitMappers_BETA.NOT_FOUND_KEY)
                                             {
                                                 foreach (var knight in bodyguardKnights.OrderByDescending(k => k.GetProwess()))
                                                 {
                                                     string knightUnitDetails = $", Culture: {knight.GetCultureName()}, Heritage: {knight.GetHeritageName()}, Faction: {faction}";
-                                                    Program.Logger.Debug($"    - Knight: {knight.GetName()}, Attila Unit: {attilaKey}, Soldiers: {knight.GetSoldiers()}{knightUnitDetails}, Prowess: {knight.GetProwess()}");
+                                                    CrusaderWarsEnvironment.Logger.Debug($"    - Knight: {knight.GetName()}, Attila Unit: {attilaKey}, Soldiers: {knight.GetSoldiers()}{knightUnitDetails}, Prowess: {knight.GetProwess()}");
                                                 }
                                             }
                                         }
@@ -317,11 +317,11 @@ namespace CrusaderWars.twbattle
                                     if (!leviesLogged)
                                     {
                                         int totalLevySoldiers = army.Units.Where(u => u.GetRegimentType() == RegimentType.Levy).Sum(u => u.GetSoldiers());
-                                        Program.Logger.Debug($"  - Unit: (All Levies), CK3 Type: Levy, Total Soldiers: {totalLevySoldiers}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"  - Unit: (All Levies), CK3 Type: Levy, Total Soldiers: {totalLevySoldiers}");
                                         var levyDetails = BattleLog.GetLevyBreakdown(army.ID);
                                         foreach (var detail in levyDetails)
                                         {
-                                            Program.Logger.Debug(detail);
+                                            CrusaderWarsEnvironment.Logger.Debug(detail);
                                         }
                                         leviesLogged = true;
                                     }
@@ -331,7 +331,7 @@ namespace CrusaderWars.twbattle
                                     string attilaKey = unit.GetAttilaUnitKey();
                                     if (string.IsNullOrEmpty(attilaKey) || attilaKey == UnitMappers_BETA.NOT_FOUND_KEY)
                                     {
-                                        Program.Logger.Debug($"  - DROPPED: Could not map CK3 Unit '{unit.GetName()}' (Type: {unit.GetRegimentType()}). All mapping attempts failed.{unitDetails}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"  - DROPPED: Could not map CK3 Unit '{unit.GetName()}' (Type: {unit.GetRegimentType()}). All mapping attempts failed.{unitDetails}");
                                     }
                                     else
                                     {
@@ -341,7 +341,7 @@ namespace CrusaderWars.twbattle
                                             {
                                                 string commanderName = army.Commander?.Name ?? "Unknown Commander";
                                                 string rankInfo = $", Rank: {unit.CharacterRank}";
-                                                Program.Logger.Debug($"  - CK3 Unit: General ({commanderName}), Type: Commander, Attila Unit: {attilaKey}, Soldiers: {unit.GetSoldiers()}{unitDetails}{rankInfo}");
+                                                CrusaderWarsEnvironment.Logger.Debug($"  - CK3 Unit: General ({commanderName}), Type: Commander, Attila Unit: {attilaKey}, Soldiers: {unit.GetSoldiers()}{unitDetails}{rankInfo}");
                                             }
                                         }
                                         else // MenAtArms
@@ -352,7 +352,7 @@ namespace CrusaderWars.twbattle
                                             {
                                                 knightCommanderInfo = $", Led by: {unit.KnightCommander.GetName()} (Prowess: {unit.KnightCommander.GetProwess()})";
                                             }
-                                            Program.Logger.Debug($"  - CK3 Unit: {unit.GetName()}, Type: {unit.GetRegimentType()}, Attila Unit: {attilaKey}, Soldiers: {unit.GetSoldiers()}{unitDetails}{rankInfo}{knightCommanderInfo}");
+                                            CrusaderWarsEnvironment.Logger.Debug($"  - CK3 Unit: {unit.GetName()}, Type: {unit.GetRegimentType()}, Attila Unit: {attilaKey}, Soldiers: {unit.GetSoldiers()}{unitDetails}{rankInfo}{knightCommanderInfo}");
                                         }
                                     }
                                 }
@@ -365,20 +365,20 @@ namespace CrusaderWars.twbattle
                         var siegeEngines = SiegeEngineGenerator.Generate(attacker_armies); // Pass attacker_armies
                         if (siegeEngines != null && siegeEngines.Any())
                         {
-                            Program.Logger.Debug("  --- Siege Engines ---");
+                            CrusaderWarsEnvironment.Logger.Debug("  --- Siege Engines ---");
                             foreach (var engine in siegeEngines)
                             {
-                                Program.Logger.Debug($"  - Type: {engine.Key}, Quantity: {engine.Value}");
+                                CrusaderWarsEnvironment.Logger.Debug($"  - Type: {engine.Key}, Quantity: {engine.Value}");
                             }
                         }
                     }
-                    Program.Logger.Debug($"TOTAL ATTACKER SOLDIERS: {attacker_armies.Sum(a => a.GetTotalSoldiers())}");
-                    Program.Logger.Debug("--------------------------------------------------");
+                    CrusaderWarsEnvironment.Logger.Debug($"TOTAL ATTACKER SOLDIERS: {attacker_armies.Sum(a => a.GetTotalSoldiers())}");
+                    CrusaderWarsEnvironment.Logger.Debug("--------------------------------------------------");
 
-                    Program.Logger.Debug("--- FINAL DEFENDER ARMY COMPOSITION FOR ATTILA ---");
+                    CrusaderWarsEnvironment.Logger.Debug("--- FINAL DEFENDER ARMY COMPOSITION FOR ATTILA ---");
                     foreach (var army in defender_armies)
                     {
-                        Program.Logger.Debug($"Army ID: {army.ID}, Total Soldiers: {army.GetTotalSoldiers()}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Army ID: {army.ID}, Total Soldiers: {army.GetTotalSoldiers()}");
                         if (army.Units != null)
                         {
                             bool leviesLogged = false;
@@ -400,14 +400,14 @@ namespace CrusaderWars.twbattle
                                             string attilaKey = unit.GetAttilaUnitKey();
                                             string faction = unit.GetAttilaFaction();
 
-                                            Program.Logger.Debug($"  - Knight Bodyguard Unit (Total Soldiers: {totalBodyguardSoldiers})");
+                                            CrusaderWarsEnvironment.Logger.Debug($"  - Knight Bodyguard Unit (Total Soldiers: {totalBodyguardSoldiers})");
 
                                             if (!string.IsNullOrEmpty(attilaKey) && attilaKey != UnitMappers_BETA.NOT_FOUND_KEY)
                                             {
                                                 foreach (var knight in bodyguardKnights.OrderByDescending(k => k.GetProwess()))
                                                 {
                                                     string knightUnitDetails = $", Culture: {knight.GetCultureName()}, Heritage: {knight.GetHeritageName()}, Faction: {faction}";
-                                                    Program.Logger.Debug($"    - Knight: {knight.GetName()}, Attila Unit: {attilaKey}, Soldiers: {knight.GetSoldiers()}{knightUnitDetails}, Prowess: {knight.GetProwess()}");
+                                                    CrusaderWarsEnvironment.Logger.Debug($"    - Knight: {knight.GetName()}, Attila Unit: {attilaKey}, Soldiers: {knight.GetSoldiers()}{knightUnitDetails}, Prowess: {knight.GetProwess()}");
                                                 }
                                             }
                                         }
@@ -420,11 +420,11 @@ namespace CrusaderWars.twbattle
                                     if (!leviesLogged)
                                     {
                                         int totalLevySoldiers = army.Units.Where(u => u.GetRegimentType() == RegimentType.Levy).Sum(u => u.GetSoldiers());
-                                        Program.Logger.Debug($"  - Unit: (All Levies), CK3 Type: Levy, Total Soldiers: {totalLevySoldiers}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"  - Unit: (All Levies), CK3 Type: Levy, Total Soldiers: {totalLevySoldiers}");
                                         var levyDetails = BattleLog.GetLevyBreakdown(army.ID);
                                         foreach (var detail in levyDetails)
                                         {
-                                            Program.Logger.Debug(detail);
+                                            CrusaderWarsEnvironment.Logger.Debug(detail);
                                         }
                                         leviesLogged = true;
                                     }
@@ -434,7 +434,7 @@ namespace CrusaderWars.twbattle
                                     string attilaKey = unit.GetAttilaUnitKey();
                                     if (string.IsNullOrEmpty(attilaKey) || attilaKey == UnitMappers_BETA.NOT_FOUND_KEY)
                                     {
-                                        Program.Logger.Debug($"  - DROPPED: Could not map CK3 Unit '{unit.GetName()}' (Type: {unit.GetRegimentType()}). All mapping attempts failed.{unitDetails}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"  - DROPPED: Could not map CK3 Unit '{unit.GetName()}' (Type: {unit.GetRegimentType()}). All mapping attempts failed.{unitDetails}");
                                     }
                                     else
                                     {
@@ -444,7 +444,7 @@ namespace CrusaderWars.twbattle
                                             {
                                                 string commanderName = army.Commander?.Name ?? "Unknown Commander";
                                                 string rankInfo = $", Rank: {unit.CharacterRank}";
-                                                Program.Logger.Debug($"  - CK3- Unit: General ({commanderName}), Type: Commander, Attila Unit: {attilaKey}, Soldiers: {unit.GetSoldiers()}{unitDetails}{rankInfo}");
+                                                CrusaderWarsEnvironment.Logger.Debug($"  - CK3- Unit: General ({commanderName}), Type: Commander, Attila Unit: {attilaKey}, Soldiers: {unit.GetSoldiers()}{unitDetails}{rankInfo}");
                                             }
                                         }
                                         else // MenAtArms
@@ -455,22 +455,22 @@ namespace CrusaderWars.twbattle
                                             {
                                                 knightCommanderInfo = $", Led by: {unit.KnightCommander.GetName()} (Prowess: {unit.KnightCommander.GetProwess()})";
                                             }
-                                            Program.Logger.Debug($"  - CK3 Unit: {unit.GetName()}, Type: {unit.GetRegimentType()}, Attila Unit: {attilaKey}, Soldiers: {unit.GetSoldiers()}{unitDetails}{rankInfo}{knightCommanderInfo}");
+                                            CrusaderWarsEnvironment.Logger.Debug($"  - CK3 Unit: {unit.GetName()}, Type: {unit.GetRegimentType()}, Attila Unit: {attilaKey}, Soldiers: {unit.GetSoldiers()}{unitDetails}{rankInfo}{knightCommanderInfo}");
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    Program.Logger.Debug($"TOTAL DEFENDER SOLDIERS: {defender_armies.Sum(a => a.GetTotalSoldiers())}");
-                    Program.Logger.Debug("--------------------------------------------------");
+                    CrusaderWarsEnvironment.Logger.Debug($"TOTAL DEFENDER SOLDIERS: {defender_armies.Sum(a => a.GetTotalSoldiers())}");
+                    CrusaderWarsEnvironment.Logger.Debug("--------------------------------------------------");
                     //Creates .pack mod file
-                    Program.Logger.Debug("Creating .pack file...");
+                    CrusaderWarsEnvironment.Logger.Debug("Creating .pack file...");
                     PackFile.PackFileCreator();
                 }
                 catch (Exception ex)
                 {
-                    Program.Logger.Debug($"Error creating Attila battle: {ex.Message}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Error creating Attila battle: {ex.Message}");
                     form.Show();
                     form.CloseLoadingScreen();
                     CrusaderWarsEnvironment.Dialogs.Show(form, $"Error creating the battle: {ex.Message}", "Crusader Conflicts: Data Error", DialogIcon.Error);
@@ -493,7 +493,7 @@ namespace CrusaderWars.twbattle
 
                 if (token.IsCancellationRequested)
                 {
-                    Program.Logger.Debug("Skipping Attila launch due to cancellation.");
+                    CrusaderWarsEnvironment.Logger.Debug("Skipping Attila launch due to cancellation.");
                     return false;
                 }
 
@@ -502,7 +502,7 @@ namespace CrusaderWars.twbattle
                     // Check for user.script.txt conflict before launching Attila
                     if (!AttilaPreferences.ValidateBeforeLaunch())
                     {
-                        Program.Logger.Debug("Aborting Attila launch due to user script conflict.");
+                        CrusaderWarsEnvironment.Logger.Debug("Aborting Attila launch due to user script conflict.");
                         form.Show();
                         form.CloseLoadingScreen();
                         ProcessCommands.ResumeProcess();
@@ -520,12 +520,12 @@ namespace CrusaderWars.twbattle
                         ProcessCommands.SuspendProcess();
                     }
                     //Open Total War Attila
-                    Program.Logger.Debug("Starting Total War: Attila process via shortcut...");
+                    CrusaderWarsEnvironment.Logger.Debug("Starting Total War: Attila process via shortcut...");
                     Games.StartTotalWArAttilaProcess();
                 }
                 catch (Exception ex)
                 {
-                    Program.Logger.Debug($"Error starting Attila: {ex.Message}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Error starting Attila: {ex.Message}");
                     form.Show();
                     form.CloseLoadingScreen();
                     CrusaderWarsEnvironment.Dialogs.Show(form, "Couldn't find 'Attila.exe'. Change the Total War Attila path. ", "Crusader Conflicts: Path Error", DialogIcon.Error);
@@ -545,7 +545,7 @@ namespace CrusaderWars.twbattle
             }
             else
             {
-                Program.Logger.Debug("Skipping battle file regeneration and Attila restart. Using current session.");
+                CrusaderWarsEnvironment.Logger.Debug("Skipping battle file regeneration and Attila restart. Using current session.");
             }
 
 
@@ -565,7 +565,7 @@ namespace CrusaderWars.twbattle
                     }
                     catch (IOException ex)
                     {
-                        Program.Logger.Debug($"Attempt {attempt + 1}/{maxRetries} to clear battle files failed due to file lock: {ex.Message}. Retrying in 500ms...");
+                        CrusaderWarsEnvironment.Logger.Debug($"Attempt {attempt + 1}/{maxRetries} to clear battle files failed due to file lock: {ex.Message}. Retrying in 500ms...");
                         if (attempt == maxRetries - 1)
                         {
                             throw; // Give up after all retries
@@ -580,7 +580,7 @@ namespace CrusaderWars.twbattle
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error during cleanup before battle: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error during cleanup before battle: {ex.Message}");
                 CrusaderWarsEnvironment.Dialogs.Show(form, $"Error: {ex.Message}", "Crusader Conflicts: Application Error", DialogIcon.Error);
                 await Games.CloseTotalWarAttilaProcess();
                 if (ModOptions.CloseCK3DuringBattle())
@@ -605,7 +605,7 @@ namespace CrusaderWars.twbattle
                 Games.CloseCrusaderKingsProcess();
             }
 
-            Program.Logger.Debug("TW:Attila battle created successfully");
+            CrusaderWarsEnvironment.Logger.Debug("TW:Attila battle created successfully");
 
             //               Retrieve battle result to ck3
             //-----------------------------------------------------------
@@ -618,7 +618,7 @@ namespace CrusaderWars.twbattle
 
             form.infoLabel.Text = "Waiting for TW:Attila battle to end...";
             form.Text = "Crusader Conflicts (Waiting for TW:Attila battle to end...)";
-            Program.Logger.Debug("Waiting for TW:Attila battle to end...");
+            CrusaderWarsEnvironment.Logger.Debug("Waiting for TW:Attila battle to end...");
 
             form.ExecuteButton.Enabled = false;
             form.ContinueBattleButton.Enabled = false;
@@ -629,35 +629,35 @@ namespace CrusaderWars.twbattle
             {
                 if (token.IsCancellationRequested)
                 {
-                    Program.Logger.Debug("Battle monitoring cancelled by user action.");
+                    CrusaderWarsEnvironment.Logger.Debug("Battle monitoring cancelled by user action.");
                     return false; // Indicate cancellation
                 }
                 // Check if Attila process is still running
                 if (Process.GetProcessesByName("Attila").Length == 0)
                 {
-                    Program.Logger.Debug("Attila process not found. Checking if it was a crash.");
+                    CrusaderWarsEnvironment.Logger.Debug("Attila process not found. Checking if it was a crash.");
 
                     // If battle ended normally, it's not a crash.
                     if (BattleResultReader.HasBattleEnded(attilaLogPath))
                     {
-                        Program.Logger.Debug("Battle log indicates a normal exit. Proceeding with results.");
+                        CrusaderWarsEnvironment.Logger.Debug("Battle log indicates a normal exit. Proceeding with results.");
                         battleEnded = true;
                         continue; // Continue to the result processing part of the loop
                     }
 
-                    Program.Logger.Debug("Attila process terminated without a complete battle log. Presumed crash.");
+                    CrusaderWarsEnvironment.Logger.Debug("Attila process terminated without a complete battle log. Presumed crash.");
 
                     // Resume CK3 if it was suspended (i.e., not closed) so the user can interact while deciding next steps.
                     if (!ModOptions.CloseCK3DuringBattle())
                     {
                         ProcessCommands.ResumeProcess();
-                        Program.Logger.Debug("CK3 process resumed after Attila crash.");
+                        CrusaderWarsEnvironment.Logger.Debug("CK3 process resumed after Attila crash.");
                     }
 
                     // --- Autofix Logic ---
                     if (autofixState == null) // First crash
                     {
-                        Program.Logger.Debug("First crash detected. Initializing autofix state.");
+                        CrusaderWarsEnvironment.Logger.Debug("First crash detected. Initializing autofix state.");
                         autofixState = new AutofixState();
                         autofixState.OriginalAttackerArmies = new List<Army>(attacker_armies);
                         autofixState.OriginalDefenderArmies = new List<Army>(defender_armies);
@@ -719,7 +719,7 @@ namespace CrusaderWars.twbattle
 
                         if (!autofixState.ProblematicUnitKeys.Any())
                         {
-                            Program.Logger.Debug("Autofix initiated, but no potentially problematic custom units were found to replace.");
+                            CrusaderWarsEnvironment.Logger.Debug("Autofix initiated, but no potentially problematic custom units were found to replace.");
                             if (form != null && !form.IsDisposed)
                             {
                                 form.Invoke((MethodInvoker)delegate
@@ -732,18 +732,18 @@ namespace CrusaderWars.twbattle
                             }
                             return false;
                         }
-                        Program.Logger.Debug($"Found {autofixState.ProblematicUnitKeys.Count} unique unit keys to test: {string.Join(", ", autofixState.ProblematicUnitKeys)}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found {autofixState.ProblematicUnitKeys.Count} unique unit keys to test: {string.Join(", ", autofixState.ProblematicUnitKeys)}");
                     }
 
                     autofixState.FailureCount++;
-                    Program.Logger.Debug($"Crash detected. Failure count: {autofixState.FailureCount}.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Crash detected. Failure count: {autofixState.FailureCount}.");
 
                     // --- Main Autofix Control Flow ---
 
                     // 1. If no strategy is active, get one from the user.
                     if (autofixState.CurrentStrategy == null)
                     {
-                        Program.Logger.Debug("No active autofix strategy. Prompting user.");
+                        CrusaderWarsEnvironment.Logger.Debug("No active autofix strategy. Prompting user.");
 
                         var allStrategies = new List<AutofixState.AutofixStrategy>
                         {
@@ -764,7 +764,7 @@ namespace CrusaderWars.twbattle
 
                         if (!availableStrategies.Any())
                         {
-                            Program.Logger.Debug("Autofix failed. All strategies have been attempted.");
+                            CrusaderWarsEnvironment.Logger.Debug("Autofix failed. All strategies have been attempted.");
                             if (form != null && !form.IsDisposed)
                             {
                                 form.Invoke((MethodInvoker)delegate
@@ -783,7 +783,7 @@ namespace CrusaderWars.twbattle
 
                         if (form is null || form.IsDisposed)
                         {
-                            Program.Logger.Debug("Autofix Error: Form is null or disposed. Cannot show strategy choice prompt.");
+                            CrusaderWarsEnvironment.Logger.Debug("Autofix Error: Form is null or disposed. Cannot show strategy choice prompt.");
                             return false; // Abort battle
                         }
                         form.Invoke((MethodInvoker)delegate
@@ -793,12 +793,12 @@ namespace CrusaderWars.twbattle
 
                         if (userResponse == DialogResult.No || chosenStrategy == null)
                         {
-                            Program.Logger.Debug("User declined autofix. Aborting battle.");
+                            CrusaderWarsEnvironment.Logger.Debug("User declined autofix. Aborting battle.");
                             return false; // User cancelled
                         }
 
                         autofixState.CurrentStrategy = chosenStrategy;
-                        Program.Logger.Debug($"User chose autofix strategy: {chosenStrategy.Value}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"User chose autofix strategy: {chosenStrategy.Value}.");
                     }
 
                     if (form != null && !form.IsDisposed)
@@ -863,7 +863,7 @@ namespace CrusaderWars.twbattle
                     {
                         originalMapSize = option_map_size;
                     }
-                    Program.Logger.Debug($"Autofix: Original map size determined as '{originalMapSize}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Autofix: Original map size determined as '{originalMapSize}'.");
 
 
                     switch (autofixState.CurrentStrategy)
@@ -881,7 +881,7 @@ namespace CrusaderWars.twbattle
                             (fixApplied, fixDescription) = TryMapVariantFix(autofixState);
                             break;
                         case AutofixState.AutofixStrategy.ManualUnitReplacement:
-                            Program.Logger.Debug("User selected Manual Unit Replacement. Launching tool.");
+                            CrusaderWarsEnvironment.Logger.Debug("User selected Manual Unit Replacement. Launching tool.");
                             if (form != null && !form.IsDisposed)
                             {
                                 form.Invoke((MethodInvoker)delegate
@@ -895,7 +895,7 @@ namespace CrusaderWars.twbattle
                             return false;
 
                         case AutofixState.AutofixStrategy.DeploymentZoneEditor:
-                            Program.Logger.Debug("User selected Deployment Zone Editor. Launching tool.");
+                            CrusaderWarsEnvironment.Logger.Debug("User selected Deployment Zone Editor. Launching tool.");
                             if (form != null && !form.IsDisposed)
                             {
                                 form.Invoke((MethodInvoker)delegate
@@ -936,14 +936,14 @@ namespace CrusaderWars.twbattle
                         }
                         autofixState.CurrentStrategy = null;
 
-                        Program.Logger.Debug($"Relaunching battle after autofix ({fixDescription}). Re-reading army data from save files to apply changes.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Relaunching battle after autofix ({fixDescription}). Re-reading army data from save files to apply changes.");
                         var (fresh_attackers, fresh_defenders) = ArmiesReader.ReadBattleArmies();
                         return await ProcessBattle(form, fresh_attackers, fresh_defenders, token, true, autofixState);
                     }
                     else
                     {
                         // The current strategy is exhausted or cancelled.
-                        Program.Logger.Debug($"--- Autofix: Strategy {autofixState.CurrentStrategy} is complete for this attempt. ---");
+                        CrusaderWarsEnvironment.Logger.Debug($"--- Autofix: Strategy {autofixState.CurrentStrategy} is complete for this attempt. ---");
                         if (autofixState.CurrentStrategy.HasValue && autofixState.CurrentStrategy.Value != AutofixState.AutofixStrategy.ManualUnitReplacement && autofixState.CurrentStrategy.Value != AutofixState.AutofixStrategy.DeploymentZoneEditor)
                         {
                             autofixState.TriedStrategies.Add(autofixState.CurrentStrategy.Value);
@@ -958,14 +958,14 @@ namespace CrusaderWars.twbattle
                 battleEnded = BattleResultReader.HasBattleEnded(attilaLogPath);
                 await Task.Delay(1000); // Check every second
             }
-            Program.Logger.Debug("TW:Attila battle ended.");
+            CrusaderWarsEnvironment.Logger.Debug("TW:Attila battle ended.");
 
 
             try
             {
                 if (battleEnded)
                 {
-                    Program.Logger.Debug("Processing TW:Attila battle results.");
+                    CrusaderWarsEnvironment.Logger.Debug("Processing TW:Attila battle results.");
                     ModOptions.CloseAttila();
 
                     form.infoLabel.Text = "Processing TW:Attila battle results...";
@@ -1030,19 +1030,19 @@ namespace CrusaderWars.twbattle
                     int originalTotalAttackerSoldiers = attacker_armies.Sum(a => a.GetTotalSoldiers());
 
                     //  SET CASUALITIES
-                    Program.Logger.Debug("Setting casualties for attacker armies...");
+                    CrusaderWarsEnvironment.Logger.Debug("Setting casualties for attacker armies...");
                     foreach (var army in attacker_armies)
                     {
-                        Program.Logger.Debug($"Processing army ID: {army.ID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Processing army ID: {army.ID}");
                         CasualtyProcessor.ReadAttilaResults(army, path_log_attila);
                         CasualtyProcessor.CheckForSlainCommanders(army, path_log_attila);
                         CasualtyProcessor.CheckKnightsKills(army);
                         CasualtyProcessor.CheckForSlainKnights(army);
                     }
-                    Program.Logger.Debug("Setting casualties for defender armies...");
+                    CrusaderWarsEnvironment.Logger.Debug("Setting casualties for defender armies...");
                     foreach (var army in defender_armies)
                     {
-                        Program.Logger.Debug($"Processing army ID: {army.ID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Processing army ID: {army.ID}");
                         CasualtyProcessor.ReadAttilaResults(army, path_log_attila);
                         CasualtyProcessor.CheckForSlainCommanders(army, path_log_attila);
                         CasualtyProcessor.CheckKnightsKills(army);
@@ -1057,10 +1057,10 @@ namespace CrusaderWars.twbattle
                         var siegeEngines = SiegeEngineGenerator.Generate(attacker_armies); // Pass attacker_armies
                         if (siegeEngines != null && siegeEngines.Any())
                         {
-                            Program.Logger.Debug("  --- Siege Engines ---");
+                            CrusaderWarsEnvironment.Logger.Debug("  --- Siege Engines ---");
                             foreach (var engine in siegeEngines)
                             {
-                                Program.Logger.Debug($"  - Type: {engine.Key}, Quantity: {engine.Value}");
+                                CrusaderWarsEnvironment.Logger.Debug($"  - Type: {engine.Key}, Quantity: {engine.Value}");
                             }
                         }
                     }
@@ -1070,7 +1070,7 @@ namespace CrusaderWars.twbattle
                     // DETERMINE WINNER FIRST so EditLivingFile can correctly calculate prisoner chances
                     string winner = BattleResultReader.GetAttilaWinner(path_log_attila, left_side[0].CombatSide, right_side[0].CombatSide);
                     BattleResult.IsAttackerVictorious = (winner == "attacker");
-                    Program.Logger.Debug($"Battle winner determined: {winner}. IsAttackerVictorious set to: {BattleResult.IsAttackerVictorious}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Battle winner determined: {winner}. IsAttackerVictorious set to: {BattleResult.IsAttackerVictorious}");
 
                     // DETERMINE CHARACTER FATES BEFORE WAR SCORE CALCULATION
                     BattleResult.DetermineCharacterFates(attacker_armies.Concat(defender_armies).ToList());
@@ -1083,7 +1083,7 @@ namespace CrusaderWars.twbattle
                     BattleResult.EditVassalContractsFile();
 
                     //  EDIT LIVING FILE
-                    Program.Logger.Debug("Editing Living.txt file...");
+                    CrusaderWarsEnvironment.Logger.Debug("Editing Living.txt file...");
                     BattleResult.EditLivingFile(attacker_armies, defender_armies);
 
                     //  EDIT COURT POSITIONS FILE
@@ -1111,7 +1111,7 @@ namespace CrusaderWars.twbattle
                     if (!twbattle.BattleState.IsSiegeBattle || (twbattle.BattleState.IsSiegeBattle && twbattle.BattleState.HasReliefArmy))
                     {
                         // Field Battle OR Siege with Relief Army: Edit files as normal
-                        Program.Logger.Debug("Field battle or siege with relief army detected. Editing combat files...");
+                        CrusaderWarsEnvironment.Logger.Debug("Field battle or siege with relief army detected. Editing combat files...");
 
                         var mobile_attacker_armies = attacker_armies.Where(a => !a.IsGarrison()).ToList();
                         var mobile_defender_armies = defender_armies.Where(a => !a.IsGarrison()).ToList();
@@ -1124,14 +1124,14 @@ namespace CrusaderWars.twbattle
                     else
                     {
                         // Standard Siege Battle (no relief army): Skip editing and copy original files to temp to prevent corruption
-                        Program.Logger.Debug("Standard siege battle (no relief army) detected. Skipping modification of Combats.txt and CombatResults.txt.");
+                        CrusaderWarsEnvironment.Logger.Debug("Standard siege battle (no relief army) detected. Skipping modification of Combats.txt and CombatResults.txt.");
 
                         string combatsSourcePath = CrusaderWars.data.save_file.Writter.DataFilesPaths.Combats_Path();
                         string combatsDestPath = CrusaderWars.data.save_file.Writter.DataTEMPFilesPaths.Combats_Path();
                         if (File.Exists(combatsSourcePath))
                         {
                             File.Copy(combatsSourcePath, combatsDestPath, true);
-                            Program.Logger.Debug("Copied original Combats.txt to temp folder.");
+                            CrusaderWarsEnvironment.Logger.Debug("Copied original Combats.txt to temp folder.");
                         }
 
                         string combatResultsSourcePath = CrusaderWars.data.save_file.Writter.DataFilesPaths.CombatResults_Path();
@@ -1139,22 +1139,22 @@ namespace CrusaderWars.twbattle
                         if (File.Exists(combatResultsSourcePath))
                         {
                             File.Copy(combatResultsSourcePath, combatResultsDestPath, true);
-                            Program.Logger.Debug("Copied original CombatResults.txt to temp folder.");
+                            CrusaderWarsEnvironment.Logger.Debug("Copied original CombatResults.txt to temp folder.");
                         }
                     }
 
                     //  EDIT REGIMENTS FILE
-                    Program.Logger.Debug("Editing Regiments.txt file...");
+                    CrusaderWarsEnvironment.Logger.Debug("Editing Regiments.txt file...");
                     BattleResult.EditRegimentsFile(attacker_armies, defender_armies);
 
                     //  EDIT ARMY REGIMENTS FILE
-                    Program.Logger.Debug("Editing ArmyRegiments.txt file...");
+                    CrusaderWarsEnvironment.Logger.Debug("Editing ArmyRegiments.txt file...");
                     ArmyRegimentsFileEditor.EditArmyRegimentsFile(attacker_armies, defender_armies);
 
                     //  EDIT SIEGES FILE
                     if (twbattle.BattleState.IsSiegeBattle)
                     {
-                        Program.Logger.Debug("Editing Sieges.txt file...");
+                        CrusaderWarsEnvironment.Logger.Debug("Editing Sieges.txt file...");
                         BattleResult.EditSiegesFile(path_log_attila, left_side[0].CombatSide, right_side[0].CombatSide, attacker_armies, defender_armies);
                     }
                     else
@@ -1166,19 +1166,19 @@ namespace CrusaderWars.twbattle
                         if (File.Exists(sourcePath))
                         {
                             File.Copy(sourcePath, destPath, true);
-                            Program.Logger.Debug("Copied original Sieges.txt to temp folder for non-siege battle.");
+                            CrusaderWarsEnvironment.Logger.Debug("Copied original Sieges.txt to temp folder for non-siege battle.");
                         }
                     }
 
                     // EDIT WARS FILE
                     if (BattleResult.WarScoreValue.HasValue)
                     {
-                        Program.Logger.Debug("Editing Wars.txt file...");
+                        CrusaderWarsEnvironment.Logger.Debug("Editing Wars.txt file...");
                         BattleResult.EditWarsFile(attacker_armies, defender_armies, BattleResult.WarScoreValue.Value);
                     }
 
                     //  WRITE TO CK3 SAVE FILE
-                    Program.Logger.Debug("Writing results to gamestate file...");
+                    CrusaderWarsEnvironment.Logger.Debug("Writing results to gamestate file...");
                     BattleResult.SendToSaveFile(form.path_editedSave);
 
                     // Add battle log footer
@@ -1193,17 +1193,17 @@ namespace CrusaderWars.twbattle
                     }
                     catch (Exception ex)
                     {
-                        Program.Logger.Debug($"Failed to write battle log footer: {ex.Message}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Failed to write battle log footer: {ex.Message}");
                     }
 
                     //  COMPRESS CK3 SAVE FILE AND SEND TO CK3 SAVE FILE FOLDER
-                    Program.Logger.Debug("Compressing new save file...");
+                    CrusaderWarsEnvironment.Logger.Debug("Compressing new save file...");
                     SaveFile.Compress();
-                    Program.Logger.Debug("Finalizing save file...");
+                    CrusaderWarsEnvironment.Logger.Debug("Finalizing save file...");
                     SaveFile.Finish();
                     twbattle.BattleState.ClearBattleState();
                     Unit.ResetUniqueIDCounter();
-                    Program.Logger.Debug("Battle finished. Clearing battle state.");
+                    CrusaderWarsEnvironment.Logger.Debug("Battle finished. Clearing battle state.");
 
                     // Show successful autofix/manual tool message if applicable
                     bool wasAutofixSuccess = autofixState != null && !string.IsNullOrEmpty(autofixState.LastAppliedFixDescription);
@@ -1304,7 +1304,7 @@ namespace CrusaderWars.twbattle
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error retrieving TW:Attila battle results: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error retrieving TW:Attila battle results: {ex.Message}");
                 CrusaderWarsEnvironment.Dialogs.Show(form, $"Error retrieving TW:Attila battle results: {ex.Message}", "Crusader Conflicts: TW:Attila Battle Results Error", DialogIcon.Error);
                 await Games.CloseTotalWarAttilaProcess();
                 if (ModOptions.CloseCK3DuringBattle())
@@ -1397,7 +1397,7 @@ namespace CrusaderWars.twbattle
         // Add the missing methods that were referenced but not implemented
         private static void ProcessProminentKnights(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Processing prominent knights for MAA leadership...");
+            CrusaderWarsEnvironment.Logger.Debug("Processing prominent knights for MAA leadership...");
 
             var allArmies = attacker_armies.Concat(defender_armies);
 
@@ -1454,7 +1454,7 @@ namespace CrusaderWars.twbattle
                     maaUnit.KnightCommander = knight;
                     knightIndex++;
 
-                    Program.Logger.Debug($"Assigned knight {knight.GetName()} (Prowess: {knight.GetProwess()}) to lead MAA unit {maaUnit.GetName()}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Assigned knight {knight.GetName()} (Prowess: {knight.GetProwess()}) to lead MAA unit {maaUnit.GetName()}");
 
                     // Remove the knight from its original KnightSystem so it doesn't appear in the combined bodyguard unit.
                     army.Knights?.RemoveKnight(knight);
@@ -1472,12 +1472,12 @@ namespace CrusaderWars.twbattle
                     {
                         int soldiersToRemove = knight.GetSoldiers();
                         combinedKnightsUnit.AddSoldiers(-soldiersToRemove);
-                        Program.Logger.Debug($"Removed {soldiersToRemove} soldiers from combined knights unit for knight {knight.GetName()}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Removed {soldiersToRemove} soldiers from combined knights unit for knight {knight.GetName()}.");
                     }
                 }
             }
 
-            Program.Logger.Debug("Finished processing prominent knights.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished processing prominent knights.");
         }
 
         [SupportedOSPlatform("windows")]
@@ -1802,7 +1802,7 @@ namespace CrusaderWars.twbattle
             {
                 // Fallback to old logic if player side can't be determined
                 report.BattleResult = winner == "attacker" ? "Victory" : "Defeat";
-                Program.Logger.Debug("WARNING: Could not determine player side in GenerateBattleReportData. BattleResult may be from attacker's perspective.");
+                CrusaderWarsEnvironment.Logger.Debug("WARNING: Could not determine player side in GenerateBattleReportData. BattleResult may be from attacker's perspective.");
             }
             report.WarScoreValue = BattleResult.WarScoreValue;
 

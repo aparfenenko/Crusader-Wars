@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CrusaderWars.data.battle_results; // Added for BattleResult class
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.data.save_file
 {
@@ -32,12 +33,12 @@ namespace CrusaderWars.data.save_file
             Opinions_NeedsSkiping = false;
             CourtPositions_NeedsSkiping = false;
 
-            Program.Logger.Debug($"Starting to write data back to save file: {Path.GetFullPath(savePath)}");
+            CrusaderWarsEnvironment.Logger.Debug($"Starting to write data back to save file: {Path.GetFullPath(savePath)}");
             // Removed resultsFound and combatsFound boolean variables.
 
             //string tempFilePath = Directory.GetCurrentDirectory() + "\\CrusaderWars_Battle.ck3";
             string tempFilePath = @".\data\save_file_data\gamestate";
-            Program.Logger.Debug($"Writing to temporary file: {Path.GetFullPath(tempFilePath)}");
+            CrusaderWarsEnvironment.Logger.Debug($"Writing to temporary file: {Path.GetFullPath(tempFilePath)}");
 
             using (var inputFileStream = new FileStream(savePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var outputFileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
@@ -52,97 +53,97 @@ namespace CrusaderWars.data.save_file
                     lineCount++;
                     if (lineCount % 500000 == 0)
                     {
-                        Program.Logger.Debug($"... Processed {lineCount} lines for writing ...");
+                        CrusaderWarsEnvironment.Logger.Debug($"... Processed {lineCount} lines for writing ...");
                     }
 
                     //Line Skipper
                     if (NeedSkiping && line == "pending_character_interactions={")
                     {
-                        Program.Logger.Debug("Skipping block until 'pending_character_interactions={' is found.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Skipping block until 'pending_character_interactions={' is found.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         NeedSkiping = false;
                     }
                     else if (CombatResults_NeedsSkiping && line == "\t}") // Modified: Match specific indentation
                     {
-                        Program.Logger.Debug("Finished skipping CombatResults block.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Finished skipping CombatResults block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         CombatResults_NeedsSkiping = false;
                         continue; // Added to prevent writing the closing brace
                     }
                     else if (Combats_NeedsSkiping && line == "\t}") // Modified: Match specific indentation
                     {
-                        Program.Logger.Debug("Finished skipping Combats block.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Finished skipping Combats block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         Combats_NeedsSkiping = false;
                         continue; // Added to prevent writing the closing brace
                     }
                     // Corrected condition to match the top-level closing brace for the entire sieges block
                     else if (Sieges_NeedsSkiping && line == "}")
                     {
-                        Program.Logger.Debug("Finished skipping Sieges block.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Finished skipping Sieges block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         Sieges_NeedsSkiping = false;
                         continue; // Added to prevent writing the closing brace
                         // siegesFound = false; // No longer needed
                     }
                     else if (Wars_NeedsSkiping && line == "}")
                     {
-                        Program.Logger.Debug("Finished skipping Wars block.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Finished skipping Wars block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         Wars_NeedsSkiping = false;
                         continue;
                     }
                     else if (VassalContracts_NeedsSkiping && line == "}")
                     {
-                        Program.Logger.Debug("Finished skipping VassalContracts block.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Finished skipping VassalContracts block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         VassalContracts_NeedsSkiping = false;
                         continue;
                     }
                     else if (Opinions_NeedsSkiping && line == "}")
                     {
-                        Program.Logger.Debug("Finished skipping Opinions block.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Finished skipping Opinions block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         Opinions_NeedsSkiping = false;
                         continue;
                     }
                     else if (CourtPositions_NeedsSkiping && line == "}")
                     {
-                        Program.Logger.Debug("Finished skipping CourtPositions block.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Finished skipping CourtPositions block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         CourtPositions_NeedsSkiping = false;
                         continue;
                     }
                     else if (CourtPositions_NeedsSkiping && line == "}")
                     {
-                        Program.Logger.Debug("Finished skipping CourtPositions block.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Finished skipping CourtPositions block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         CourtPositions_NeedsSkiping = false;
                         continue;
                     }
                     else if (PlayedCharacter_NeedsSkipping && line == "}")
                     {
-                        Program.Logger.Debug("Finished skipping played_character block.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Finished skipping played_character block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         PlayedCharacter_NeedsSkipping = false;
                         continue;
                     }
                     else if (NeedSkiping && line == "\tarmy_regiments={")
                     {
-                        Program.Logger.Debug("Skipping block until '\tarmy_regiments={' is found.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Skipping block until '\tarmy_regiments={' is found.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         NeedSkiping = false;
                     }
                     else if (NeedSkiping && line == "\tarmies={")
                     {
-                        Program.Logger.Debug("Skipping block until '\tarmies={' is found.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Skipping block until '\tarmies={' is found.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         NeedSkiping = false;
                     }
                     else if (NeedSkiping && line == "dead_unprunable={")
                     {
-                        Program.Logger.Debug("Skipping block until 'dead_unprunable={' is found.");
-                        Program.Logger.Debug($"Stopped skipping at line: {line}");
+                        CrusaderWarsEnvironment.Logger.Debug("Skipping block until 'dead_unprunable={' is found.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Stopped skipping at line: {line}");
                         NeedSkiping = false;
                     }
 
@@ -156,55 +157,55 @@ namespace CrusaderWars.data.save_file
                     //Combat Result START
                     else if (line == "\tcombat_results={")
                     {
-                        Program.Logger.Debug("Writing modified CombatResults block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Writing modified CombatResults block.");
                         WriteDataToSaveFile(streamWriter, DataTEMPFilesPaths.CombatResults_Path(), FileType.CombatResults);
-                        Program.Logger.Debug("EDITED BATTLE RESULTS SENT!");
+                        CrusaderWarsEnvironment.Logger.Debug("EDITED BATTLE RESULTS SENT!");
                         CombatResults_NeedsSkiping = true;
                     }
 
                     //Combat START
                     else if (line == "\tcombats={")
                     {
-                        Program.Logger.Debug("Writing modified Combats block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Writing modified Combats block.");
                         WriteDataToSaveFile(streamWriter, DataTEMPFilesPaths.Combats_Path(), FileType.Combats);
-                        Program.Logger.Debug("EDITED COMBATS SENT!");
+                        CrusaderWarsEnvironment.Logger.Debug("EDITED COMBATS SENT!");
                         Combats_NeedsSkiping = true;
                     }
                     else if (line == "\tregiments={" && !NeedSkiping)
                     {
-                        Program.Logger.Debug("Writing modified Regiments block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Writing modified Regiments block.");
                         WriteDataToSaveFile(streamWriter, DataTEMPFilesPaths.Regiments_Path(), FileType.Regiments);
-                        Program.Logger.Debug("EDITED REGIMENTS SENT!");
+                        CrusaderWarsEnvironment.Logger.Debug("EDITED REGIMENTS SENT!");
                         NeedSkiping = true;
                     }
                     else if (line == "\tarmy_regiments={" && !NeedSkiping)
                     {
-                        Program.Logger.Debug("Writing modified ArmyRegiments block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Writing modified ArmyRegiments block.");
                         WriteDataToSaveFile(streamWriter, DataTEMPFilesPaths.ArmyRegiments_Path(), FileType.ArmyRegiments);
-                        Program.Logger.Debug("EDITED ARMY REGIMENTS SENT!");
+                        CrusaderWarsEnvironment.Logger.Debug("EDITED ARMY REGIMENTS SENT!");
                         NeedSkiping = true;
                     }
                     else if (line == "living={" && !NeedSkiping)
                     {
-                        Program.Logger.Debug("Writing modified Living block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Writing modified Living block.");
                         WriteDataToSaveFile(streamWriter, DataTEMPFilesPaths.Living_Path(), FileType.Living);
-                        Program.Logger.Debug("EDITED LIVING SENT!");
+                        CrusaderWarsEnvironment.Logger.Debug("EDITED LIVING SENT!");
                         NeedSkiping = true;
                     }
                     // NEW BLOCK: Replace the entire played_character block
                     else if (line.StartsWith("played_character={") && !PlayedCharacter_NeedsSkipping)
                     {
-                        Program.Logger.Debug("Writing modified played_character block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Writing modified played_character block.");
                         WriteDataToSaveFile(streamWriter, DataTEMPFilesPaths.PlayedCharacter_Path(), FileType.PlayedCharacter);
-                        Program.Logger.Debug("EDITED PLAYED CHARACTER SENT!");
+                        CrusaderWarsEnvironment.Logger.Debug("EDITED PLAYED CHARACTER SENT!");
                         PlayedCharacter_NeedsSkipping = true;
                     }
                     // NEW BLOCK: Replace the entire currently_played_characters block
                     else if (line.StartsWith("currently_played_characters={"))
                     {
-                        Program.Logger.Debug("Writing modified currently_played_characters block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Writing modified currently_played_characters block.");
                         WriteDataToSaveFile(streamWriter, DataTEMPFilesPaths.CurrentlyPlayedCharacters_Path(), FileType.CurrentlyPlayedCharacters);
-                        Program.Logger.Debug("EDITED CURRENTLY PLAYED CHARACTERS SENT!");
+                        CrusaderWarsEnvironment.Logger.Debug("EDITED CURRENTLY PLAYED CHARACTERS SENT!");
                         continue;
                     }
                     else if (line == "court_positions={" && !CourtPositions_NeedsSkiping)
@@ -212,14 +213,14 @@ namespace CrusaderWars.data.save_file
                         string tempCourtPositionsPath = DataTEMPFilesPaths.CourtPositions_Path();
                         if (File.Exists(tempCourtPositionsPath) && new FileInfo(tempCourtPositionsPath).Length > 0)
                         {
-                            Program.Logger.Debug("Writing modified CourtPositions block.");
+                            CrusaderWarsEnvironment.Logger.Debug("Writing modified CourtPositions block.");
                             WriteDataToSaveFile(streamWriter, tempCourtPositionsPath, FileType.CourtPositions);
-                            Program.Logger.Debug("EDITED COURT POSITIONS SENT!");
+                            CrusaderWarsEnvironment.Logger.Debug("EDITED COURT POSITIONS SENT!");
                             CourtPositions_NeedsSkiping = true;
                         }
                         else
                         {
-                            Program.Logger.Debug($"Temporary CourtPositions file not found or is empty. Preserving original block.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Temporary CourtPositions file not found or is empty. Preserving original block.");
                             streamWriter.WriteLine(line);
                         }
                     }
@@ -228,14 +229,14 @@ namespace CrusaderWars.data.save_file
                         string tempCourtPositionsPath = DataTEMPFilesPaths.CourtPositions_Path();
                         if (File.Exists(tempCourtPositionsPath) && new FileInfo(tempCourtPositionsPath).Length > 0)
                         {
-                            Program.Logger.Debug("Writing modified CourtPositions block.");
+                            CrusaderWarsEnvironment.Logger.Debug("Writing modified CourtPositions block.");
                             WriteDataToSaveFile(streamWriter, tempCourtPositionsPath, FileType.CourtPositions);
-                            Program.Logger.Debug("EDITED COURT POSITIONS SENT!");
+                            CrusaderWarsEnvironment.Logger.Debug("EDITED COURT POSITIONS SENT!");
                             CourtPositions_NeedsSkiping = true;
                         }
                         else
                         {
-                            Program.Logger.Debug($"Temporary CourtPositions file not found or is empty. Preserving original block.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Temporary CourtPositions file not found or is empty. Preserving original block.");
                             streamWriter.WriteLine(line);
                         }
                     }
@@ -245,25 +246,25 @@ namespace CrusaderWars.data.save_file
                         string tempSiegesPath = DataTEMPFilesPaths.Sieges_Path();
                         if (File.Exists(tempSiegesPath))
                         {
-                            Program.Logger.Debug("Writing modified Sieges block from temporary file.");
+                            CrusaderWarsEnvironment.Logger.Debug("Writing modified Sieges block from temporary file.");
                             WriteDataToSaveFile(streamWriter, tempSiegesPath, FileType.Sieges);
-                            Program.Logger.Debug("EDITED SIEGES SENT!");
+                            CrusaderWarsEnvironment.Logger.Debug("EDITED SIEGES SENT!");
                             Sieges_NeedsSkiping = true;
                         }
                         else
                         {
                             // If the temporary Sieges.txt doesn't exist, it means no siege battle occurred
                             // or the data wasn't processed. Preserve the original block.
-                            Program.Logger.Debug($"Temporary Sieges file not found at {Path.GetFullPath(tempSiegesPath)}. Preserving original sieges block.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Temporary Sieges file not found at {Path.GetFullPath(tempSiegesPath)}. Preserving original sieges block.");
                             streamWriter.WriteLine(line); // Write the "sieges={" line
                             // DO NOT set Sieges_NeedsSkiping = true, so the original content is copied.
                         }
                     }
                     else if (line == "wars={" && !Wars_NeedsSkiping)
                     {
-                        Program.Logger.Debug("Writing modified Wars block.");
+                        CrusaderWarsEnvironment.Logger.Debug("Writing modified Wars block.");
                         WriteDataToSaveFile(streamWriter, DataTEMPFilesPaths.Wars_Path(), FileType.Wars);
-                        Program.Logger.Debug("EDITED WARS SENT!");
+                        CrusaderWarsEnvironment.Logger.Debug("EDITED WARS SENT!");
                         Wars_NeedsSkiping = true;
                     }
                     else if (line == "vassal_contracts={" && !VassalContracts_NeedsSkiping)
@@ -271,14 +272,14 @@ namespace CrusaderWars.data.save_file
                         string tempVassalPath = DataTEMPFilesPaths.VassalContracts_Path();
                         if (File.Exists(tempVassalPath))
                         {
-                            Program.Logger.Debug("Writing modified VassalContracts block.");
+                            CrusaderWarsEnvironment.Logger.Debug("Writing modified VassalContracts block.");
                             WriteDataToSaveFile(streamWriter, tempVassalPath, FileType.VassalContracts);
-                            Program.Logger.Debug("EDITED VASSAL CONTRACTS SENT!");
+                            CrusaderWarsEnvironment.Logger.Debug("EDITED VASSAL CONTRACTS SENT!");
                             VassalContracts_NeedsSkiping = true;
                         }
                         else
                         {
-                            Program.Logger.Debug($"Temporary VassalContracts file not found. Preserving original block.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Temporary VassalContracts file not found. Preserving original block.");
                             streamWriter.WriteLine(line);
                         }
                     }
@@ -287,14 +288,14 @@ namespace CrusaderWars.data.save_file
                         string tempOpinionsPath = DataTEMPFilesPaths.Opinions_Path();
                         if (File.Exists(tempOpinionsPath) && new FileInfo(tempOpinionsPath).Length > 0)
                         {
-                            Program.Logger.Debug("Writing modified Opinions block.");
+                            CrusaderWarsEnvironment.Logger.Debug("Writing modified Opinions block.");
                             WriteDataToSaveFile(streamWriter, tempOpinionsPath, FileType.Opinions);
-                            Program.Logger.Debug("EDITED OPINIONS SENT!");
+                            CrusaderWarsEnvironment.Logger.Debug("EDITED OPINIONS SENT!");
                             Opinions_NeedsSkiping = true;
                         }
                         else
                         {
-                            Program.Logger.Debug($"Temporary Opinions file not found or is empty. Preserving original block.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Temporary Opinions file not found or is empty. Preserving original block.");
                             streamWriter.WriteLine(line);
                         }
                     }
@@ -304,13 +305,13 @@ namespace CrusaderWars.data.save_file
                     }
 
                 }
-                Program.Logger.Debug("Finished writing to temporary file. All blocks processed.");
+                CrusaderWarsEnvironment.Logger.Debug("Finished writing to temporary file. All blocks processed.");
                 streamWriter.Close();
                 streamReader.Close();
                 outputFileStream.Close();
                 inputFileStream.Close();
             }
-            Program.Logger.Debug($"Finished writing to temporary file: {Path.GetFullPath(tempFilePath)}");
+            CrusaderWarsEnvironment.Logger.Debug($"Finished writing to temporary file: {Path.GetFullPath(tempFilePath)}");
 
             //string save_games_path = Properties.Settings.Default.VAR_dir_save;
             //string editedSavePath = save_games_path + @"\CrusaderWars_Battle.ck3";
@@ -321,7 +322,7 @@ namespace CrusaderWars.data.save_file
 
         static void WriteDataToSaveFile(StreamWriter streamWriter, string data_file_path, FileType fileType)
         {
-            Program.Logger.Debug($"Reading entire content from {data_file_path} to write into save file stream.");
+            CrusaderWarsEnvironment.Logger.Debug($"Reading entire content from {data_file_path} to write into save file stream.");
 
             // Read the entire content of the temporary file
             string fileContent = File.ReadAllText(data_file_path);
@@ -330,7 +331,7 @@ namespace CrusaderWars.data.save_file
             // Using Write instead of WriteLine prevents adding an extra newline.
             streamWriter.Write(fileContent);
 
-            Program.Logger.Debug($"Wrote {fileContent.Length} characters of {fileType} data to save file stream.");
+            CrusaderWarsEnvironment.Logger.Debug($"Wrote {fileContent.Length} characters of {fileType} data to save file stream.");
         }
 
         enum FileType

@@ -7,7 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CrusaderWars.unit_mapper;
 using System.Xml;
-using CrusaderWars.client; // Added for Program.Logger
+using CrusaderWars.client; // Added for CrusaderWarsEnvironment.Logger
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.data.save_file
 {
@@ -19,17 +20,17 @@ namespace CrusaderWars.data.save_file
             int regimentsTotal = 0;
             foreach (var i in armies)
             {
-                Program.Logger.Debug($"#Army - {i.ID} | {i.CombatSide} | Commander {i.CommanderID}");
-                Program.Logger.Debug("------------------------------------------------------------");
+                CrusaderWarsEnvironment.Logger.Debug($"#Army - {i.ID} | {i.CombatSide} | Commander {i.CommanderID}");
+                CrusaderWarsEnvironment.Logger.Debug("------------------------------------------------------------");
                 foreach (var x in i.ArmyRegiments)
                 {
                     if (x.Type == RegimentType.Knight)
                     {
-                        Program.Logger.Debug($"##Army Regiment - {x.ID} |{x.Type} | Character ID {x.MAA_Name}");
+                        CrusaderWarsEnvironment.Logger.Debug($"##Army Regiment - {x.ID} |{x.Type} | Character ID {x.MAA_Name}");
                     }
                     else
                     {
-                        Program.Logger.Debug($"##Army Regiment - {x.ID} |{x.Type} | {x.MAA_Name}");
+                        CrusaderWarsEnvironment.Logger.Debug($"##Army Regiment - {x.ID} |{x.Type} | {x.MAA_Name}");
                         armyRegimentsTotal += x.CurrentNum;
                     }
 
@@ -39,33 +40,33 @@ namespace CrusaderWars.data.save_file
                         {
                             if (t.Culture is null)
                             {
-                                Program.Logger.Debug($"## ## Chunk Regiment: {t.ID} | Owner: {t.Owner} |Index: {t.Index} | Origin: {t.Origin} | Soldiers: {ModOptions.FullArmies(t)} | County Key: {t.GetCountyKey()} | Culture ID: null");
+                                CrusaderWarsEnvironment.Logger.Debug($"## ## Chunk Regiment: {t.ID} | Owner: {t.Owner} |Index: {t.Index} | Origin: {t.Origin} | Soldiers: {ModOptions.FullArmies(t)} | County Key: {t.GetCountyKey()} | Culture ID: null");
                                 regimentsTotal += int.TryParse(t.CurrentNum, out int currentNum) ? currentNum : 0;
                             }
                             else
                             {
-                                Program.Logger.Debug($"## ## Chunk Regiment: {t.ID} | Owner: {t.Owner} | Index: {t.Index} | Origin: {t.Origin} | Soldiers: {ModOptions.FullArmies(t)} | County Key: {t.GetCountyKey()} | Culture: {t.Culture.GetCultureName()} | Heritage: {t.Culture.GetHeritageName()}");
+                                CrusaderWarsEnvironment.Logger.Debug($"## ## Chunk Regiment: {t.ID} | Owner: {t.Owner} | Index: {t.Index} | Origin: {t.Origin} | Soldiers: {ModOptions.FullArmies(t)} | County Key: {t.GetCountyKey()} | Culture: {t.Culture.GetCultureName()} | Heritage: {t.Culture.GetHeritageName()}");
                                 regimentsTotal += int.TryParse(t.CurrentNum, out int currentNum) ? currentNum : 0;
                             }
                         }
                         else
                         {
-                            ///Program.Logger.Debug($"## ## Mercenary Chunk Regiment: {t.ID} | Owner: {t.Owner} | Index: {t.Index} | Origin: {t.Origin} | Soldiers: {t.CurrentNum} | County Key: {t.GetCountyKey()} | Culture: {t.Culture?.GetCultureName() ?? "null"} | Heritage: {t.Culture?.GetHeritageName() ?? "null"}"); // Applied null-conditional and null-coalescing
-                            Program.Logger.Debug($"## ## Mercenary Chunk Regiment: {t.ID} | Owner: {t.Owner} | Index: {t.Index} | Origin: {t.Origin} | Soldiers: {ModOptions.FullArmies(t)} | County Key: {t.GetCountyKey()} | Culture: {t.Culture?.GetCultureName() ?? "null"} | Heritage: {t.Culture?.GetHeritageName() ?? "null"}"); // Applied null-conditional and null-coalescing
+                            ///CrusaderWarsEnvironment.Logger.Debug($"## ## Mercenary Chunk Regiment: {t.ID} | Owner: {t.Owner} | Index: {t.Index} | Origin: {t.Origin} | Soldiers: {t.CurrentNum} | County Key: {t.GetCountyKey()} | Culture: {t.Culture?.GetCultureName() ?? "null"} | Heritage: {t.Culture?.GetHeritageName() ?? "null"}"); // Applied null-conditional and null-coalescing
+                            CrusaderWarsEnvironment.Logger.Debug($"## ## Mercenary Chunk Regiment: {t.ID} | Owner: {t.Owner} | Index: {t.Index} | Origin: {t.Origin} | Soldiers: {ModOptions.FullArmies(t)} | County Key: {t.GetCountyKey()} | Culture: {t.Culture?.GetCultureName() ?? "null"} | Heritage: {t.Culture?.GetHeritageName() ?? "null"}"); // Applied null-conditional and null-coalescing
                             regimentsTotal += int.TryParse(t.CurrentNum, out int currentNum) ? currentNum : 0;
                         }
 
                     }
 
                 }
-                Program.Logger.Debug("\n");
+                CrusaderWarsEnvironment.Logger.Debug("\n");
             }
 
-            Program.Logger.Debug("\n");
-            Program.Logger.Debug($"ARMY REGIMENTS TOTAL FOUND: {armyRegimentsTotal}\n" +
+            CrusaderWarsEnvironment.Logger.Debug("\n");
+            CrusaderWarsEnvironment.Logger.Debug($"ARMY REGIMENTS TOTAL FOUND: {armyRegimentsTotal}\n" +
                               $"REGIMENTS TOTAL FOUND: {regimentsTotal}\n");
-            Program.Logger.Debug("\n");
-            Program.Logger.Debug("\n");
+            CrusaderWarsEnvironment.Logger.Debug("\n");
+            CrusaderWarsEnvironment.Logger.Debug("\n");
 
         }
     }
@@ -189,7 +190,7 @@ namespace CrusaderWars.data.save_file
         public static void ResetUniqueIDCounter()
         {
             _nextUniqueID = 1;
-            Program.Logger.Debug("Unit UniqueID counter has been reset.");
+            CrusaderWarsEnvironment.Logger.Debug("Unit UniqueID counter has been reset.");
         }
 
 

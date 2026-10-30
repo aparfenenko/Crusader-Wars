@@ -1,6 +1,7 @@
 using System.IO;
 using System.Collections.Generic; // Added for List<string>
 using System.Text.Json; // Added for JSON serialization
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.twbattle
 {
@@ -54,7 +55,7 @@ namespace CrusaderWars.twbattle
             // Ensure directory exists
             if (!Directory.Exists(StateFolder))
             {
-                Program.Logger.Debug($"BattleState: State folder not found at '{StateFolder}'. Creating it.");
+                CrusaderWarsEnvironment.Logger.Debug($"BattleState: State folder not found at '{StateFolder}'. Creating it.");
                 Directory.CreateDirectory(StateFolder);
             }
 
@@ -72,18 +73,18 @@ namespace CrusaderWars.twbattle
         {
             if (!System.IO.File.Exists(StateFile))
             {
-                Program.Logger.Debug($"Marking battle as started. Creating state file: '{StateFile}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Marking battle as started. Creating state file: '{StateFile}'");
                 System.IO.File.WriteAllText(StateFile, "battle_in_progress");
             }
             else
             {
-                Program.Logger.Debug($"Battle already marked as started. State file exists: '{StateFile}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Battle already marked as started. State file exists: '{StateFile}'");
             }
         }
 
         public static void ClearAutofixOverrides()
         {
-            Program.Logger.Debug("Clearing autofix deployment overrides.");
+            CrusaderWarsEnvironment.Logger.Debug("Clearing autofix deployment overrides.");
             AutofixDeploymentSizeOverride = null;
             AutofixDeploymentRotationOverride = null;
             AutofixAttackerDirectionOverride = null;
@@ -96,46 +97,46 @@ namespace CrusaderWars.twbattle
 
         public static void ClearBattleState()
         {
-            Program.Logger.Debug("Clearing battle state...");
+            CrusaderWarsEnvironment.Logger.Debug("Clearing battle state...");
             IsSiegeBattle = false;
             BattleType = null;
             HasReliefArmy = false;
             ClearAutofixOverrides(); // Reset autofix overrides
             if (System.IO.File.Exists(StateFile))
             {
-                Program.Logger.Debug($"Deleting battle state file: '{StateFile}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Deleting battle state file: '{StateFile}'");
                 System.IO.File.Delete(StateFile);
             }
             if (System.IO.File.Exists(LogSnippetFile))
             {
                 string backupLogSnippetFile = LogSnippetFile + ".bak";
-                Program.Logger.Debug($"Backing up battle log snippet to: '{backupLogSnippetFile}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Backing up battle log snippet to: '{backupLogSnippetFile}'");
                 System.IO.File.Copy(LogSnippetFile, backupLogSnippetFile, true);
-                Program.Logger.Debug($"Deleting battle log snippet file: '{LogSnippetFile}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Deleting battle log snippet file: '{LogSnippetFile}'");
                 System.IO.File.Delete(LogSnippetFile);
             }
-            Program.Logger.Debug("Battle state cleared.");
+            CrusaderWarsEnvironment.Logger.Debug("Battle state cleared.");
         }
 
         public static void SaveLogSnippet(string logContent)
         {
-            Program.Logger.Debug($"Saving battle log snippet to: '{LogSnippetFile}'");
+            CrusaderWarsEnvironment.Logger.Debug($"Saving battle log snippet to: '{LogSnippetFile}'");
             System.IO.File.WriteAllText(LogSnippetFile, logContent);
-            Program.Logger.Debug($"Saved battle log snippet.");
+            CrusaderWarsEnvironment.Logger.Debug($"Saved battle log snippet.");
         }
 
         public static string? LoadLogSnippet()
         {
             if (System.IO.File.Exists(LogSnippetFile))
             {
-                Program.Logger.Debug($"Loading battle log snippet from: '{LogSnippetFile}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Loading battle log snippet from: '{LogSnippetFile}'");
                 string content = System.IO.File.ReadAllText(LogSnippetFile);
-                Program.Logger.Debug("Successfully loaded battle log snippet.");
+                CrusaderWarsEnvironment.Logger.Debug("Successfully loaded battle log snippet.");
                 return content;
             }
             else
             {
-                Program.Logger.Debug($"Battle log snippet not found at: '{LogSnippetFile}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Battle log snippet not found at: '{LogSnippetFile}'");
                 return null;
             }
         }
@@ -164,11 +165,11 @@ namespace CrusaderWars.twbattle
                 string jsonString = JsonSerializer.Serialize(settings, options);
                 string settingsFilePath = Path.Combine(StateFolder, SETTINGS_FILE);
                 File.WriteAllText(settingsFilePath, jsonString);
-                Program.Logger.Debug($"Saved persistent battle settings to: '{settingsFilePath}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Saved persistent battle settings to: '{settingsFilePath}'");
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error saving persistent battle settings: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error saving persistent battle settings: {ex.Message}");
             }
         }
 
@@ -198,13 +199,13 @@ namespace CrusaderWars.twbattle
                         DeploymentZoneOverrideAttacker = settings.DeploymentZoneOverrideAttacker;
                         DeploymentZoneOverrideDefender = settings.DeploymentZoneOverrideDefender;
 
-                        Program.Logger.Debug($"Loaded persistent battle settings from: '{settingsFilePath}'");
+                        CrusaderWarsEnvironment.Logger.Debug($"Loaded persistent battle settings from: '{settingsFilePath}'");
                     }
                 }
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error loading persistent battle settings: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error loading persistent battle settings: {ex.Message}");
                 ManualUnitReplacements.Clear();
                 DeploymentZoneOverrideAttacker = null;
                 DeploymentZoneOverrideDefender = null;
@@ -215,7 +216,7 @@ namespace CrusaderWars.twbattle
         {
             ManualUnitReplacements.Clear();
             SavePersistentBattleSettings();
-            Program.Logger.Debug("Cleared manual unit replacements and saved settings.");
+            CrusaderWarsEnvironment.Logger.Debug("Cleared manual unit replacements and saved settings.");
         }
 
         public static void ClearDeploymentZoneOverrides()
@@ -223,7 +224,7 @@ namespace CrusaderWars.twbattle
             DeploymentZoneOverrideAttacker = null;
             DeploymentZoneOverrideDefender = null;
             SavePersistentBattleSettings();
-            Program.Logger.Debug("Cleared deployment zone overrides and saved settings.");
+            CrusaderWarsEnvironment.Logger.Debug("Cleared deployment zone overrides and saved settings.");
         }
     }
 }

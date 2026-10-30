@@ -4,6 +4,7 @@ using System.Linq;
 using CrusaderWars.twbattle;
 using CrusaderWars.unit_mapper;
 using CrusaderWars.data.save_file; // Added for Army
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.sieges
 {
@@ -11,7 +12,7 @@ namespace CrusaderWars.sieges
     {
         public static Dictionary<string, int> Generate(List<Army> attackerArmies)
         {
-            Program.Logger.Debug("Starting SiegeEngineGenerator.Generate()");
+            CrusaderWarsEnvironment.Logger.Debug("Starting SiegeEngineGenerator.Generate()");
             var siegeEnginesToBuild = new Dictionary<string, int>();
 
             int attackerArmySize = attackerArmies.SelectMany(a => a.Units).Sum(u => u.GetSoldiers());
@@ -21,17 +22,17 @@ namespace CrusaderWars.sieges
             int holdingLevel = Sieges.GetHoldingLevel();
             var allAvailableEngines = UnitMappers_BETA.SiegeEngines;
 
-            Program.Logger.Debug($"Siege Progress: {siegeProgress}, Fort Level: {fortLevel}, Holding Level: {holdingLevel}");
+            CrusaderWarsEnvironment.Logger.Debug($"Siege Progress: {siegeProgress}, Fort Level: {fortLevel}, Holding Level: {holdingLevel}");
 
             // Calculate total progress required for the siege
             // Base 100 progress + 75 progress per fort level
             double totalRequiredProgress = 100 + (fortLevel * 75);
-            Program.Logger.Debug($"Total Required Siege Progress: {totalRequiredProgress}");
+            CrusaderWarsEnvironment.Logger.Debug($"Total Required Siege Progress: {totalRequiredProgress}");
 
             // Return immediately if current progress is less than one-fourth of the total required progress
             if (siegeProgress < totalRequiredProgress / 4)
             {
-                Program.Logger.Debug($"Siege progress ({siegeProgress}) is less than one-fourth of total required progress ({totalRequiredProgress / 4}). No siege engines generated based on progress.");
+                CrusaderWarsEnvironment.Logger.Debug($"Siege progress ({siegeProgress}) is less than one-fourth of total required progress ({totalRequiredProgress / 4}). No siege engines generated based on progress.");
                 // The default ram logic will now be handled after this if-else block.
             }
             else // Logic for when siege progress is sufficient
@@ -40,20 +41,20 @@ namespace CrusaderWars.sieges
                 // Holding level 1 or 2 means we exclude 15m equipment
                 // Holding level 3 or higher means we exclude 8m equipment
                 string excludedWallHeight = (holdingLevel >= 3) ? "8m" : "15m";
-                Program.Logger.Debug($"Excluding engines with wall height '{excludedWallHeight}' based on holding level ({holdingLevel}).");
+                CrusaderWarsEnvironment.Logger.Debug($"Excluding engines with wall height '{excludedWallHeight}' based on holding level ({holdingLevel}).");
 
                 // Filter out engines designed for the wrong wall height.
                 // This correctly includes engines for the required height AND engines with no height requirement (like rams).
                 var filteredEngines = allAvailableEngines
                     .Where(e => !e.Key.Contains(excludedWallHeight, StringComparison.OrdinalIgnoreCase))
                     .ToList();
-                Program.Logger.Debug($"Filtered to {filteredEngines.Count} engines after excluding '{excludedWallHeight}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"Filtered to {filteredEngines.Count} engines after excluding '{excludedWallHeight}'.");
 
                 // Calculate progress percentage to determine allowed effort cost and quantity
                 double progressPercentage = siegeProgress / totalRequiredProgress;
                 // Scale effort cost from 0 to 100 based on progress percentage
                 int maxEffortCost = (int)(progressPercentage * 100);
-                Program.Logger.Debug($"Progress Percentage: {progressPercentage:P2}, Max Effort Cost: {maxEffortCost}");
+                CrusaderWarsEnvironment.Logger.Debug($"Progress Percentage: {progressPercentage:P2}, Max Effort Cost: {maxEffortCost}");
 
                 // Select the best available engine for each type that meets the criteria
                 var bestRam = filteredEngines
@@ -83,23 +84,23 @@ namespace CrusaderWars.sieges
                     quantityMultiplier = 2;
                 }
                 int finalQuantity = baseQuantity + quantityMultiplier;
-                Program.Logger.Debug($"Final quantity for each engine type: {finalQuantity}");
+                CrusaderWarsEnvironment.Logger.Debug($"Final quantity for each engine type: {finalQuantity}");
 
                 // Add selected engines to the dictionary
                 if (bestRam != null)
                 {
                     siegeEnginesToBuild.Add(bestRam.Key, finalQuantity);
-                    Program.Logger.Debug($"Selected Ram: {bestRam.Key}, Quantity: {finalQuantity}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Selected Ram: {bestRam.Key}, Quantity: {finalQuantity}");
                 }
                 if (bestTower != null)
                 {
                     siegeEnginesToBuild.Add(bestTower.Key, finalQuantity);
-                    Program.Logger.Debug($"Selected Tower: {bestTower.Key}, Quantity: {finalQuantity}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Selected Tower: {bestTower.Key}, Quantity: {finalQuantity}");
                 }
                 if (bestLadder != null)
                 {
                     siegeEnginesToBuild.Add(bestLadder.Key, finalQuantity);
-                    Program.Logger.Debug($"Selected Ladder: {bestLadder.Key}, Quantity: {finalQuantity}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Selected Ladder: {bestLadder.Key}, Quantity: {finalQuantity}");
                 }
             }
 
@@ -109,7 +110,7 @@ namespace CrusaderWars.sieges
             bool attackerHasSiegeUnits = attackerArmies.SelectMany(a => a.Units).Any(u => u.IsSiege());
             if (!attackerHasSiegeUnits && !siegeEnginesToBuild.Any())
             {
-                Program.Logger.Debug("Attacker has no mapped siege units and no deployables were generated. Adding a default battering ram.");
+                CrusaderWarsEnvironment.Logger.Debug("Attacker has no mapped siege units and no deployables were generated. Adding a default battering ram.");
                 var cheapestRam = UnitMappers_BETA.SiegeEngines
                     .Where(se => se.Type.Contains("ram", StringComparison.OrdinalIgnoreCase))
                     .OrderBy(se => se.SiegeEffortCost)
@@ -118,11 +119,11 @@ namespace CrusaderWars.sieges
                 if (cheapestRam != null && !string.IsNullOrEmpty(cheapestRam.Key))
                 {
                     siegeEnginesToBuild.Add(cheapestRam.Key, 1);
-                    Program.Logger.Debug($"Added one deployable of '{cheapestRam.Key}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Added one deployable of '{cheapestRam.Key}'.");
                 }
                 else
                 {
-                    Program.Logger.Debug("WARNING: Could not find any battering ram in siege engine definitions. Cannot add default siege engine.");
+                    CrusaderWarsEnvironment.Logger.Debug("WARNING: Could not find any battering ram in siege engine definitions. Cannot add default siege engine.");
                 }
             }
             // --- END: NEW DEFAULT RAM LOGIC ---
@@ -130,7 +131,7 @@ namespace CrusaderWars.sieges
             // --- START: NEW CAPPING LOGIC ---
             int maxAllowedEngines = Math.Min(10, Math.Max(1, attackerArmySize / 800));
             int currentTotalEngines = siegeEnginesToBuild.Values.Sum();
-            Program.Logger.Debug($"Siege engine limit: {maxAllowedEngines} (based on {attackerArmySize} soldiers, capped at 10). Current count before limit: {currentTotalEngines}.");
+            CrusaderWarsEnvironment.Logger.Debug($"Siege engine limit: {maxAllowedEngines} (based on {attackerArmySize} soldiers, capped at 10). Current count before limit: {currentTotalEngines}.");
 
             while (currentTotalEngines > maxAllowedEngines)
             {
@@ -145,7 +146,7 @@ namespace CrusaderWars.sieges
                 // Decrement the count and total
                 siegeEnginesToBuild[keyToRemove]--;
                 currentTotalEngines--;
-                Program.Logger.Debug($"Removing one '{keyToRemove}' to meet limit. New total: {currentTotalEngines}");
+                CrusaderWarsEnvironment.Logger.Debug($"Removing one '{keyToRemove}' to meet limit. New total: {currentTotalEngines}");
 
                 // If count is zero, remove the engine type from the dictionary
                 if (siegeEnginesToBuild[keyToRemove] == 0)
@@ -153,7 +154,7 @@ namespace CrusaderWars.sieges
                     siegeEnginesToBuild.Remove(keyToRemove);
                 }
             }
-            Program.Logger.Debug($"Final siege engine count after applying limit: {currentTotalEngines}.");
+            CrusaderWarsEnvironment.Logger.Debug($"Final siege engine count after applying limit: {currentTotalEngines}.");
             // --- END: NEW CAPPING LOGIC ---
 
             // Store siege engines in each army
@@ -162,7 +163,7 @@ namespace CrusaderWars.sieges
                 army.SiegeEngines = new Dictionary<string, int>(siegeEnginesToBuild);
             }
 
-            Program.Logger.Debug($"Finished SiegeEngineGenerator.Generate(). Generated {siegeEnginesToBuild.Count} unique siege engine types.");
+            CrusaderWarsEnvironment.Logger.Debug($"Finished SiegeEngineGenerator.Generate(). Generated {siegeEnginesToBuild.Count} unique siege engine types.");
             return siegeEnginesToBuild;
         }
     }

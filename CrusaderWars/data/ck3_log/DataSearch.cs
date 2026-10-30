@@ -131,43 +131,43 @@ namespace CrusaderWars
         {
             if (log.Contains("BattleType:SIEGE"))
             {
-                Program.Logger.Debug("Siege battle detected.");
+                CrusaderWarsEnvironment.Logger.Debug("Siege battle detected.");
                 twbattle.BattleState.IsSiegeBattle = true;
             }
             else if (log.Contains("BattleType:BATTLE"))
             {
-                Program.Logger.Debug("Field battle detected.");
+                CrusaderWarsEnvironment.Logger.Debug("Field battle detected.");
                 twbattle.BattleState.IsSiegeBattle = false;
             }
             else
             {
-                Program.Logger.Debug("Could not determine battle type from keyword. Defaulting to field battle.");
+                CrusaderWarsEnvironment.Logger.Debug("Could not determine battle type from keyword. Defaulting to field battle.");
                 twbattle.BattleState.IsSiegeBattle = false;
             }
         }
 
         private static void SearchSiegeData(string log)
         {
-            Program.Logger.Debug("Searching for siege-specific data in log...");
+            CrusaderWarsEnvironment.Logger.Debug("Searching for siege-specific data in log...");
 
             // Holding type key
             string holdingLevel = Regex.Match(log, @"HoldingLevel:\s*(.+)").Groups[1].Value.Trim();
-            Program.Logger.Debug($"Found HoldingLevel Key: {holdingLevel}");
+            CrusaderWarsEnvironment.Logger.Debug($"Found HoldingLevel Key: {holdingLevel}");
             twbattle.Sieges.SetHoldingLevelKey(holdingLevel);
 
             // Disease
             string diseaseFrameStr = Regex.Match(log, @"Diseases:\s*(.+)").Groups[1].Value.Trim();
-            Program.Logger.Debug($"Found Sickness Status: {diseaseFrameStr}");
+            CrusaderWarsEnvironment.Logger.Debug($"Found Sickness Status: {diseaseFrameStr}");
             twbattle.Sieges.SetHoldingSickness(diseaseFrameStr);
 
             // Starvation
             string suppliesStr = Regex.Match(log, @"Supplies:\s*(.+)").Groups[1].Value.Trim();
-            Program.Logger.Debug($"Found Supply Status: {suppliesStr}");
+            CrusaderWarsEnvironment.Logger.Debug($"Found Supply Status: {suppliesStr}");
             twbattle.Sieges.SetHoldingSupplies(suppliesStr);
 
             // Walls
             string wallsStr = Regex.Match(log, @"Walls:\s*(.+)").Groups[1].Value.Trim();
-            Program.Logger.Debug($"Found Breach Status: {wallsStr}");
+            CrusaderWarsEnvironment.Logger.Debug($"Found Breach Status: {wallsStr}");
             twbattle.Sieges.SetHoldingEscalation(wallsStr);
 
             // Fort Level
@@ -176,14 +176,14 @@ namespace CrusaderWars
                 .Trim();
             if (int.TryParse(fortLevelStr, out int fortLevel))
             {
-                Program.Logger.Debug($"Found Fort Level: {fortLevel}");
+                CrusaderWarsEnvironment.Logger.Debug($"Found Fort Level: {fortLevel}");
                 twbattle.Sieges.SetFortLevel(fortLevel); // Changed from SetGarrisonSize to SetFortLevel
             }
 
             // Garrison culture and heritage
             string garrisonCulture = Regex.Match(log, @"GarrisonCulture:.*?ONCLICK:CULTURE[,]*(\d+)").Groups[1].Value.Trim();
             string garrisonHeritage = Regex.Match(log, @"GarrisonHeritage:.*?TOOLTIP:CULTURE_PILLAR[,]*(\S+)").Groups[1].Value.Trim();
-            Program.Logger.Debug($"Found Garrison Culture: {garrisonCulture}, Heritage: {garrisonHeritage}");
+            CrusaderWarsEnvironment.Logger.Debug($"Found Garrison Culture: {garrisonCulture}, Heritage: {garrisonHeritage}");
             twbattle.Sieges.SetGarrisonCulture(garrisonCulture);
             twbattle.Sieges.SetGarrisonHeritage(garrisonHeritage);
 
@@ -191,13 +191,13 @@ namespace CrusaderWars
             string garrisonSizeStr = Regex.Match(log, @"GarrisonSize:\s*(\d+)").Groups[1].Value;
             if (int.TryParse(garrisonSizeStr, out int garrisonSize))
             {
-                Program.Logger.Debug($"Found Garrison Size: {garrisonSize}");
+                CrusaderWarsEnvironment.Logger.Debug($"Found Garrison Size: {garrisonSize}");
                 twbattle.Sieges.SetGarrisonSize(garrisonSize);
             }
 
             // Attacker's army composition string.
             string attackerArmyComposition = Regex.Match(log, @"---------Attacker Army---------([\s\S]*?)Attacker Martial:").Groups[1].Value.Trim();
-            Program.Logger.Debug($"Found Attacker Army Composition for siege.");
+            CrusaderWarsEnvironment.Logger.Debug($"Found Attacker Army Composition for siege.");
             twbattle.Sieges.SetAttackerArmyComposition(attackerArmyComposition);
 
             // Calculate the holding level after all siege data is parsed.
@@ -207,14 +207,14 @@ namespace CrusaderWars
         [SupportedOSPlatform("windows")]
         public static void Search(string log)
         {
-            Program.Logger.Debug("Starting CK3 log search...");
+            CrusaderWarsEnvironment.Logger.Debug("Starting CK3 log search...");
             /*---------------------------------------------
              * ::::::::::::::::Army Ratio::::::::::::::::::
              ---------------------------------------------*/
 
             //Get Army Ratio in log file...
             ArmyProportions.SetRatio(ModOptions.GetBattleScale());
-            Program.Logger.Debug($"Battle scale set to: {ModOptions.GetBattleScale()}");
+            CrusaderWarsEnvironment.Logger.Debug($"Battle scale set to: {ModOptions.GetBattleScale()}");
 
             /*---------------------------------------------
              * :::::::::::::::::::General Data:::::::::::::::
@@ -235,7 +235,7 @@ namespace CrusaderWars
             var modifiers_texts = GetModifiersText(log);
             CK3LogData.LeftSide.SetModifiers(new Modifiers(modifiers_texts.left));
             CK3LogData.RightSide.SetModifiers(new Modifiers(modifiers_texts.right));
-            Program.Logger.Debug("Modifiers searched and set for both sides.");
+            CrusaderWarsEnvironment.Logger.Debug("Modifiers searched and set for both sides.");
 
             /*---------------------------------------------
              * ::::::::::::::Player Character::::::::::::::
@@ -243,7 +243,7 @@ namespace CrusaderWars
             string player_culture_id = Regex.Match(log, @"PlayerCharacter_Culture:\s*(.+)").Groups[1].Value.Trim();
             string playerID = Regex.Match(log, @"PlayerCharacter_ID:\s*(.+)").Groups[1].Value.Trim();
             Player_Character = new PlayerChar(playerID, player_culture_id);
-            Program.Logger.Debug($"Player character: ID={playerID}, CultureID={player_culture_id}");
+            CrusaderWarsEnvironment.Logger.Debug($"Player character: ID={playerID}, CultureID={player_culture_id}");
 
             /*---------------------------------------------
              * ::::::::::::::Main Participants::::::::::::::
@@ -278,13 +278,13 @@ namespace CrusaderWars
             // Left Side
             if (string.IsNullOrEmpty(left_side_commander_id) || left_side_commander_id == "4294967295")
             {
-                Program.Logger.Debug("Left side commander ID is missing or invalid. Using owner ID as fallback.");
+                CrusaderWarsEnvironment.Logger.Debug("Left side commander ID is missing or invalid. Using owner ID as fallback.");
                 left_side_commander_id = left_side_mainparticipant_id;
                 left_side_commander_culture_id = left_side_mainparticipant_culture_id;
             }
             else if (left_side_mainparticipant_id == "4294967295")
             {
-                Program.Logger.Debug("Left side owner ID is invalid. Using commander ID as fallback.");
+                CrusaderWarsEnvironment.Logger.Debug("Left side owner ID is invalid. Using commander ID as fallback.");
                 left_side_mainparticipant_id = left_side_commander_id;
                 left_side_mainparticipant_culture_id = left_side_commander_culture_id;
             }
@@ -292,27 +292,27 @@ namespace CrusaderWars
             // Right Side
             if (string.IsNullOrEmpty(right_side_commander_id) || right_side_commander_id == "4294967295")
             {
-                Program.Logger.Debug("Right side commander ID is missing or invalid. Using owner ID as fallback.");
+                CrusaderWarsEnvironment.Logger.Debug("Right side commander ID is missing or invalid. Using owner ID as fallback.");
                 right_side_commander_id = right_side_mainparticipant_id;
                 right_side_commander_culture_id = right_side_mainparticipant_culture_id;
             }
             else if (right_side_mainparticipant_id == "4294967295")
             {
-                Program.Logger.Debug("Right side owner ID is invalid. Using commander ID as fallback.");
+                CrusaderWarsEnvironment.Logger.Debug("Right side owner ID is invalid. Using commander ID as fallback.");
                 right_side_mainparticipant_id = right_side_commander_id;
                 right_side_mainparticipant_culture_id = right_side_commander_culture_id;
             }
             // --- End Consolidated Logic ---
 
             CK3LogData.LeftSide.SetMainParticipant((left_side_mainparticipant_id, left_side_mainparticipant_culture_id));
-            Program.Logger.Debug($"Left side main participant: ID={left_side_mainparticipant_id}, CultureID={left_side_mainparticipant_culture_id}");
+            CrusaderWarsEnvironment.Logger.Debug($"Left side main participant: ID={left_side_mainparticipant_id}, CultureID={left_side_mainparticipant_culture_id}");
 
             CK3LogData.RightSide.SetMainParticipant((right_side_mainparticipant_id, right_side_mainparticipant_culture_id));
-            Program.Logger.Debug($"Right side main participant: ID={right_side_mainparticipant_id}, CultureID={right_side_mainparticipant_culture_id}");
+            CrusaderWarsEnvironment.Logger.Debug($"Right side main participant: ID={right_side_mainparticipant_id}, CultureID={right_side_mainparticipant_culture_id}");
 
-            Program.Logger.Debug($"Left side commander: ID={left_side_commander_id}, CultureID={left_side_commander_culture_id}");
+            CrusaderWarsEnvironment.Logger.Debug($"Left side commander: ID={left_side_commander_id}, CultureID={left_side_commander_culture_id}");
 
-            Program.Logger.Debug($"Right side commander: ID={right_side_commander_id}, CultureID={right_side_commander_culture_id}");
+            CrusaderWarsEnvironment.Logger.Debug($"Right side commander: ID={right_side_commander_id}, CultureID={right_side_commander_culture_id}");
 
             /*---------------------------------------------
              * :::::::::::::::::Terrain::::::::::::::::::::
@@ -367,7 +367,7 @@ namespace CrusaderWars
              ---------------------------------------------*/
 
             RealmsNamesSearch(log);
-            Program.Logger.Debug("Finished CK3 log search.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished CK3 log search.");
         }
 
         private static void BattleNameSearch(string log)
@@ -377,7 +377,7 @@ namespace CrusaderWars
             // If it's a siege battle, the name might contain extra GUI metadata from GetName.
             if (twbattle.BattleState.IsSiegeBattle && battle_name.Contains("ONCLICK:PROVINCE"))
             {
-                Program.Logger.Debug($"Original siege battle name: '{battle_name}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Original siege battle name: '{battle_name}'");
 
                 // New simplified replacement logic
                 battle_name = Regex.Replace(battle_name, @"ONCLICK:.*?( L |L;)", " ");
@@ -395,21 +395,21 @@ namespace CrusaderWars
                 // Existing cleanup logic for multiple spaces
                 battle_name = Regex.Replace(battle_name, @"\s{2,}", " ").Trim();
 
-                Program.Logger.Debug($"Cleaned siege battle name: '{battle_name}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Cleaned siege battle name: '{battle_name}'");
             }
 
             BattleDetails.SetBattleName(battle_name);
-            Program.Logger.Debug($"Battle name set to: {battle_name}");
+            CrusaderWarsEnvironment.Logger.Debug($"Battle name set to: {battle_name}");
         }
 
         static void DateSearch(string log)
         {
             if (Date.Year != 0)
             {
-                Program.Logger.Debug($"Date already set to {Date.Year}.{Date.Month}.{Date.Day}. Skipping date parsing from log.");
+                CrusaderWarsEnvironment.Logger.Debug($"Date already set to {Date.Year}.{Date.Month}.{Date.Day}. Skipping date parsing from log.");
                 string season = Date.GetSeason();
                 Weather.SetSeason(season);
-                Program.Logger.Debug($"Season set to: {season}");
+                CrusaderWarsEnvironment.Logger.Debug($"Season set to: {season}");
                 return;
             }
 
@@ -422,11 +422,11 @@ namespace CrusaderWars
                 Date.Month = Int32.Parse(month);
                 Date.Year = Int32.Parse(year);
                 Date.Day = 1; // Day is not available in the log, default to 1
-                Program.Logger.Debug($"Date searched from log: Year={year}, Month={month}, Day=1");
+                CrusaderWarsEnvironment.Logger.Debug($"Date searched from log: Year={year}, Month={month}, Day=1");
 
                 string season = Date.GetSeason();
                 Weather.SetSeason(season);
-                Program.Logger.Debug($"Season set to: {season}");
+                CrusaderWarsEnvironment.Logger.Debug($"Season set to: {season}");
             }
             catch
             {
@@ -434,7 +434,7 @@ namespace CrusaderWars
                 Date.Year = 1300;
                 Date.Day = 1;
                 Weather.SetSeason("random");
-                Program.Logger.Debug($"Failed to parse date from log. Defaulting to {Date.Year}.{Date.Month}.{Date.Day} and random season.");
+                CrusaderWarsEnvironment.Logger.Debug($"Failed to parse date from log. Defaulting to {Date.Year}.{Date.Month}.{Date.Day} and random season.");
             }
 
         }
@@ -495,7 +495,7 @@ namespace CrusaderWars
         static void TerrainSearch(string log)
         {
             TerrainGenerator.TerrainType = SearchForTerrain(log);
-            Program.Logger.Debug($"Terrain type found: {TerrainGenerator.TerrainType}");
+            CrusaderWarsEnvironment.Logger.Debug($"Terrain type found: {TerrainGenerator.TerrainType}");
             Weather.SetWinterSeverity(SearchForWinter(log));
         }
         static void CommanderSearch(string log, string army_data, DataSearchSides side, string id, string culture_id)
@@ -575,12 +575,12 @@ namespace CrusaderWars
 
                     CK3LogData.LeftSide.SetRealmName(player_army);
                     CK3LogData.RightSide.SetRealmName(enemy_army);
-                    Program.Logger.Debug($"Left side realm name (siege): {player_army}");
-                    Program.Logger.Debug($"Right side realm name (siege): {enemy_army}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Left side realm name (siege): {player_army}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Right side realm name (siege): {enemy_army}");
                 }
                 else
                 {
-                    Program.Logger.Debug("WARNING: Could not find enough realm names for siege battle.");
+                    CrusaderWarsEnvironment.Logger.Debug("WARNING: Could not find enough realm names for siege battle.");
                 }
             }
             else
@@ -600,12 +600,12 @@ namespace CrusaderWars
 
                     CK3LogData.LeftSide.SetRealmName(player_army);
                     CK3LogData.RightSide.SetRealmName(enemy_army);
-                    Program.Logger.Debug($"Left side realm name (field): {player_army}");
-                    Program.Logger.Debug($"Right side realm name (field): {enemy_army}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Left side realm name (field): {player_army}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Right side realm name (field): {enemy_army}");
                 }
                 else
                 {
-                    Program.Logger.Debug("WARNING: Could not find enough realm names for field battle.");
+                    CrusaderWarsEnvironment.Logger.Debug("WARNING: Could not find enough realm names for field battle.");
                 }
             }
         }
@@ -684,7 +684,7 @@ namespace CrusaderWars
 
         public static void ClearLogFile()
         {
-            Program.Logger.Debug($"Clearing CK3 log file at: {LogPath}");
+            CrusaderWarsEnvironment.Logger.Debug($"Clearing CK3 log file at: {LogPath}");
             if (!File.Exists(LogPath)) File.Create(LogPath)?.Close(); // Close the created file stream immediately
 
             using (var fileStream = new FileStream(LogPath, FileMode.Truncate))
@@ -741,11 +741,11 @@ namespace CrusaderWars
                     if (match.Success)
                     {
                         provinceID = match.Groups[1].Value;
-                        Program.Logger.Debug($"Province ID found (complex format): {provinceID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Province ID found (complex format): {provinceID}");
                     }
                     else
                     {
-                        Program.Logger.Debug($"Province ID line contains 'ONCLICK:PROVINCE,' but could not parse ID from: '{provinceIDLine}'");
+                        CrusaderWarsEnvironment.Logger.Debug($"Province ID line contains 'ONCLICK:PROVINCE,' but could not parse ID from: '{provinceIDLine}'");
                     }
 
                     // New logic to parse the province name as suggested
@@ -761,11 +761,11 @@ namespace CrusaderWars
                         }
                         // Second, remove any trailing non-letter, non-whitespace, non-hyphen characters
                         provinceName = Regex.Replace(provinceName, @".*\d+\s*L[;\s]+", "").Trim();
-                        Program.Logger.Debug($"Province Name found and cleaned (complex format): '{provinceName}'");
+                        CrusaderWarsEnvironment.Logger.Debug($"Province Name found and cleaned (complex format): '{provinceName}'");
                     }
                     else
                     {
-                        Program.Logger.Debug($"Could not parse Province Name from: '{provinceIDLine}'");
+                        CrusaderWarsEnvironment.Logger.Debug($"Could not parse Province Name from: '{provinceIDLine}'");
                     }
                 }
                 else
@@ -774,12 +774,12 @@ namespace CrusaderWars
                     provinceID = provinceIDLine;
                     // For field battles, we don't have the name in this line, so provinceName remains empty.
                     // This is acceptable because we only need the name for siege battles.
-                    Program.Logger.Debug($"Province ID found (simple format): {provinceID}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Province ID found (simple format): {provinceID}");
                 }
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error searching for Province ID: {ex.Message}. Defaulting to '{provinceID}'.");
+                CrusaderWarsEnvironment.Logger.Debug($"Error searching for Province ID: {ex.Message}. Defaulting to '{provinceID}'.");
             }
 
             BattleResult.ProvinceID = provinceID;
@@ -792,11 +792,11 @@ namespace CrusaderWars
             // 1. Initial Check
             if (!twbattle.BattleState.IsSiegeBattle || string.IsNullOrEmpty(BattleResult.ProvinceID))
             {
-                Program.Logger.Debug("Skipping FindSiegeCombatID: Not a siege battle or ProvinceID is empty.");
+                CrusaderWarsEnvironment.Logger.Debug("Skipping FindSiegeCombatID: Not a siege battle or ProvinceID is empty.");
                 return;
             }
 
-            Program.Logger.Debug($"Starting FindSiegeCombatID for province: {BattleResult.ProvinceID}");
+            CrusaderWarsEnvironment.Logger.Debug($"Starting FindSiegeCombatID for province: {BattleResult.ProvinceID}");
 
             try
             {
@@ -804,7 +804,7 @@ namespace CrusaderWars
                 string? siegeId = null;
 
                 // 2. Find Siege ID and Progress from Sieges.txt
-                Program.Logger.Debug($"Searching for siege ID and progress in {siegesPath} for province {BattleResult.ProvinceID}");
+                CrusaderWarsEnvironment.Logger.Debug($"Searching for siege ID and progress in {siegesPath} for province {BattleResult.ProvinceID}");
                 using (StreamReader sr = new StreamReader(siegesPath))
                 {
                     string? currentBlockId = null;
@@ -819,7 +819,7 @@ namespace CrusaderWars
                         else if (line.Trim() == $"province={BattleResult.ProvinceID}" && currentBlockId != null)
                         {
                             siegeId = currentBlockId;
-                            Program.Logger.Debug($"Found siege ID '{siegeId}' for province {BattleResult.ProvinceID}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found siege ID '{siegeId}' for province {BattleResult.ProvinceID}.");
 
                             // Read siege progress from the same block
                             while ((line = sr.ReadLine()) != null)
@@ -830,11 +830,11 @@ namespace CrusaderWars
                                     if (double.TryParse(progressValueStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double parsedProgress))
                                     {
                                         twbattle.Sieges.SetSiegeProgress(parsedProgress);
-                                        Program.Logger.Debug($"Found siege progress: {parsedProgress}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Found siege progress: {parsedProgress}");
                                     }
                                     else
                                     {
-                                        Program.Logger.Debug($"Warning: Could not parse siege progress from line: '{line}'");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Warning: Could not parse siege progress from line: '{line}'");
                                     }
                                     break; // Exit the inner while loop after finding progress
                                 }
@@ -850,17 +850,17 @@ namespace CrusaderWars
 
                 if (string.IsNullOrEmpty(siegeId))
                 {
-                    Program.Logger.Debug($"Could not find siege ID for province {BattleResult.ProvinceID} in Sieges.txt.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Could not find siege ID for province {BattleResult.ProvinceID} in Sieges.txt.");
                     return;
                 }
 
                 // 3. Set BattleResult SiegeID. Do NOT set CombatID or search Combats.txt for sieges.
                 BattleResult.SiegeID = siegeId;
-                Program.Logger.Debug($"Set BattleResult.SiegeID to '{siegeId}'. No combat block is searched for sieges.");
+                CrusaderWarsEnvironment.Logger.Debug($"Set BattleResult.SiegeID to '{siegeId}'. No combat block is searched for sieges.");
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error in FindSiegeCombatID: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error in FindSiegeCombatID: {ex.Message}");
                 BattleResult.SiegeID = null;
                 BattleResult.CombatID = null;
                 BattleResult.Player_Combat = null;

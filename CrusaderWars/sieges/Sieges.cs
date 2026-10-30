@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CrusaderWars.data.save_file;
 using CrusaderWars.sieges;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.twbattle
 {
@@ -48,7 +49,7 @@ namespace CrusaderWars.twbattle
             FortLevel = 0;
             AttackerArmyComposition = string.Empty;
             SiegeProgress = 0; // Reset siege progress
-            Program.Logger.Debug("Siege data reset.");
+            CrusaderWarsEnvironment.Logger.Debug("Siege data reset.");
         }
 
         public static int GetHoldingLevel() { return HoldingLevel; }
@@ -109,7 +110,7 @@ namespace CrusaderWars.twbattle
         public static void CalculateAndSetHoldingLevel()
         {
             HoldingLevel = Sieges_DataTypes.Holding.GetLevel(HoldingLevelKey, Data.Province_Buildings.ToArray(), FortLevel);
-            Program.Logger.Debug($"Calculated Holding Level: {HoldingLevel} (Base Key: {HoldingLevelKey}, Fort Level: {FortLevel})");
+            CrusaderWarsEnvironment.Logger.Debug($"Calculated Holding Level: {HoldingLevel} (Base Key: {HoldingLevelKey}, Fort Level: {FortLevel})");
         }
 
         public static void SetHoldingLevelKey(string key)
@@ -140,7 +141,7 @@ namespace CrusaderWars.twbattle
         public static void SetSiegeProgress(double progress) // New setter for siege progress
         {
             SiegeProgress = progress;
-            Program.Logger.Debug($"Siege progress set to: {progress}");
+            CrusaderWarsEnvironment.Logger.Debug($"Siege progress set to: {progress}");
         }
 
 

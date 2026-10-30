@@ -84,7 +84,7 @@ namespace CrusaderWars.locs
                     break;
                 default:
                     // Fallback: if mapper name is unknown, try to find loc files in a generic way
-                    Program.Logger.Debug($"Unknown mapper name '{Mapper_Name}' in ChangeUnitsCardsNames. Attempting to find localization files generically.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Unknown mapper name '{Mapper_Name}' in ChangeUnitsCardsNames. Attempting to find localization files generically.");
                     string genericLocPath = @".\data\units_cards_names";
                     if (Directory.Exists(genericLocPath))
                     {
@@ -111,7 +111,7 @@ namespace CrusaderWars.locs
             }
             else
             {
-                Program.Logger.Debug($"Warning: Base localization folder not found at '{baseLocPath}'");
+                CrusaderWarsEnvironment.Logger.Debug($"Warning: Base localization folder not found at '{baseLocPath}'");
             }
 
             // 2. Get active submods
@@ -125,7 +125,7 @@ namespace CrusaderWars.locs
                     string submodLocPath = @$".\data\units_cards_names\{baseFolderName}_{submodTag}\";
                     if (Directory.Exists(submodLocPath))
                     {
-                        Program.Logger.Debug($"Found and adding localization files from submod folder: '{submodLocPath}'");
+                        CrusaderWarsEnvironment.Logger.Debug($"Found and adding localization files from submod folder: '{submodLocPath}'");
                         allLocFiles.AddRange(Directory.GetFiles(submodLocPath));
                     }
                 }
@@ -447,7 +447,7 @@ namespace CrusaderWars.locs
                     break;
                 default:
                     // Fallback: if mapper name is unknown, try to find loc files in a generic way
-                    Program.Logger.Debug($"Unknown mapper name '{Mapper_Name}'. Attempting to find localization files generically.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Unknown mapper name '{Mapper_Name}'. Attempting to find localization files generically.");
                     string genericLocPath = @".\data\units_cards_names";
                     if (Directory.Exists(genericLocPath))
                     {

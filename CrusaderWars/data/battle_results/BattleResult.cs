@@ -52,7 +52,7 @@ namespace CrusaderWars.data.battle_results
 
         public static void ReadPlayerCombat(string playerID)
         {
-            Program.Logger.Debug($"Reading player combat for player ID: {playerID}");
+            CrusaderWarsEnvironment.Logger.Debug($"Reading player combat for player ID: {playerID}");
             try
             {
                 bool isSearchStarted = false;
@@ -105,11 +105,11 @@ namespace CrusaderWars.data.battle_results
                 BattleResult.CombatID = battleID;
                 Player_Combat = sb.ToString();
                 Original_Player_Combat = sb.ToString();
-                Program.Logger.Debug("Combat ID - " + battleID);
+                CrusaderWarsEnvironment.Logger.Debug("Combat ID - " + battleID);
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error reading player combat: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error reading player combat: {ex.Message}");
             }
 
 
@@ -118,7 +118,7 @@ namespace CrusaderWars.data.battle_results
 
         public static void ReadCombatBlockByProvinceID()
         {
-            Program.Logger.Debug($"Searching for combat block using ProvinceID: {ProvinceID}");
+            CrusaderWarsEnvironment.Logger.Debug($"Searching for combat block using ProvinceID: {ProvinceID}");
             try
             {
                 string battle_id = "";
@@ -136,14 +136,14 @@ namespace CrusaderWars.data.battle_results
                         }
                         else if (line.Trim() == $"province={ProvinceID}")
                         {
-                            Program.Logger.Debug($"Found combat block ID: {battle_id} for ProvinceID: {ProvinceID}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found combat block ID: {battle_id} for ProvinceID: {ProvinceID}");
                             break;
                         }
                     }
 
                     if (string.IsNullOrEmpty(battle_id))
                     {
-                        Program.Logger.Debug($"Could not find a combat block for ProvinceID: {ProvinceID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Could not find a combat block for ProvinceID: {ProvinceID}");
                         return;
                     }
 
@@ -177,17 +177,17 @@ namespace CrusaderWars.data.battle_results
                 BattleResult.CombatID = battle_id;
                 Player_Combat = sb.ToString();
                 Original_Player_Combat = sb.ToString();
-                Program.Logger.Debug($"Combat block for ID {battle_id} read successfully.");
+                CrusaderWarsEnvironment.Logger.Debug($"Combat block for ID {battle_id} read successfully.");
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error reading combat block by province ID: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error reading combat block by province ID: {ex.Message}");
             }
         }
 
         public static void GetPlayerCombatResult()
         {
-            Program.Logger.Debug("Getting player combat result...");
+            CrusaderWarsEnvironment.Logger.Debug("Getting player combat result...");
             try
             {
                 string battle_id = "";
@@ -196,7 +196,7 @@ namespace CrusaderWars.data.battle_results
                 {
                     if (twbattle.BattleState.IsSiegeBattle && !twbattle.BattleState.HasReliefArmy && SiegeID != null)
                     {
-                        Program.Logger.Debug($"Searching for siege battle result using SiegeID: {SiegeID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Searching for siege battle result using SiegeID: {SiegeID}");
                         string? current_result_block_id = null;
                         while (!sr.EndOfStream)
                         {
@@ -211,7 +211,7 @@ namespace CrusaderWars.data.battle_results
                             else if (line.Trim() == $"siege={SiegeID}") // Trim for safety
                             {
                                 battle_id = current_result_block_id ?? ""; // Use the last captured ID
-                                Program.Logger.Debug(
+                                CrusaderWarsEnvironment.Logger.Debug(
                                     $"Found siege battle result block ID: {battle_id} for SiegeID: {SiegeID}");
                                 break;
                             }
@@ -219,7 +219,7 @@ namespace CrusaderWars.data.battle_results
                     }
                     else
                     {
-                        Program.Logger.Debug($"Searching for field battle result using ProvinceID: {ProvinceID}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Searching for field battle result using ProvinceID: {ProvinceID}");
                         while (!sr.EndOfStream)
                         {
                             string? line = sr.ReadLine();
@@ -230,7 +230,7 @@ namespace CrusaderWars.data.battle_results
                             }
                             else if (line.Trim() == $"location={ProvinceID}")
                             {
-                                Program.Logger.Debug(
+                                CrusaderWarsEnvironment.Logger.Debug(
                                     $"Found field battle result block ID: {battle_id} for ProvinceID: {ProvinceID}");
                                 break;
                             }
@@ -276,12 +276,12 @@ namespace CrusaderWars.data.battle_results
                 BattleResult.ResultID = battle_id;
                 Player_CombatResult = f.ToString();
                 Original_Player_CombatResult = f.ToString();
-                Program.Logger.Debug("ResultID - " + battle_id);
-                Program.Logger.Debug("All combat results were read successfully");
+                CrusaderWarsEnvironment.Logger.Debug("ResultID - " + battle_id);
+                CrusaderWarsEnvironment.Logger.Debug("All combat results were read successfully");
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error reading all combat results: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error reading all combat results: {ex.Message}");
             }
 
 
@@ -290,7 +290,7 @@ namespace CrusaderWars.data.battle_results
 
         public static void GetPlayerSiege()
         {
-            Program.Logger.Debug("Getting player siege data...");
+            CrusaderWarsEnvironment.Logger.Debug("Getting player siege data...");
             try
             {
                 string siege_id = "";
@@ -320,26 +320,26 @@ namespace CrusaderWars.data.battle_results
 
                 if (string.IsNullOrEmpty(siege_id))
                 {
-                    Program.Logger.Debug($"Could not find a siege for ProvinceID: {ProvinceID}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Could not find a siege for ProvinceID: {ProvinceID}");
                     return;
                 }
 
                 BattleResult.SiegeID = siege_id;
-                Program.Logger.Debug("SiegeID - " + siege_id);
-                Program.Logger.Debug("Siege ID identified. No further modification to Sieges.txt in GetPlayerSiege.");
+                CrusaderWarsEnvironment.Logger.Debug("SiegeID - " + siege_id);
+                CrusaderWarsEnvironment.Logger.Debug("Siege ID identified. No further modification to Sieges.txt in GetPlayerSiege.");
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error getting player siege data: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error getting player siege data: {ex.Message}");
             }
         }
 
         public static void SendToSaveFile(string filePath)
         {
-            Program.Logger.Debug($"Sending battle results to save file: {filePath}");
+            CrusaderWarsEnvironment.Logger.Debug($"Sending battle results to save file: {filePath}");
 
             Writter.SendDataToFile(filePath);
-            Program.Logger.Debug("Resetting data and collecting garbage.");
+            CrusaderWarsEnvironment.Logger.Debug("Resetting data and collecting garbage.");
             Data.Reset();
             Player_Combat = "";
             ProvinceName = null;
@@ -348,10 +348,10 @@ namespace CrusaderWars.data.battle_results
 
         public static void CalculateAndSetWarScore(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Calculating and setting war score...");
+            CrusaderWarsEnvironment.Logger.Debug("Calculating and setting war score...");
             double newWarScore = CalculateWarScore(attacker_armies, defender_armies);
             WarScoreValue = newWarScore;
-            Program.Logger.Debug($"War score calculated and set to: {newWarScore}");
+            CrusaderWarsEnvironment.Logger.Debug($"War score calculated and set to: {newWarScore}");
         }
 
 
@@ -364,13 +364,13 @@ namespace CrusaderWars.data.battle_results
         public static (bool searchStarted, bool isCommander, CommanderSystem? commander, bool isKnight, Knight? knight, Army? army)
             SearchCharacters(string char_id, List<Army> armies)
         {
-            // Program.Logger.Debug($"Searching for character ID: {char_id}");
+            // CrusaderWarsEnvironment.Logger.Debug($"Searching for character ID: {char_id}");
             foreach (Army army in armies)
             {
                 if (army == null) continue; // Added null check for army
                 if (army.Commander != null && army.Commander.ID == char_id)
                 {
-                    Program.Logger.Debug($"Commander {char_id} found in army {army.ID}.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Commander {char_id} found in army {army.ID}.");
                     return (true, true, army.Commander, false, null, army);
                 }
                 else if (army.Knights?.GetKnightsList() != null)
@@ -379,7 +379,7 @@ namespace CrusaderWars.data.battle_results
                     {
                         if (knight_u.GetID() == char_id)
                         {
-                            Program.Logger.Debug($"Knight {char_id} found in army {army.ID}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Knight {char_id} found in army {army.ID}.");
                             return (true, false, null, true, knight_u, army);
                         }
                     }
@@ -392,7 +392,7 @@ namespace CrusaderWars.data.battle_results
                         if (mergedArmy == null) continue; // Added null check for mergedArmy
                         if (mergedArmy.Commander != null && mergedArmy.Commander.ID == char_id)
                         {
-                            Program.Logger.Debug(
+                            CrusaderWarsEnvironment.Logger.Debug(
                                 $"Commander {char_id} found in merged army {mergedArmy.ID} (part of main army {army.ID}).");
                             return (true, true, mergedArmy.Commander, false, null, army);
                         }
@@ -402,7 +402,7 @@ namespace CrusaderWars.data.battle_results
                             {
                                 if (knight_u.GetID() == char_id)
                                 {
-                                    Program.Logger.Debug(
+                                    CrusaderWarsEnvironment.Logger.Debug(
                                         $"Knight {char_id} found in merged army {mergedArmy.ID} (part of main army {army.ID}).");
                                     return (true, false, null, true, knight_u, army);
                                 }
@@ -412,13 +412,13 @@ namespace CrusaderWars.data.battle_results
                 }
             }
 
-            // Program.Logger.Debug($"Character ID: {char_id} not found in any army.");
+            // CrusaderWarsEnvironment.Logger.Debug($"Character ID: {char_id} not found in any army.");
             return (false, false, null, false, null, null);
         }
 
         public static void DetermineCharacterFates(List<Army> allArmies)
         {
-            Program.Logger.Debug("Determining character fates and extracting succession data...");
+            CrusaderWarsEnvironment.Logger.Debug("Determining character fates and extracting succession data...");
 
             using (StreamReader streamReader = new StreamReader(Writter.DataFilesPaths.Living_Path()))
             {
@@ -474,7 +474,7 @@ namespace CrusaderWars.data.battle_results
                     }
                 }
             }
-            Program.Logger.Debug("Finished determining character fates.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished determining character fates.");
         }
 
         private static void ExtractSuccessionData(string slainCharId, List<string> charBlock)
@@ -572,7 +572,7 @@ namespace CrusaderWars.data.battle_results
                             var contractsContent = landedBlockStr.Substring(startIndex, endIndex - startIndex);
                             var contractIds = contractsContent.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
                             data.VassalContractIds.AddRange(contractIds);
-                            Program.Logger.Debug($"Extracted {contractIds.Length} vassal contract IDs for slain character {slainCharId}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Extracted {contractIds.Length} vassal contract IDs for slain character {slainCharId}");
                         }
                     }
                 }
@@ -589,17 +589,17 @@ namespace CrusaderWars.data.battle_results
                         pBraceCount -= charBlock[i].Count(c => c == '}');
                         if (pBraceCount == 0) break;
                     }
-                    Program.Logger.Debug($"Extracted playable_data block for slain character {slainCharId}.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Extracted playable_data block for slain character {slainCharId}.");
                 }
 
                 PendingLandedData[successorId] = data;
-                Program.Logger.Debug($"Slain character {slainCharId} identified successor {successorId}. Data queued for transfer.");
+                CrusaderWarsEnvironment.Logger.Debug($"Slain character {slainCharId} identified successor {successorId}. Data queued for transfer.");
             }
         }
 
         public static void EditLivingFile(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Editing Living file...");
+            CrusaderWarsEnvironment.Logger.Debug("Editing Living file...");
             var allArmies = attacker_armies.Concat(defender_armies).ToList();
             string? playerCharId = DataSearch.Player_Character?.GetID();
             if (playerCharId is null) { return; }
@@ -619,14 +619,14 @@ namespace CrusaderWars.data.battle_results
                     leftSideCombatRole = "defender";
                 }
             }
-            Program.Logger.Debug($"Determined Left Side combat role: {leftSideCombatRole}");
+            CrusaderWarsEnvironment.Logger.Debug($"Determined Left Side combat role: {leftSideCombatRole}");
 
             bool playerIsSlain = allArmies.Any(a => a.Commander?.ID == playerCharId && a.Commander.IsSlain);
             if (!playerIsSlain)
             {
                 playerIsSlain = allArmies.Any(a => a.Knights?.GetKnightsList().Any(k => k.GetID() == playerCharId && k.IsSlain) ?? false);
             }
-            if (playerIsSlain) Program.Logger.Debug($"Player character {playerCharId} was slain.");
+            if (playerIsSlain) CrusaderWarsEnvironment.Logger.Debug($"Player character {playerCharId} was slain.");
 
             EditPlayerCharacterFiles(playerIsSlain, playerHeirId);
 
@@ -640,7 +640,7 @@ namespace CrusaderWars.data.battle_results
             EditOpinionsFile(allArmies);
 
             // --- Apply changes and write to temp file ---
-            Program.Logger.Debug("Living file: Applying pre-determined fates...");
+            CrusaderWarsEnvironment.Logger.Debug("Living file: Applying pre-determined fates...");
             using (StreamReader streamReader = new StreamReader(Writter.DataFilesPaths.Living_Path()))
             using (StreamWriter streamWriter = new StreamWriter(Writter.DataTEMPFilesPaths.Living_Path()))
             {
@@ -694,7 +694,7 @@ namespace CrusaderWars.data.battle_results
                                             string indentation = charBlock[courtDataIdx].Substring(0, charBlock[courtDataIdx].IndexOf("court_data="));
                                             charBlock.RemoveRange(courtDataIdx, courtDataEndIdx - courtDataIdx + 1);
                                             charBlock.Insert(courtDataIdx, $"{indentation}court_data={{\n{indentation}}}");
-                                            Program.Logger.Debug($"Emptied court_data for {char_id} because employer {employerId} was slain.");
+                                            CrusaderWarsEnvironment.Logger.Debug($"Emptied court_data for {char_id} because employer {employerId} was slain.");
                                         }
                                     }
                                 }
@@ -729,7 +729,7 @@ namespace CrusaderWars.data.battle_results
                                                 string indentation = charBlock[courtDataIdx].Substring(0, charBlock[courtDataIdx].IndexOf("court_data="));
                                                 charBlock.RemoveRange(courtDataIdx, courtDataEndIdx - courtDataIdx + 1);
                                                 charBlock.Insert(courtDataIdx, $"{indentation}court_data={{\n{indentation}}}");
-                                                Program.Logger.Debug($"Emptied court_data for successor {char_id} as they were previously in the court of slain {transfer.SlainCharId}.");
+                                                CrusaderWarsEnvironment.Logger.Debug($"Emptied court_data for successor {char_id} as they were previously in the court of slain {transfer.SlainCharId}.");
                                             }
                                         }
                                         else
@@ -762,7 +762,7 @@ namespace CrusaderWars.data.battle_results
                                                 }
                                             }
 
-                                            Program.Logger.Debug($"Updated courtier {char_id} employer from {transfer.SlainCharId} to successor {successorId} and updated join_court_date.");
+                                            CrusaderWarsEnvironment.Logger.Debug($"Updated courtier {char_id} employer from {transfer.SlainCharId} to successor {successorId} and updated join_court_date.");
                                         }
                                     }
                                 }
@@ -770,7 +770,7 @@ namespace CrusaderWars.data.battle_results
 
                             if (isSlain)
                             {
-                                Program.Logger.Debug($"Character {char_id} was slain. Adding dead_data block and removing alive_data and landed_data blocks.");
+                                CrusaderWarsEnvironment.Logger.Debug($"Character {char_id} was slain. Adding dead_data block and removing alive_data and landed_data blocks.");
 
                                 // Remove landed_data
                                 int landedIdx = charBlock.FindIndex(l => l.Trim() == "landed_data={");
@@ -891,7 +891,7 @@ namespace CrusaderWars.data.battle_results
                                         {
                                             imprisonerId = CK3LogData.LeftSide.GetCommander().id;
                                         }
-                                        Program.Logger.Debug($"Could not find main participant for imprisoner. Falling back to main commander of winning side. Imprisoner ID: {imprisonerId}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Could not find main participant for imprisoner. Falling back to main commander of winning side. Imprisoner ID: {imprisonerId}");
                                     }
 
                                     if (!string.IsNullOrEmpty(imprisonerId))
@@ -910,16 +910,16 @@ namespace CrusaderWars.data.battle_results
                                         if (aliveDataIndex != -1)
                                         {
                                             charBlock.InsertRange(aliveDataIndex + 1, prisonBlock);
-                                            Program.Logger.Debug($"Character {char_id} captured by {imprisonerId}. Adding prison_data block.");
+                                            CrusaderWarsEnvironment.Logger.Debug($"Character {char_id} captured by {imprisonerId}. Adding prison_data block.");
                                         }
                                         else
                                         {
-                                            Program.Logger.Debug($"Warning: Could not find alive_data block for captured character {char_id}.");
+                                            CrusaderWarsEnvironment.Logger.Debug($"Warning: Could not find alive_data block for captured character {char_id}.");
                                         }
                                     }
                                     else
                                     {
-                                        Program.Logger.Debug($"Warning: Could not determine an imprisoner for captured character {char_id}.");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Warning: Could not determine an imprisoner for captured character {char_id}.");
                                     }
                                 }
                             }
@@ -927,7 +927,7 @@ namespace CrusaderWars.data.battle_results
 
                         if (playerIsSlain && playerHeirId != null && char_id == playerHeirId)
                         {
-                            Program.Logger.Debug($"Player was slain. Adding 'was_player=yes' to heir {playerHeirId}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Player was slain. Adding 'was_player=yes' to heir {playerHeirId}.");
                             int playableDataIndex = charBlock.FindIndex(l => l.Trim() == "playable_data={");
                             if (playableDataIndex != -1)
                             {
@@ -935,7 +935,7 @@ namespace CrusaderWars.data.battle_results
                             }
                             else
                             {
-                                Program.Logger.Debug($"Warning: Could not find playable_data block for heir {playerHeirId}.");
+                                CrusaderWarsEnvironment.Logger.Debug($"Warning: Could not find playable_data block for heir {playerHeirId}.");
                             }
                         }
 
@@ -974,7 +974,7 @@ namespace CrusaderWars.data.battle_results
                                             string indentation = charBlock[courtDataIdx].Substring(0, charBlock[courtDataIdx].IndexOf("court_data="));
                                             charBlock.RemoveRange(courtDataIdx, courtDataEndIdx - courtDataIdx + 1);
                                             charBlock.Insert(courtDataIdx, $"{indentation}court_data={{\n{indentation}}}");
-                                            Program.Logger.Debug($"Emptied court_data for successor {char_id} as they were previously in the court of slain {transfer.SlainCharId}.");
+                                            CrusaderWarsEnvironment.Logger.Debug($"Emptied court_data for successor {char_id} as they were previously in the court of slain {transfer.SlainCharId}.");
                                         }
                                     }
                                     else
@@ -1007,7 +1007,7 @@ namespace CrusaderWars.data.battle_results
                                             }
                                         }
 
-                                        Program.Logger.Debug($"Updated courtier {char_id} employer from {transfer.SlainCharId} to successor {successorId} and updated join_court_date.");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Updated courtier {char_id} employer from {transfer.SlainCharId} to successor {successorId} and updated join_court_date.");
                                     }
                                 }
                             }
@@ -1024,7 +1024,7 @@ namespace CrusaderWars.data.battle_results
                     }
                 }
             }
-            Program.Logger.Debug("Finished editing Living file.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished editing Living file.");
         }
 
         private static List<string> RemoveCourtPositionsFromLandedData(List<string> landedBlock)
@@ -1048,7 +1048,7 @@ namespace CrusaderWars.data.battle_results
             if (endIdx != -1)
             {
                 landedBlock.RemoveRange(cpIdx, endIdx - cpIdx + 1);
-                Program.Logger.Debug("Removed court_positions from transferred landed_data block.");
+                CrusaderWarsEnvironment.Logger.Debug("Removed court_positions from transferred landed_data block.");
             }
 
             return landedBlock;
@@ -1057,7 +1057,7 @@ namespace CrusaderWars.data.battle_results
         private static void ApplyLandedDataTransfer(string successorId, List<string> charBlock)
         {
             var transferData = PendingLandedData[successorId];
-            Program.Logger.Debug($"Applying landed_data transfer to successor {successorId}.");
+            CrusaderWarsEnvironment.Logger.Debug($"Applying landed_data transfer to successor {successorId}.");
 
             // Remove court_positions from the block being transferred to prevent duplicate/invalid entries
             transferData.LandedDataBlock = RemoveCourtPositionsFromLandedData(transferData.LandedDataBlock);
@@ -1101,7 +1101,7 @@ namespace CrusaderWars.data.battle_results
                     {
                         string indentation = line.Substring(0, line.IndexOf("succession="));
                         transferData.LandedDataBlock[succIdx] = $"{indentation}succession={{ {string.Join(" ", ids)} }}";
-                        Program.Logger.Debug($"Removed successor {successorId} from their own succession list during transfer.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Removed successor {successorId} from their own succession list during transfer.");
                     }
                 }
 
@@ -1118,7 +1118,7 @@ namespace CrusaderWars.data.battle_results
                     {
                         string indentation = line.Substring(0, line.IndexOf("vassal_contracts="));
                         transferData.LandedDataBlock[vcIdx] = $"{indentation}vassal_contracts={{ {string.Join(" ", ids)} }}";
-                        Program.Logger.Debug($"Removed {originalCount - ids.Count} invalidated vassal contracts from transferred landed_data for {successorId}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Removed {originalCount - ids.Count} invalidated vassal contracts from transferred landed_data for {successorId}.");
                     }
                 }
                 // Update became_ruler_date
@@ -1190,7 +1190,7 @@ namespace CrusaderWars.data.battle_results
             // Transfer Playable Data
             if (transferData.PlayableDataBlock.Any())
             {
-                Program.Logger.Debug($"Applying playable_data transfer to successor {successorId}.");
+                CrusaderWarsEnvironment.Logger.Debug($"Applying playable_data transfer to successor {successorId}.");
                 List<string> playableBlock = new List<string>(transferData.PlayableDataBlock);
 
                 // Modify knights list
@@ -1205,7 +1205,7 @@ namespace CrusaderWars.data.battle_results
                     {
                         string indentation = line.Substring(0, line.IndexOf("knights="));
                         playableBlock[knightsIdx] = $"{indentation}knights={{ {string.Join(" ", ids)} }}";
-                        Program.Logger.Debug($"Removed successor {successorId} from transferred knights list.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Removed successor {successorId} from transferred knights list.");
                     }
                 }
 
@@ -1228,12 +1228,12 @@ namespace CrusaderWars.data.battle_results
                     {
                         string indentation = playableBlock[transferDiarchyIdx].Substring(0, playableBlock[transferDiarchyIdx].IndexOf("diarchy_successor="));
                         playableBlock[transferDiarchyIdx] = $"{indentation}diarchy_successor={successorSuccessorId}";
-                        Program.Logger.Debug($"Updated diarchy_successor in transferred playable_data to {successorSuccessorId}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Updated diarchy_successor in transferred playable_data to {successorSuccessorId}.");
                     }
                     else
                     {
                         playableBlock.RemoveAt(transferDiarchyIdx);
-                        Program.Logger.Debug("Removed diarchy_successor from transferred playable_data as successor has no heir.");
+                        CrusaderWarsEnvironment.Logger.Debug("Removed diarchy_successor from transferred playable_data as successor has no heir.");
                     }
                 }
 
@@ -1254,7 +1254,7 @@ namespace CrusaderWars.data.battle_results
                     {
                         charBlock.RemoveRange(succPlayableIdxInCharBlock, endIdx - succPlayableIdxInCharBlock + 1);
                         charBlock.InsertRange(succPlayableIdxInCharBlock, playableBlock);
-                        Program.Logger.Debug($"Replaced existing playable_data for successor {successorId}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Replaced existing playable_data for successor {successorId}.");
                     }
                 }
                 else
@@ -1264,7 +1264,7 @@ namespace CrusaderWars.data.battle_results
                     if (insertPos != -1)
                     {
                         charBlock.InsertRange(insertPos, playableBlock);
-                        Program.Logger.Debug($"Inserted new playable_data for successor {successorId}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Inserted new playable_data for successor {successorId}.");
                     }
                 }
             }
@@ -1286,7 +1286,7 @@ namespace CrusaderWars.data.battle_results
                             double newGold = currentGold + transferData.Gold;
                             string indentation = charBlock[valIdx].Substring(0, charBlock[valIdx].IndexOf("value="));
                             charBlock[valIdx] = $"{indentation}value={newGold.ToString("F3", CultureInfo.InvariantCulture)}";
-                            Program.Logger.Debug($"Transferred {transferData.Gold} gold from slain {transferData.SlainCharId} to successor {successorId}. New total: {newGold}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Transferred {transferData.Gold} gold from slain {transferData.SlainCharId} to successor {successorId}. New total: {newGold}");
                         }
                     }
                     else
@@ -1307,7 +1307,7 @@ namespace CrusaderWars.data.battle_results
                     if (succIncomeIdx == -1)
                     {
                         charBlock.InsertRange(succAliveIdx + 1, transferData.IncomeBlock);
-                        Program.Logger.Debug($"Copied income block from slain {transferData.SlainCharId} to successor {successorId}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Copied income block from slain {transferData.SlainCharId} to successor {successorId}.");
                     }
                 }
             }
@@ -1316,13 +1316,13 @@ namespace CrusaderWars.data.battle_results
 
         public static void EditVassalContractsFile()
         {
-            Program.Logger.Debug("Editing Vassal Contracts file...");
+            CrusaderWarsEnvironment.Logger.Debug("Editing Vassal Contracts file...");
             string path = Writter.DataFilesPaths.VassalContracts_Path();
             string tempPath = Writter.DataTEMPFilesPaths.VassalContracts_Path();
 
             if (!File.Exists(path))
             {
-                Program.Logger.Debug("VassalContracts.txt not found. Skipping.");
+                CrusaderWarsEnvironment.Logger.Debug("VassalContracts.txt not found. Skipping.");
                 return;
             }
 
@@ -1364,7 +1364,7 @@ namespace CrusaderWars.data.battle_results
                             block[liegeIdx] = $"{indent}liege={liegeSuccessorId}";
                             currentLiegeId = liegeSuccessorId;
                             isModified = true;
-                            Program.Logger.Debug($"Contract {contractId}: Updated liege from slain character to successor {liegeSuccessorId}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Contract {contractId}: Updated liege from slain character to successor {liegeSuccessorId}.");
                         }
 
                         // Update Vassal if slain
@@ -1374,7 +1374,7 @@ namespace CrusaderWars.data.battle_results
                             block[vassalIdx] = $"{indent}vassal={vassalSuccessorId}";
                             currentVassalId = vassalSuccessorId;
                             isModified = true;
-                            Program.Logger.Debug($"Contract {contractId}: Updated vassal from slain character to successor {vassalSuccessorId}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Contract {contractId}: Updated vassal from slain character to successor {vassalSuccessorId}.");
                         }
 
                         // Self-contract check: if vassal and liege are the same after updates, invalidate the contract.
@@ -1382,7 +1382,7 @@ namespace CrusaderWars.data.battle_results
                         {
                             sw.WriteLine($"\t{contractId}=none");
                             InvalidatedVassalContracts.Add(contractId);
-                            Program.Logger.Debug($"Contract {contractId}: Vassal and Liege are the same ({currentVassalId}). Setting to none.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Contract {contractId}: Vassal and Liege are the same ({currentVassalId}). Setting to none.");
                             continue;
                         }
 
@@ -1418,13 +1418,13 @@ namespace CrusaderWars.data.battle_results
 
         public static void EditCourtPositionsFile(List<Army> allArmies)
         {
-            Program.Logger.Debug("Editing Court Positions file...");
+            CrusaderWarsEnvironment.Logger.Debug("Editing Court Positions file...");
             string path = Writter.DataFilesPaths.CourtPositions_Path();
             string tempPath = Writter.DataTEMPFilesPaths.CourtPositions_Path();
 
             if (!File.Exists(path))
             {
-                Program.Logger.Debug("CourtPositions.txt not found. Skipping.");
+                CrusaderWarsEnvironment.Logger.Debug("CourtPositions.txt not found. Skipping.");
                 return;
             }
 
@@ -1464,7 +1464,7 @@ namespace CrusaderWars.data.battle_results
                             string indentation = block[employerIdx].Substring(0, block[employerIdx].IndexOf("employer="));
                             block[employerIdx] = $"{indentation}employer={employerSuccessorId}";
                             currentEmployerId = employerSuccessorId; // update for the self-check
-                            Program.Logger.Debug($"Court Position {contractId}: Updated employer from slain {originalEmployerId} to successor {employerSuccessorId}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Court Position {contractId}: Updated employer from slain {originalEmployerId} to successor {employerSuccessorId}.");
                         }
 
                         // Check and update employee
@@ -1473,14 +1473,14 @@ namespace CrusaderWars.data.battle_results
                             string indentation = block[employeeIdx].Substring(0, block[employeeIdx].IndexOf("employee="));
                             block[employeeIdx] = $"{indentation}employee={employeeSuccessorId}";
                             currentEmployeeId = employeeSuccessorId; // update for the self-check
-                            Program.Logger.Debug($"Court Position {contractId}: Updated employee from slain {originalEmployeeId} to successor {employeeSuccessorId}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Court Position {contractId}: Updated employee from slain {originalEmployeeId} to successor {employeeSuccessorId}.");
                         }
 
                         // Self-employment check
                         if (currentEmployerId != null && currentEmployeeId != null && currentEmployerId == currentEmployeeId)
                         {
                             sw.WriteLine($"\t{contractId}=none");
-                            Program.Logger.Debug($"Court Position {contractId}: Set to none because employer and employee are the same character ({currentEmployerId}).");
+                            CrusaderWarsEnvironment.Logger.Debug($"Court Position {contractId}: Set to none because employer and employee are the same character ({currentEmployerId}).");
                             continue; // Skip writing the block
                         }
 
@@ -1494,7 +1494,7 @@ namespace CrusaderWars.data.battle_results
                         if ((employerSlain && !employerReplaced) || (employeeSlain && !employeeReplaced))
                         {
                             sw.WriteLine($"\t{contractId}=none");
-                            Program.Logger.Debug($"Court Position {contractId}: Set to none because a participant was slain without a successor.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Court Position {contractId}: Set to none because a participant was slain without a successor.");
                             continue;
                         }
 
@@ -1514,7 +1514,7 @@ namespace CrusaderWars.data.battle_results
 
         public static void EditPlayerCharacterFiles(bool playerIsSlain, string? playerHeirId)
         {
-            Program.Logger.Debug("Editing Player Character files...");
+            CrusaderWarsEnvironment.Logger.Debug("Editing Player Character files...");
             string playedCharPath = Writter.DataFilesPaths.PlayedCharacter_Path();
             string playedCharTempPath = Writter.DataTEMPFilesPaths.PlayedCharacter_Path();
             string currentlyPlayedPath = Writter.DataFilesPaths.CurrentlyPlayedCharacters_Path();
@@ -1522,13 +1522,13 @@ namespace CrusaderWars.data.battle_results
 
             if (!playerIsSlain || string.IsNullOrEmpty(playerHeirId))
             {
-                Program.Logger.Debug("Player not slain or no heir. Copying original player character files to temp.");
+                CrusaderWarsEnvironment.Logger.Debug("Player not slain or no heir. Copying original player character files to temp.");
                 if (File.Exists(playedCharPath)) File.Copy(playedCharPath, playedCharTempPath, true);
                 if (File.Exists(currentlyPlayedPath)) File.Copy(currentlyPlayedPath, currentlyPlayedTempPath, true);
                 return;
             }
 
-            Program.Logger.Debug($"Player slain, heir is {playerHeirId}. Modifying player character files.");
+            CrusaderWarsEnvironment.Logger.Debug($"Player slain, heir is {playerHeirId}. Modifying player character files.");
 
             // --- Edit PlayedCharacter.txt ---
             if (File.Exists(playedCharPath))
@@ -1538,7 +1538,7 @@ namespace CrusaderWars.data.battle_results
                 // NEW: Update the main character ID to the heir, replacing only the first occurrence.
                 Regex mainCharRegex = new Regex(@"(^\s*character=)\d+", RegexOptions.Multiline);
                 content = mainCharRegex.Replace(content, $"${{1}}{playerHeirId}", 1);
-                Program.Logger.Debug($"Updated main character ID to heir ID {playerHeirId}.");
+                CrusaderWarsEnvironment.Logger.Debug($"Updated main character ID to heir ID {playerHeirId}.");
 
                 string newLegacyEntry = $"\t\t{{\n\t\t\tcharacter={playerHeirId}\n\t\t\tdate={Date.Year}.{Date.Month}.{Date.Day}\n\t\t\twars={{ 0 0 0 0 }}\n\t\t}}";
 
@@ -1557,11 +1557,11 @@ namespace CrusaderWars.data.battle_results
                     // We replace the matched part (everything up to the brace) with itself plus the new entry.
                     string replacement = $"{legacyMatch.Groups[1].Value}{separator}{newLegacyEntry}";
                     content = legacyRegex.Replace(content, replacement, 1);
-                    Program.Logger.Debug("Added new legacy entry to played_character block.");
+                    CrusaderWarsEnvironment.Logger.Debug("Added new legacy entry to played_character block.");
                 }
                 else
                 {
-                    Program.Logger.Debug("Warning: Could not find legacy block in PlayedCharacter.txt to add heir.");
+                    CrusaderWarsEnvironment.Logger.Debug("Warning: Could not find legacy block in PlayedCharacter.txt to add heir.");
                 }
                 File.WriteAllText(playedCharTempPath, content);
             }
@@ -1572,13 +1572,13 @@ namespace CrusaderWars.data.battle_results
                 string content = File.ReadAllText(currentlyPlayedPath);
                 string updatedContent = Regex.Replace(content, @"(currently_played_characters={\s*)\d+", "${1}" + playerHeirId);
                 File.WriteAllText(currentlyPlayedTempPath, updatedContent);
-                Program.Logger.Debug($"Updated currently_played_characters to heir ID {playerHeirId}.");
+                CrusaderWarsEnvironment.Logger.Debug($"Updated currently_played_characters to heir ID {playerHeirId}.");
             }
         }
 
         private static double CalculateWarScore(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Calculating dynamic war score with 'Battle Impact' algorithm...");
+            CrusaderWarsEnvironment.Logger.Debug("Calculating dynamic war score with 'Battle Impact' algorithm...");
 
             var winningArmies = IsAttackerVictorious ? attacker_armies : defender_armies;
             var losingArmies = IsAttackerVictorious ? defender_armies : attacker_armies;
@@ -1627,7 +1627,7 @@ namespace CrusaderWars.data.battle_results
 
             double totalImpactScore = Math.Clamp(casualtyImpact + victoryMarginImpact + characterImpact, 0, 100);
 
-            Program.Logger.Debug($"Battle Impact Score: Casualty({casualtyImpact:F2}/40) + Margin({victoryMarginImpact:F2}/30) + Character({characterImpact:F2}) = {totalImpactScore:F2}");
+            CrusaderWarsEnvironment.Logger.Debug($"Battle Impact Score: Casualty({casualtyImpact:F2}/40) + Margin({victoryMarginImpact:F2}/30) + Character({characterImpact:F2}) = {totalImpactScore:F2}");
 
             // --- STAGE 2: Convert Impact Score to Final War Score ---
             double normalizedImpact = totalImpactScore / 100.0;
@@ -1638,7 +1638,7 @@ namespace CrusaderWars.data.battle_results
 
             finalWarScore = Math.Clamp(finalWarScore, 0, 75.0); // Clamp to a max of 75
 
-            Program.Logger.Debug($"Final Calculated War Score: {finalWarScore:F4}");
+            CrusaderWarsEnvironment.Logger.Debug($"Final Calculated War Score: {finalWarScore:F4}");
 
             return Math.Round(finalWarScore, 4);
         }
@@ -1655,27 +1655,27 @@ namespace CrusaderWars.data.battle_results
             // Clamp prestige to reasonable values
             prestige = Math.Max(5.0, Math.Min(500.0, prestige));
 
-            Program.Logger.Debug($"Calculated prestige award: {prestige:F2} (War Score: {warScore:F2}, Losing Army Size: {totalLosingArmySize:F0})");
+            CrusaderWarsEnvironment.Logger.Debug($"Calculated prestige award: {prestige:F2} (War Score: {warScore:F2}, Losing Army Size: {totalLosingArmySize:F0})");
             return prestige;
         }
 
         public static void EditCombatResultsFile(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Editing Combat Results file...");
+            CrusaderWarsEnvironment.Logger.Debug("Editing Combat Results file...");
 
             // Use pre-calculated war score if available, otherwise calculate it
             double newWarScore;
             if (WarScoreValue.HasValue)
             {
                 newWarScore = WarScoreValue.Value;
-                Program.Logger.Debug($"Using pre-calculated war score: {newWarScore}");
+                CrusaderWarsEnvironment.Logger.Debug($"Using pre-calculated war score: {newWarScore}");
             }
             else
             {
                 // Fallback calculation if somehow WarScoreValue is null
                 newWarScore = CalculateWarScore(attacker_armies, defender_armies);
                 WarScoreValue = newWarScore;
-                Program.Logger.Debug($"Calculated war score (fallback): {newWarScore}");
+                CrusaderWarsEnvironment.Logger.Debug($"Calculated war score (fallback): {newWarScore}");
             }
 
             // Determine winning side value (0 for attacker, 1 for defender)
@@ -1749,7 +1749,7 @@ namespace CrusaderWars.data.battle_results
                         if (blockStartMatch.Success && blockStartMatch.Groups[1].Value == BattleResult.ResultID)
                         {
                             inPlayerCombatResultBlock = true;
-                            Program.Logger.Debug($"Entering player combat result block ID: {BattleResult.ResultID}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Entering player combat result block ID: {BattleResult.ResultID}");
                         }
                     }
 
@@ -1763,7 +1763,7 @@ namespace CrusaderWars.data.battle_results
                             if (!warScoreUpdated)
                             {
                                 streamWriter.WriteLine($"\t\t\twar_score={newWarScore.ToString("F4", CultureInfo.InvariantCulture)}");
-                                Program.Logger.Debug($"Added war_score: {newWarScore:F4}");
+                                CrusaderWarsEnvironment.Logger.Debug($"Added war_score: {newWarScore:F4}");
                             }
 
                             streamWriter.WriteLine($"\t\t\twinning_side={winningSideValue}");
@@ -1778,7 +1778,7 @@ namespace CrusaderWars.data.battle_results
                             streamWriter.WriteLine($"\t\t\tleader={winningParticipantId}");
 
                             inPlayerCombatResultBlock = false;
-                            Program.Logger.Debug($"Exiting player combat result block ID: {BattleResult.ResultID}");
+                            CrusaderWarsEnvironment.Logger.Debug($"Exiting player combat result block ID: {BattleResult.ResultID}");
 
                             // Reset all state variables to prevent them from affecting other parts of the file
                             isAttacker = false;
@@ -1798,7 +1798,7 @@ namespace CrusaderWars.data.battle_results
                             {
                                 string edited_line = $"\t\t\twar_score={newWarScore.ToString("F4", CultureInfo.InvariantCulture)}";
                                 streamWriter.WriteLine(edited_line);
-                                Program.Logger.Debug($"Updated war_score to: {newWarScore:F4}");
+                                CrusaderWarsEnvironment.Logger.Debug($"Updated war_score to: {newWarScore:F4}");
                                 warScoreUpdated = true;
                                 continue;
                             }
@@ -1827,7 +1827,7 @@ namespace CrusaderWars.data.battle_results
                                 isDefender = false;
                                 currentParticipantId = null; // Reset participant for new block
                                 currentArmy = null; // Reset army for new block
-                                Program.Logger.Debug("Processing attacker results in CombatResults file.");
+                                CrusaderWarsEnvironment.Logger.Debug("Processing attacker results in CombatResults file.");
                             }
                             else if (line == "\t\t\tdefender={")
                             {
@@ -1835,7 +1835,7 @@ namespace CrusaderWars.data.battle_results
                                 isAttacker = false;
                                 currentParticipantId = null; // Reset participant for new block
                                 currentArmy = null; // Reset army for new block
-                                Program.Logger.Debug("Processing defender results in CombatResults file.");
+                                CrusaderWarsEnvironment.Logger.Debug("Processing defender results in CombatResults file.");
                             }
                             else if ((isAttacker || isDefender) && (line.Contains("\t\t\tmain_participant=") || line.Contains("\t\t\tcommander=")))
                             {
@@ -1859,7 +1859,7 @@ namespace CrusaderWars.data.battle_results
                                             }
                                         }
                                     }
-                                    Program.Logger.Debug($"Detected main_participant: {currentParticipantId}. Current Army found: {currentArmy?.ID ?? "None"}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Detected main_participant: {currentParticipantId}. Current Army found: {currentArmy?.ID ?? "None"}");
                                 }
                                 else // It's a commander line
                                 {
@@ -1878,7 +1878,7 @@ namespace CrusaderWars.data.battle_results
                                             }
                                         }
                                     }
-                                    Program.Logger.Debug($"Detected commander: {currentParticipantId}. Current Army found: {currentArmy?.ID ?? "None"}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Detected commander: {currentParticipantId}. Current Army found: {currentArmy?.ID ?? "None"}");
                                 }
                             }
                             else if (isAttacker)
@@ -1898,14 +1898,14 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\tsurviving_soldiers=" + totalFightingMen;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Attacker side: surviving_soldiers={totalFightingMen}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Attacker side: surviving_soldiers={totalFightingMen}");
                                     continue;
                                 }
                                 else if (line.Contains("\t\t\t\t\t\ttype="))
                                 {
                                     isMAA = true;
                                     regimentType = Regex.Match(line, "\"(.+)\"").Groups[1].Value;
-                                    Program.Logger.Debug($"Attacker: Detected Men-at-Arms regiment type: {regimentType}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Attacker: Detected Men-at-Arms regiment type: {regimentType}");
                                 }
                                 else if (line.Contains("\t\t\t\t\t\tknight="))
                                 {
@@ -1913,19 +1913,19 @@ namespace CrusaderWars.data.battle_results
                                     if (id == "4294967295" && !isMAA)
                                     {
                                         regimentType = "Levy";
-                                        Program.Logger.Debug($"Attacker: Detected Levy regiment (ID: {id}).");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Attacker: Detected Levy regiment (ID: {id}).");
                                     }
                                     else if (id == "4294967295" && isMAA)
                                     {
                                         isMAA = true;
                                         string logMessage = string.Format("Attacker: Detected Men-at-Arms regiment (ID: {0}).", id);
-                                        Program.Logger.Debug(logMessage);
+                                        CrusaderWarsEnvironment.Logger.Debug(logMessage);
                                     }
                                     else
                                     {
                                         isKnight = true;
                                         knightID = id;
-                                        Program.Logger.Debug($"Attacker: Detected Knight (ID: {knightID}).");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Attacker: Detected Knight (ID: {knightID}).");
                                     }
                                 }
                                 else if (!isKnight && line.Contains("\t\t\t\t\t\tmain_kills="))
@@ -1941,7 +1941,7 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\t\t\tmain_kills=" + main_kills;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Attacker: {regimentType} main_kills={main_kills}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Attacker: {regimentType} main_kills={main_kills}");
                                     continue;
                                 }
                                 else if (isKnight && line.Contains("\t\t\t\t\t\tmain_kills="))
@@ -1963,7 +1963,7 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\t\t\tmain_kills=" + main_kills;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Attacker: Knight {knightID} main_kills={main_kills}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Attacker: Knight {knightID} main_kills={main_kills}");
                                     continue;
                                 }
                                 else if (!isKnight && line.Contains("\t\t\t\t\t\tpursuit_kills="))
@@ -1979,7 +1979,7 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\t\t\tpursuit_kills=" + pursuit_kills;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Attacker: {regimentType} pursuit_kills={pursuit_kills}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Attacker: {regimentType} pursuit_kills={pursuit_kills}");
                                     continue;
                                 }
                                 else if (!isKnight && line.Contains("\t\t\t\t\t\tmain_losses="))
@@ -1995,7 +1995,7 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\t\t\tmain_losses=" + main_losses;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Attacker: {regimentType} main_losses={main_losses}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Attacker: {regimentType} main_losses={main_losses}");
                                     continue;
                                 }
                                 else if (!isKnight && line.Contains("\t\t\t\t\t\tpursuit_losses_maa="))
@@ -2011,7 +2011,7 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\t\t\tpursuit_losses_maa=" + pursuit_losses;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Attacker: {regimentType} pursuit_losses_maa={pursuit_losses}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Attacker: {regimentType} pursuit_losses_maa={pursuit_losses}");
                                     continue;
                                 }
                                 else if (line == "\t\t\t\t\t}")
@@ -2020,7 +2020,7 @@ namespace CrusaderWars.data.battle_results
                                     isMAA = false;
                                     knightID = "";
                                     regimentType = "";
-                                    Program.Logger.Debug("Attacker: End of regiment block.");
+                                    CrusaderWarsEnvironment.Logger.Debug("Attacker: End of regiment block.");
                                 }
                             }
                             else if (isDefender)
@@ -2040,14 +2040,14 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\tsurviving_soldiers=" + totalFightingMen;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Defender side: surviving_soldiers={totalFightingMen}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Defender side: surviving_soldiers={totalFightingMen}");
                                     continue;
                                 }
                                 else if (line.Contains("\t\t\t\t\t\ttype="))
                                 {
                                     isMAA = true;
                                     regimentType = Regex.Match(line, "\"(.+)\"").Groups[1].Value;
-                                    Program.Logger.Debug($"Defender: Detected regiment type: {regimentType}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Defender: Detected regiment type: {regimentType}");
                                 }
                                 else if (line.Contains("\t\t\t\t\t\tknight="))
                                 {
@@ -2055,13 +2055,13 @@ namespace CrusaderWars.data.battle_results
                                     if (id == "4294967295" && !isMAA)
                                     {
                                         regimentType = "Levy";
-                                        Program.Logger.Debug($"Defender: Detected Levy regiment (ID: {id}).");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Defender: Detected Levy regiment (ID: {id}).");
                                     }
                                     else
                                     {
                                         isKnight = true;
                                         knightID = id;
-                                        Program.Logger.Debug($"Defender: Detected Knight (ID: {knightID}).");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Defender: Detected Knight (ID: {knightID}).");
                                     }
                                 }
                                 else if (!isKnight && line.Contains("\t\t\t\t\t\tmain_kills="))
@@ -2077,7 +2077,7 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\t\t\tmain_kills=" + main_kills;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Defender: {regimentType} main_kills={main_kills}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Defender: {regimentType} main_kills={main_kills}");
                                     continue;
                                 }
                                 else if (isKnight && line.Contains("\t\t\t\t\t\tmain_kills="))
@@ -2099,7 +2099,7 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\t\t\tmain_kills=" + main_kills;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Defender: Knight {knightID} main_kills={main_kills}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Defender: Knight {knightID} main_kills={main_kills}");
                                     continue;
                                 }
                                 else if (!isKnight && line.Contains("\t\t\t\t\t\tpursuit_kills="))
@@ -2115,7 +2115,7 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\t\t\tpursuit_kills=" + pursuit_kills;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Defender: {regimentType} pursuit_kills={pursuit_kills}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Defender: {regimentType} pursuit_kills={pursuit_kills}");
                                     continue;
                                 }
                                 else if (!isKnight && line.Contains("\t\t\t\t\t\tmain_losses="))
@@ -2131,7 +2131,7 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\t\t\tmain_losses=" + main_losses;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Defender: {regimentType} main_losses={main_losses}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Defender: {regimentType} main_losses={main_losses}");
                                     continue;
                                 }
                                 else if (!isKnight && line.Contains("\t\t\t\t\t\tpursuit_losses_maa="))
@@ -2147,7 +2147,7 @@ namespace CrusaderWars.data.battle_results
                                     }
                                     string edited_line = "\t\t\t\t\t\tpursuit_losses_maa=" + pursuit_losses;
                                     streamWriter.WriteLine(edited_line);
-                                    Program.Logger.Debug($"Defender: {regimentType} pursuit_losses_maa={pursuit_losses}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Defender: {regimentType} pursuit_losses_maa={pursuit_losses}");
                                     continue;
                                 }
                                 else if (line == "\t\t\t\t\t}")
@@ -2156,7 +2156,7 @@ namespace CrusaderWars.data.battle_results
                                     isMAA = false;
                                     knightID = "";
                                     regimentType = "";
-                                    Program.Logger.Debug("Defender: End of regiment block.");
+                                    CrusaderWarsEnvironment.Logger.Debug("Defender: End of regiment block.");
                                 }
                             }
                             else if (line == "\t\t\t}") // End of an attacker or defender block
@@ -2165,7 +2165,7 @@ namespace CrusaderWars.data.battle_results
                                 isDefender = false;
                                 currentParticipantId = null;
                                 currentArmy = null;
-                                Program.Logger.Debug("Resetting participant state at end of alliance block.");
+                                CrusaderWarsEnvironment.Logger.Debug("Resetting participant state at end of alliance block.");
                                 streamWriter.WriteLine(line); // Write the closing brace
                                 continue; // Continue to next line, preventing default write
                             }
@@ -2178,17 +2178,17 @@ namespace CrusaderWars.data.battle_results
                     streamWriter.WriteLine(line);
                 }
             }
-            Program.Logger.Debug("Finished editing Combat Results file.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished editing Combat Results file.");
         }
 
 
         public static void EditCombatFile(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Editing Combat file using block replacement...");
+            CrusaderWarsEnvironment.Logger.Debug("Editing Combat file using block replacement...");
 
             if (string.IsNullOrEmpty(Player_Combat) || string.IsNullOrEmpty(Original_Player_Combat))
             {
-                Program.Logger.Debug("No player combat block found. Copying original Combats.txt to temp.");
+                CrusaderWarsEnvironment.Logger.Debug("No player combat block found. Copying original Combats.txt to temp.");
                 File.Copy(Writter.DataFilesPaths.Combats_Path(), Writter.DataTEMPFilesPaths.Combats_Path(), true);
                 return;
             }
@@ -2203,7 +2203,7 @@ namespace CrusaderWars.data.battle_results
 
             if (!attackerMatch.Success || !defenderMatch.Success)
             {
-                Program.Logger.Debug("CRITICAL: Could not isolate attacker or defender block from Player_Combat. Aborting modification.");
+                CrusaderWarsEnvironment.Logger.Debug("CRITICAL: Could not isolate attacker or defender block from Player_Combat. Aborting modification.");
                 // Fallback: write the partially modified (winner only) combat block to temp
                 string fullContent = File.ReadAllText(Writter.DataFilesPaths.Combats_Path());
                 string updatedContent = fullContent.Replace(Original_Player_Combat, Player_Combat);
@@ -2261,7 +2261,7 @@ namespace CrusaderWars.data.battle_results
             string fullFileContent = File.ReadAllText(Writter.DataFilesPaths.Combats_Path());
             string updatedFileContent = fullFileContent.Replace(Original_Player_Combat!, Player_Combat);
             File.WriteAllText(Writter.DataTEMPFilesPaths.Combats_Path(), updatedFileContent);
-            Program.Logger.Debug("Finished editing Combat file.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished editing Combat file.");
         }
 
         static int GetArmiesTotalFightingMen(List<Army> armies)
@@ -2270,7 +2270,7 @@ namespace CrusaderWars.data.battle_results
                 .Sum(army => army.GetTotalSoldiers()); // Use the updated GetTotalSoldiers
 
             string logMessage = string.Format("Calculated total fighting men for armies: {0}", total);
-            Program.Logger.Debug(logMessage);
+            CrusaderWarsEnvironment.Logger.Debug(logMessage);
             return total;
         }
 
@@ -2281,13 +2281,13 @@ namespace CrusaderWars.data.battle_results
                               .Where(ar => ar != null && ar.Type == RegimentType.Levy)
                               .Sum(ar => ar.CurrentNum);
 
-            Program.Logger.Debug($"Calculated total levy men for armies (from ArmyRegiments): {total}");
+            CrusaderWarsEnvironment.Logger.Debug($"Calculated total levy men for armies (from ArmyRegiments): {total}");
             return total;
         }
 
         static ArmyRegiment? SearchArmyRegiment(List<Army> armies, string army_regiment_id)
         {
-            Program.Logger.Debug($"Searching for ArmyRegiment ID: {army_regiment_id}");
+            CrusaderWarsEnvironment.Logger.Debug($"Searching for ArmyRegiment ID: {army_regiment_id}");
             foreach (Army army in armies)
             {
                 if (army.ArmyRegiments != null)
@@ -2299,28 +2299,28 @@ namespace CrusaderWars.data.battle_results
                         if (armyRegiment.Type == RegimentType.Knight) continue;
                         if (armyRegiment.ID == army_regiment_id)
                         {
-                            Program.Logger.Debug($"Found ArmyRegiment {army.ID}.{armyRegiment.ID}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found ArmyRegiment {army.ID}.{armyRegiment.ID}.");
                             return armyRegiment;
                         }
                     }
                 }
             }
 
-            Program.Logger.Debug($"ArmyRegiment ID: {army_regiment_id} not found.");
+            CrusaderWarsEnvironment.Logger.Debug($"ArmyRegiment ID: {army_regiment_id} not found.");
             return null;
         }
 
         public static string GetAttilaWinner(string path_attila_log, string player_armies_combat_side,
             string enemy_armies_combat_side)
         {
-            Program.Logger.Debug($"Entering GetAttilaWinner for log file: {path_attila_log}");
+            CrusaderWarsEnvironment.Logger.Debug($"Entering GetAttilaWinner for log file: {path_attila_log}");
             string winner = enemy_armies_combat_side; // Default to a loss
 
             try
             {
                 if (!File.Exists(path_attila_log))
                 {
-                    Program.Logger.Debug($"Attila log file not found at: {path_attila_log}. Returning default winner.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Attila log file not found at: {path_attila_log}. Returning default winner.");
                     return winner;
                 }
 
@@ -2353,40 +2353,40 @@ namespace CrusaderWars.data.battle_results
                 if (lastHeaderIndex != -1)
                 {
                     relevantLogSection = logContent.Substring(lastHeaderIndex);
-                    Program.Logger.Debug("Isolated final battle report section from Attila log.");
+                    CrusaderWarsEnvironment.Logger.Debug("Isolated final battle report section from Attila log.");
                 }
                 else
                 {
                     relevantLogSection = logContent; // Fallback to entire log if header not found
-                    Program.Logger.Debug("Battle report header not found. Analyzing entire Attila log content.");
+                    CrusaderWarsEnvironment.Logger.Debug("Battle report header not found. Analyzing entire Attila log content.");
                 }
 
                 // Search for "Victory" only within the isolated log section
                 if (relevantLogSection.Contains("Victory"))
                 {
                     winner = player_armies_combat_side;
-                    Program.Logger.Debug($"'Victory' keyword found in relevant log section. Winner set to: {winner}");
+                    CrusaderWarsEnvironment.Logger.Debug($"'Victory' keyword found in relevant log section. Winner set to: {winner}");
                 }
                 else
                 {
-                    Program.Logger.Debug(
+                    CrusaderWarsEnvironment.Logger.Debug(
                         $"'Victory' keyword not found in relevant log section. Winner remains default: {winner}");
                 }
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug(
+                CrusaderWarsEnvironment.Logger.Debug(
                     $"Error determining Attila winner: {ex.Message}. Returning default winner ({winner}).");
                 // The 'winner' variable is already initialized to enemy_armies_combat_side, so no need to re-assign.
             }
 
-            Program.Logger.Debug($"Determined Attila winner: {winner}");
+            CrusaderWarsEnvironment.Logger.Debug($"Determined Attila winner: {winner}");
             return winner;
         }
 
         static void SetWinner(string winner)
         {
-            Program.Logger.Debug($"Setting battle winner to: {winner}");
+            CrusaderWarsEnvironment.Logger.Debug($"Setting battle winner to: {winner}");
             try
             {
                 // IsAttackerVictorious is now set authoritatively in BattleProcessor before any file edits.
@@ -2404,11 +2404,11 @@ namespace CrusaderWars.data.battle_results
 
                 Player_Combat = Player_Combat?.Replace("\r", "");
 
-                Program.Logger.Debug("Winner of battle set successfully");
+                CrusaderWarsEnvironment.Logger.Debug("Winner of battle set successfully");
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error setting winner of battle: {ex.Message}");
+                CrusaderWarsEnvironment.Logger.Debug($"Error setting winner of battle: {ex.Message}");
             }
 
         }
@@ -2446,7 +2446,7 @@ namespace CrusaderWars.data.battle_results
 
         public static void EditRegimentsFile(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Editing Regiments file...");
+            CrusaderWarsEnvironment.Logger.Debug("Editing Regiments file...");
             bool editStarted = false;
             bool editIndex = false;
             Regiment? editRegiment = null;
@@ -2478,7 +2478,7 @@ namespace CrusaderWars.data.battle_results
                             editStarted = true;
                             editRegiment = searchingData.foundRegiment;
                             parentArmyRegiment = searchingData.parentArmyRegiment;
-                            Program.Logger.Debug($"Found Regiment {regiment_id} for editing.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found Regiment {regiment_id} for editing.");
 
                             // For Levy and Garrison, we always rewrite the block to ensure consistency
                             if (parentArmyRegiment?.Type == RegimentType.Levy || parentArmyRegiment?.Type == RegimentType.Garrison)
@@ -2561,12 +2561,12 @@ namespace CrusaderWars.data.battle_results
                     streamWriter.WriteLine(line);
                 }
             }
-            Program.Logger.Debug("Finished editing Regiments file.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished editing Regiments file.");
         }
 
         static (bool editStarted, Regiment? foundRegiment, ArmyRegiment? parentArmyRegiment) SearchRegimentsFile(List<Army> armies, string regiment_id)
         {
-            // Program.Logger.Debug($"Searching for Regiment ID: {regiment_id} in Regiments file.");
+            // CrusaderWarsEnvironment.Logger.Debug($"Searching for Regiment ID: {regiment_id} in Regiments file.");
             bool editStarted = false;
             Regiment? foundRegiment = null;
             ArmyRegiment? parentArmyRegiment = null;
@@ -2587,40 +2587,40 @@ namespace CrusaderWars.data.battle_results
                             editStarted = true;
                             foundRegiment = regiment;
                             parentArmyRegiment = armyRegiment;
-                            Program.Logger.Debug($"Found Regiment {regiment_id} with parent ArmyRegiment {armyRegiment.ID}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found Regiment {regiment_id} with parent ArmyRegiment {armyRegiment.ID}.");
                             return (editStarted, foundRegiment, parentArmyRegiment);
                         }
                     }
                 }
             }
-            // Program.Logger.Debug($"Regiment ID: {regiment_id} not found in Regiments file.");
+            // CrusaderWarsEnvironment.Logger.Debug($"Regiment ID: {regiment_id} not found in Regiments file.");
             return (false, null, null);
         }
 
         public static void EditSiegesFile(string path_log_attila, string attacker_side, string defender_side,
             List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Entering EditSiegesFile method.");
+            CrusaderWarsEnvironment.Logger.Debug("Entering EditSiegesFile method.");
 
             if (!BattleState.IsSiegeBattle)
             {
-                Program.Logger.Debug("Not a siege battle. Skipping EditSiegesFile.");
+                CrusaderWarsEnvironment.Logger.Debug("Not a siege battle. Skipping EditSiegesFile.");
                 return;
             }
 
-            Program.Logger.Debug($"Using pre-determined battle winner. IsAttackerVictorious: {IsAttackerVictorious}");
+            CrusaderWarsEnvironment.Logger.Debug($"Using pre-determined battle winner. IsAttackerVictorious: {IsAttackerVictorious}");
 
 
             if (string.IsNullOrEmpty(SiegeID))
             {
-                Program.Logger.Debug("SiegeID is null or empty. Cannot edit Sieges.txt.");
+                CrusaderWarsEnvironment.Logger.Debug("SiegeID is null or empty. Cannot edit Sieges.txt.");
                 return;
             }
 
             string siegesFilePath = Writter.DataFilesPaths.Sieges_Path();
             if (!File.Exists(siegesFilePath))
             {
-                Program.Logger.Debug($"Sieges file not found at {siegesFilePath}. Cannot edit siege progress.");
+                CrusaderWarsEnvironment.Logger.Debug($"Sieges file not found at {siegesFilePath}. Cannot edit siege progress.");
                 return;
             }
 
@@ -2650,18 +2650,18 @@ namespace CrusaderWars.data.battle_results
                 if (lastHeaderIndex != -1)
                 {
                     relevantLogSection = attilaLogContent.Substring(lastHeaderIndex);
-                    Program.Logger.Debug("Isolated final battle report section from Attila log for siege analysis.");
+                    CrusaderWarsEnvironment.Logger.Debug("Isolated final battle report section from Attila log for siege analysis.");
                 }
                 else
                 {
                     relevantLogSection = attilaLogContent; // Fallback to entire log if header not found
-                    Program.Logger.Debug("Battle report header not found. Analyzing entire Attila log content for siege analysis.");
+                    CrusaderWarsEnvironment.Logger.Debug("Battle report header not found. Analyzing entire Attila log content for siege analysis.");
                 }
 
                 settlementCaptured = relevantLogSection.Contains("SETTLEMENT_CAPTURED");
                 if (settlementCaptured)
                 {
-                    Program.Logger.Debug("Attila log: SETTLEMENT_CAPTURED event found in last battle report.");
+                    CrusaderWarsEnvironment.Logger.Debug("Attila log: SETTLEMENT_CAPTURED event found in last battle report.");
                 }
 
                 int wallsAttackedCount = Regex.Matches(relevantLogSection, "WALLS_ATTACKED").Count;
@@ -2670,28 +2670,28 @@ namespace CrusaderWars.data.battle_results
                 if (wallsDestroyedCount > 1)
                 {
                     breachIncrement = 3;
-                    Program.Logger.Debug(
+                    CrusaderWarsEnvironment.Logger.Debug(
                         $"Attila log: Multiple WALLS_DESTROYED events ({wallsDestroyedCount}). Setting breachIncrement to 3.");
                 }
                 else if (wallsDestroyedCount == 1)
                 {
                     breachIncrement = 2;
-                    Program.Logger.Debug($"Attila log: One WALLS_DESTROYED event. Setting breachIncrement to 2.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Attila log: One WALLS_DESTROYED event. Setting breachIncrement to 2.");
                 }
                 else if (wallsAttackedCount > 0)
                 {
                     breachIncrement = 1;
-                    Program.Logger.Debug(
+                    CrusaderWarsEnvironment.Logger.Debug(
                         $"Attila log: WALLS_ATTACKED event(s) found ({wallsAttackedCount}). Setting breachIncrement to 1.");
                 }
                 else
                 {
-                    Program.Logger.Debug("Attila log: No wall attack/destruction events found. breachIncrement remains 0.");
+                    CrusaderWarsEnvironment.Logger.Debug("Attila log: No wall attack/destruction events found. breachIncrement remains 0.");
                 }
             }
             else
             {
-                Program.Logger.Debug($"Attila log file not found at {path_log_attila}. Cannot calculate breach increment or check for capture.");
+                CrusaderWarsEnvironment.Logger.Debug($"Attila log file not found at {path_log_attila}. Cannot calculate breach increment or check for capture.");
             }
 
 
@@ -2720,7 +2720,7 @@ namespace CrusaderWars.data.battle_results
                     {
                         int newBreach = Math.Min(3, breachIncrement);
                         updatedContent.AppendLine($"\t\t\tbreach={newBreach}");
-                        Program.Logger.Debug($"Added missing breach line with value: {newBreach}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Added missing breach line with value: {newBreach}");
                     }
 
                     inTargetSiegeBlock = false;
@@ -2733,7 +2733,7 @@ namespace CrusaderWars.data.battle_results
                         // Settlement was captured, siege is won by besieger.
                         int fortLevel = twbattle.Sieges.GetFortLevel();
                         double newProgress = 100 + (fortLevel * 75);
-                        Program.Logger.Debug($"Settlement captured. Updating siege progress for SiegeID {SiegeID} to {newProgress} (based on fort level {fortLevel}).");
+                        CrusaderWarsEnvironment.Logger.Debug($"Settlement captured. Updating siege progress for SiegeID {SiegeID} to {newProgress} (based on fort level {fortLevel}).");
                         updatedContent.AppendLine($"{line.Substring(0, line.IndexOf("progress="))}progress={newProgress.ToString("F2", CultureInfo.InvariantCulture)}");
                     }
                     else
@@ -2747,7 +2747,7 @@ namespace CrusaderWars.data.battle_results
                             // Attacker won a standard assault by routing defender: set progress to 100%
                             int fortLevel = twbattle.Sieges.GetFortLevel();
                             double newProgress = 100 + (fortLevel * 75);
-                            Program.Logger.Debug(
+                            CrusaderWarsEnvironment.Logger.Debug(
                                 $"Attacker won standard assault by routing defender. Updating siege progress for SiegeID {SiegeID} to {newProgress} (based on fort level {fortLevel}).");
                             updatedContent.AppendLine(
                                 $"{line.Substring(0, line.IndexOf("progress="))}progress={newProgress.ToString("F2", CultureInfo.InvariantCulture)}");
@@ -2784,7 +2784,7 @@ namespace CrusaderWars.data.battle_results
                             {
                                 outcomeLog = "Besieger lost assault.";
                             }
-                            Program.Logger.Debug($"{outcomeLog} Garrison casualties: {initialGarrisonSize - finalGarrisonSize} ({casualtyPercentage:P2}). Calculating siege progress gain.");
+                            CrusaderWarsEnvironment.Logger.Debug($"{outcomeLog} Garrison casualties: {initialGarrisonSize - finalGarrisonSize} ({casualtyPercentage:P2}). Calculating siege progress gain.");
 
                             if (casualtyPercentage > 0)
                             {
@@ -2798,7 +2798,7 @@ namespace CrusaderWars.data.battle_results
                                 double progressToAdd = casualtyPercentage * remainingProgress;
                                 double newProgress = currentProgress + progressToAdd;
 
-                                Program.Logger.Debug(
+                                CrusaderWarsEnvironment.Logger.Debug(
                                     $"Adding {progressToAdd:F2} to siege progress. New progress: {newProgress:F2}");
 
                                 // Append the new progress line, preserving indentation
@@ -2807,7 +2807,7 @@ namespace CrusaderWars.data.battle_results
                             }
                             else
                             {
-                                Program.Logger.Debug("No garrison casualties. Siege progress remains unchanged.");
+                                CrusaderWarsEnvironment.Logger.Debug("No garrison casualties. Siege progress remains unchanged.");
                                 updatedContent.AppendLine(line); // Append original line
                             }
                         }
@@ -2823,13 +2823,13 @@ namespace CrusaderWars.data.battle_results
                         if (breachMatch.Success && int.TryParse(breachMatch.Groups[1].Value, out currentBreach))
                         {
                             int newBreach = Math.Min(3, currentBreach + breachIncrement); // Cap at max 3
-                            Program.Logger.Debug(
+                            CrusaderWarsEnvironment.Logger.Debug(
                                 $"Updating breach from {currentBreach} to {newBreach} (increment: {breachIncrement}).");
                             updatedContent.AppendLine($"{line.Substring(0, line.IndexOf("breach="))}breach={newBreach}");
                         }
                         else
                         {
-                            Program.Logger.Debug(
+                            CrusaderWarsEnvironment.Logger.Debug(
                                 $"Warning: Could not parse current breach value from line: '{line}'. Appending original line.");
                             updatedContent.AppendLine(line);
                         }
@@ -2879,7 +2879,7 @@ namespace CrusaderWars.data.battle_results
                         }
 
                         string newTokensString = string.Join(" ", tokens);
-                        Program.Logger.Debug(
+                        CrusaderWarsEnvironment.Logger.Debug(
                             $"Updating action_history from '{{ {originalTokensString} }}' to '{{ {newTokensString} }}' (increment: {breachIncrement}).");
 
                         updatedContent.AppendLine(line); // Append "action_history={"
@@ -2904,18 +2904,18 @@ namespace CrusaderWars.data.battle_results
             if (targetSiegeBlockFound) // Only write if we actually found the target siege block
             {
                 File.WriteAllText(Writter.DataTEMPFilesPaths.Sieges_Path(), updatedContent.ToString());
-                Program.Logger.Debug($"Sieges.txt updated for siege ID {SiegeID}.");
+                CrusaderWarsEnvironment.Logger.Debug($"Sieges.txt updated for siege ID {SiegeID}.");
             }
             else
             {
-                Program.Logger.Debug(
+                CrusaderWarsEnvironment.Logger.Debug(
                     $"Sieges.txt for siege ID {SiegeID} was read, but the target siege block was not found.");
             }
         }
 
         public static (string outcome, string wall_damage) GetSiegeOutcome(string path_attila_log, string left_side_combat_side, string right_side_combat_side)
         {
-            Program.Logger.Debug($"Entering GetSiegeOutcome for log file: {path_attila_log}");
+            CrusaderWarsEnvironment.Logger.Debug($"Entering GetSiegeOutcome for log file: {path_attila_log}");
             string outcome = "Successfully Defended"; // Default for defender
             string wall_damage = "No Damage";
 
@@ -2923,7 +2923,7 @@ namespace CrusaderWars.data.battle_results
             {
                 if (!File.Exists(path_attila_log))
                 {
-                    Program.Logger.Debug($"Attila log file not found at: {path_attila_log}. Returning default siege outcome.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Attila log file not found at: {path_attila_log}. Returning default siege outcome.");
                     return (outcome, wall_damage);
                 }
 
@@ -2992,17 +2992,17 @@ namespace CrusaderWars.data.battle_results
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error determining siege outcome: {ex.Message}. Returning default values.");
+                CrusaderWarsEnvironment.Logger.Debug($"Error determining siege outcome: {ex.Message}. Returning default values.");
             }
 
-            Program.Logger.Debug($"Determined Siege Outcome: {outcome}, Wall Damage: {wall_damage}");
+            CrusaderWarsEnvironment.Logger.Debug($"Determined Siege Outcome: {outcome}, Wall Damage: {wall_damage}");
             return (outcome, wall_damage);
         }
 
 
         public static bool HasBattleEnded(string path_attila_log)
         {
-            Program.Logger.Debug($"Checking if battle has ended in log file: {path_attila_log}");
+            CrusaderWarsEnvironment.Logger.Debug($"Checking if battle has ended in log file: {path_attila_log}");
             using (FileStream logFile = File.Open(path_attila_log, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (StreamReader reader = new StreamReader(logFile))
             {
@@ -3012,12 +3012,12 @@ namespace CrusaderWars.data.battle_results
                 {
                     reader.Close();
                     logFile.Close();
-                    Program.Logger.Debug("Battle has finished marker found. Battle ended.");
+                    CrusaderWarsEnvironment.Logger.Debug("Battle has finished marker found. Battle ended.");
                     return true;
                 }
                 else
                 {
-                    Program.Logger.Debug("Battle has finished marker not found. Battle still in progress.");
+                    CrusaderWarsEnvironment.Logger.Debug("Battle has finished marker not found. Battle still in progress.");
                     return false;
                 }
 
@@ -3027,9 +3027,9 @@ namespace CrusaderWars.data.battle_results
 
         public static void ClearAttilaLog()
         {
-            Program.Logger.Debug("Entering ClearAttilaLog method.");
+            CrusaderWarsEnvironment.Logger.Debug("Entering ClearAttilaLog method.");
             string path_attila_log = CrusaderWarsEnvironment.Paths.AttilaBattleLogPath;
-            Program.Logger.Debug($"Attila log file path to clear: {path_attila_log}");
+            CrusaderWarsEnvironment.Logger.Debug($"Attila log file path to clear: {path_attila_log}");
 
             bool isCreated = false;
             if (isCreated == false)
@@ -3040,15 +3040,15 @@ namespace CrusaderWars.data.battle_results
                     logFile.Close();
                 }
             }
-            Program.Logger.Debug("Attila log file cleared successfully.");
+            CrusaderWarsEnvironment.Logger.Debug("Attila log file cleared successfully.");
         }
 
         public static void EditWarsFile(List<Army> attacker_armies, List<Army> defender_armies, double warScoreChange)
         {
-            Program.Logger.Debug("Editing Wars file...");
+            CrusaderWarsEnvironment.Logger.Debug("Editing Wars file...");
             if (string.IsNullOrEmpty(WarID))
             {
-                Program.Logger.Debug("WarID is not set. Skipping Wars file edit and copying original to temp.");
+                CrusaderWarsEnvironment.Logger.Debug("WarID is not set. Skipping Wars file edit and copying original to temp.");
                 if (File.Exists(Writter.DataFilesPaths.Wars_Path()))
                 {
                     File.Copy(Writter.DataFilesPaths.Wars_Path(), Writter.DataTEMPFilesPaths.Wars_Path(), true);
@@ -3065,7 +3065,7 @@ namespace CrusaderWars.data.battle_results
 
                 if (!warBlockMatch.Success)
                 {
-                    Program.Logger.Debug($"Could not find war block for WarID: {WarID}. Skipping edit.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Could not find war block for WarID: {WarID}. Skipping edit.");
                     File.Copy(Writter.DataFilesPaths.Wars_Path(), Writter.DataTEMPFilesPaths.Wars_Path(), true);
                     return;
                 }
@@ -3078,7 +3078,7 @@ namespace CrusaderWars.data.battle_results
                 var warAttackersBlockMatch = Regex.Match(warBlockContent, @"attacker\s*=\s*({[\s\S]*?})\s*defender\s*=\s*{", RegexOptions.Multiline);
                 if (!warAttackersBlockMatch.Success)
                 {
-                    Program.Logger.Debug($"Could not find or parse the attacker block in war block for WarID: {WarID}. Skipping edit.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Could not find or parse the attacker block in war block for WarID: {WarID}. Skipping edit.");
                     File.Copy(Writter.DataFilesPaths.Wars_Path(), Writter.DataTEMPFilesPaths.Wars_Path(), true);
                     return;
                 }
@@ -3094,7 +3094,7 @@ namespace CrusaderWars.data.battle_results
                 // Check if any attackers were found
                 if (!warAttackerIds.Any())
                 {
-                    Program.Logger.Debug($"No attacker participants found in parsed attacker block for WarID: {WarID}. Skipping edit.");
+                    CrusaderWarsEnvironment.Logger.Debug($"No attacker participants found in parsed attacker block for WarID: {WarID}. Skipping edit.");
                     File.Copy(Writter.DataFilesPaths.Wars_Path(), Writter.DataTEMPFilesPaths.Wars_Path(), true);
                     return;
                 }
@@ -3154,7 +3154,7 @@ namespace CrusaderWars.data.battle_results
                                 string afterInsert = warBlockContent.Substring(currentIndex);
                                 warBlockContent = beforeInsert + " " + newBattleResultEntry.ToString().Trim() + afterInsert;
                                 foundEnd = true;
-                                Program.Logger.Debug($"Appended new battle result entry to existing battle_results list for WarID {WarID} using brace counting.");
+                                CrusaderWarsEnvironment.Logger.Debug($"Appended new battle result entry to existing battle_results list for WarID {WarID} using brace counting.");
                                 break;
                             }
                         }
@@ -3163,7 +3163,7 @@ namespace CrusaderWars.data.battle_results
 
                     if (!foundEnd)
                     {
-                        Program.Logger.Debug($"Warning: Could not find end of battle_results block for WarID {WarID} using brace counting. Appending using fallback method.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Warning: Could not find end of battle_results block for WarID {WarID} using brace counting. Appending using fallback method.");
                         // Fallback: try regex again if brace counting somehow failed
                         var battleResultsMatch = Regex.Match(warBlockContent, @"(battle_results\s*=\s*{)([\s\S]*?)\s*}");
                         if (battleResultsMatch.Success)
@@ -3172,11 +3172,11 @@ namespace CrusaderWars.data.battle_results
                             string existingContent = battleResultsMatch.Groups[2].Value;
                             string newBattleResultsBlock = $"{openingPart}{existingContent.TrimEnd()} {newBattleResultEntry} }}";
                             warBlockContent = warBlockContent.Replace(battleResultsMatch.Value, newBattleResultsBlock);
-                            Program.Logger.Debug($"Appended new battle result entry to existing battle_results list for WarID {WarID} using fallback regex.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Appended new battle result entry to existing battle_results list for WarID {WarID} using fallback regex.");
                         }
                         else
                         {
-                            Program.Logger.Debug($"Fallback regex also failed for WarID {WarID}. Skipping battle_results update.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Fallback regex also failed for WarID {WarID}. Skipping battle_results update.");
                         }
                     }
                 }
@@ -3192,11 +3192,11 @@ namespace CrusaderWars.data.battle_results
                         newBattleResultsBlock.Append("\t\t\t}");
 
                         warBlockContent = warBlockContent.Insert(attackerBlockIndex, newBattleResultsBlock.ToString());
-                        Program.Logger.Debug($"Created new battle_results list and added entry for WarID {WarID}.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Created new battle_results list and added entry for WarID {WarID}.");
                     }
                     else
                     {
-                        Program.Logger.Debug($"Could not find attacker block to insert battle_results for WarID {WarID}. Appending to end of war block.");
+                        CrusaderWarsEnvironment.Logger.Debug($"Could not find attacker block to insert battle_results for WarID {WarID}. Appending to end of war block.");
                         // As a fallback, insert before the closing brace of the war block
                         var newBattleResultsBlock = new StringBuilder();
                         newBattleResultsBlock.AppendLine("\t\t\tbattle_results={");
@@ -3209,24 +3209,24 @@ namespace CrusaderWars.data.battle_results
 
                 string updatedWarsContent = warsContent.Replace(originalWarBlock, warBlockContent);
                 File.WriteAllText(Writter.DataTEMPFilesPaths.Wars_Path(), updatedWarsContent);
-                Program.Logger.Debug($"Successfully appended battle result entry for WarID {WarID}. Entry: {newBattleResultEntry}");
+                CrusaderWarsEnvironment.Logger.Debug($"Successfully appended battle result entry for WarID {WarID}. Entry: {newBattleResultEntry}");
             }
             catch (Exception ex)
             {
-                Program.Logger.Debug($"Error editing Wars file: {ex.Message}. Copying original to temp.");
+                CrusaderWarsEnvironment.Logger.Debug($"Error editing Wars file: {ex.Message}. Copying original to temp.");
                 File.Copy(Writter.DataFilesPaths.Wars_Path(), Writter.DataTEMPFilesPaths.Wars_Path(), true);
             }
         }
 
         public static void EditOpinionsFile(List<Army> allArmies)
         {
-            Program.Logger.Debug("Editing Opinions file...");
+            CrusaderWarsEnvironment.Logger.Debug("Editing Opinions file...");
             string path = Writter.DataFilesPaths.Opinions_Path();
             string tempPath = Writter.DataTEMPFilesPaths.Opinions_Path();
 
             if (!File.Exists(path) || new FileInfo(path).Length == 0)
             {
-                Program.Logger.Debug("Opinions.txt not found or is empty. Skipping.");
+                CrusaderWarsEnvironment.Logger.Debug("Opinions.txt not found or is empty. Skipping.");
                 return;
             }
 
@@ -3243,7 +3243,7 @@ namespace CrusaderWars.data.battle_results
 
             if (!slainCharIds.Any())
             {
-                Program.Logger.Debug("No slain characters to process for opinions. Copying original file.");
+                CrusaderWarsEnvironment.Logger.Debug("No slain characters to process for opinions. Copying original file.");
                 File.Copy(path, tempPath, true);
                 return;
             }
@@ -3253,7 +3253,7 @@ namespace CrusaderWars.data.battle_results
 
             if (activeOpinionsStartIndex == -1)
             {
-                Program.Logger.Debug("Could not find active_opinions block. Skipping opinion edits.");
+                CrusaderWarsEnvironment.Logger.Debug("Could not find active_opinions block. Skipping opinion edits.");
                 File.Copy(path, tempPath, true);
                 return;
             }
@@ -3276,7 +3276,7 @@ namespace CrusaderWars.data.battle_results
 
             if (bodyEndIndex == -1)
             {
-                Program.Logger.Debug("Warning: Could not find matching closing brace for active_opinions. Skipping opinion edits.");
+                CrusaderWarsEnvironment.Logger.Debug("Warning: Could not find matching closing brace for active_opinions. Skipping opinion edits.");
                 File.Copy(path, tempPath, true);
                 return;
             }
@@ -3311,7 +3311,7 @@ namespace CrusaderWars.data.battle_results
                 if (blockEnd == -1)
                 {
                     newOpinionsBody.Append(opinionsBody.Substring(blockStart));
-                    Program.Logger.Debug("Warning: Unmatched brace in an inner opinion block. Appending rest of content as is.");
+                    CrusaderWarsEnvironment.Logger.Debug("Warning: Unmatched brace in an inner opinion block. Appending rest of content as is.");
                     break;
                 }
 
@@ -3332,7 +3332,7 @@ namespace CrusaderWars.data.battle_results
                         {
                             // We are inserting before the newline of the last brace
                             opinionBlock = opinionBlock.Insert(insertIndex, "\n\t\t\tdelete=yes\n");
-                            Program.Logger.Debug("Marked an opinion for deletion.");
+                            CrusaderWarsEnvironment.Logger.Debug("Marked an opinion for deletion.");
                         }
                         else
                         {
@@ -3348,7 +3348,7 @@ namespace CrusaderWars.data.battle_results
 
             string finalContent = content.Substring(0, bodyStartIndex) + newOpinionsBody.ToString() + content.Substring(bodyEndIndex);
             File.WriteAllText(tempPath, finalContent);
-            Program.Logger.Debug("Finished editing Opinions file.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished editing Opinions file.");
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using CrusaderWars.data.save_file;
 using static CrusaderWars.data.save_file.Writter;
 using CrusaderWars.armies; // Added for List<Army>
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.data.battle_results.editors
 {
@@ -14,7 +15,7 @@ namespace CrusaderWars.data.battle_results.editors
     {
         public static void EditArmyRegimentsFile(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Editing Army Regiments file...");
+            CrusaderWarsEnvironment.Logger.Debug("Editing Army Regiments file...");
             bool editStarted = false;
             ArmyRegiment? editArmyRegiment = null;
 
@@ -38,7 +39,7 @@ namespace CrusaderWars.data.battle_results.editors
                         {
                             editStarted = true;
                             editArmyRegiment = searchingData.editArmyRegiment;
-                            Program.Logger.Debug($"Found ArmyRegiment {army_regiment_id} for editing (Attacker).");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found ArmyRegiment {army_regiment_id} for editing (Attacker).");
                         }
                         else
                         {
@@ -47,7 +48,7 @@ namespace CrusaderWars.data.battle_results.editors
                             {
                                 editStarted = true;
                                 editArmyRegiment = searchingData.editArmyRegiment;
-                                Program.Logger.Debug($"Found ArmyRegiment {army_regiment_id} for editing (Defender).");
+                                CrusaderWarsEnvironment.Logger.Debug($"Found ArmyRegiment {army_regiment_id} for editing (Defender).");
                             }
                         }
 
@@ -57,7 +58,7 @@ namespace CrusaderWars.data.battle_results.editors
                     {
                         string edited_line = "\t\t\t\tcurrent=" + editArmyRegiment.CurrentNum;
                         streamWriter.WriteLine(edited_line);
-                        Program.Logger.Debug(
+                        CrusaderWarsEnvironment.Logger.Debug(
                             $"Updated ArmyRegiment {editArmyRegiment.ID} current soldiers to {editArmyRegiment.CurrentNum}.");
                         continue;
                     }
@@ -73,13 +74,13 @@ namespace CrusaderWars.data.battle_results.editors
                 }
             }
 
-            Program.Logger.Debug("Finished editing Army Regiments file.");
+            CrusaderWarsEnvironment.Logger.Debug("Finished editing Army Regiments file.");
         }
 
         static (bool editStarted, ArmyRegiment? editArmyRegiment) SearchArmyRegimentsFile(List<Army> armies,
             string army_regiment_id)
         {
-            // Program.Logger.Debug($"Searching for ArmyRegiment ID: {army_regiment_id} in ArmyRegiments file.");
+            // CrusaderWarsEnvironment.Logger.Debug($"Searching for ArmyRegiment ID: {army_regiment_id} in ArmyRegiments file.");
             bool editStarted = false;
             ArmyRegiment? editRegiment = null;
 
@@ -97,14 +98,14 @@ namespace CrusaderWars.data.battle_results.editors
                         {
                             editStarted = true;
                             editRegiment = army_regiment;
-                            Program.Logger.Debug($"Found ArmyRegiment {army_regiment_id}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"Found ArmyRegiment {army_regiment_id}.");
                             return (editStarted, editRegiment);
                         }
                     }
                 }
             }
 
-            // Program.Logger.Debug($"ArmyRegiment ID: {army_regiment_id} not found in ArmyRegiments file.");
+            // CrusaderWarsEnvironment.Logger.Debug($"ArmyRegiment ID: {army_regiment_id} not found in ArmyRegiments file.");
             return (false, null);
         }
     }

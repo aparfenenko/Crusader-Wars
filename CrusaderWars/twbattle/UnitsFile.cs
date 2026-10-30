@@ -10,6 +10,7 @@ using CrusaderWars.data.save_file;
 using CrusaderWars.terrain;
 using CrusaderWars.unit_mapper;
 using CrusaderWars.twbattle;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars
 {
@@ -35,7 +36,7 @@ namespace CrusaderWars
             processedArmyIDs.Clear();
             attackerSiegeUnitsCount = 0;
             defenderSiegeUnitsCount = 0;
-            Program.Logger.Debug($"Cleared processed armies list and siege unit counters.");
+            CrusaderWarsEnvironment.Logger.Debug($"Cleared processed armies list and siege unit counters.");
         }
 
         public static (int UnitSoldiers, int UnitNum, int SoldiersRest) RetriveCalculatedUnits(int soldiers, int unit_limit)
@@ -70,7 +71,7 @@ namespace CrusaderWars
         {
             if (processedArmyIDs.Contains(army.ID))
             {
-                Program.Logger.Debug($"BETA_ConvertandAddArmyUnits: Army {army.ID} has already been processed (likely as a merged army). Skipping.");
+                CrusaderWarsEnvironment.Logger.Debug($"BETA_ConvertandAddArmyUnits: Army {army.ID} has already been processed (likely as a merged army). Skipping.");
                 return;
             }
 
@@ -85,7 +86,7 @@ namespace CrusaderWars
                 {
                     if (processedArmyIDs.Contains(merged_army.ID))
                     {
-                        Program.Logger.Debug($"BETA_ConvertandAddArmyUnits: Merged army {merged_army.ID} was already processed. This is unexpected but handled. Skipping.");
+                        CrusaderWarsEnvironment.Logger.Debug($"BETA_ConvertandAddArmyUnits: Merged army {merged_army.ID} was already processed. This is unexpected but handled. Skipping.");
                         continue;
                     }
                     BETA_AddArmyUnits(merged_army);
@@ -119,11 +120,11 @@ namespace CrusaderWars
 
         static void BETA_AddArmyUnits(Army army)
         {
-            Program.Logger.Debug($"BETA_AddArmyUnits: Processing army {army.ID} ({army.CombatSide}) with {army.Units.Count} units.");
+            CrusaderWarsEnvironment.Logger.Debug($"BETA_AddArmyUnits: Processing army {army.ID} ({army.CombatSide}) with {army.Units.Count} units.");
 
             if (army.Owner is null)
             {
-                Program.Logger.Debug($"  - WARNING: Army {army.ID} has no owner. Skipping unit processing.");
+                CrusaderWarsEnvironment.Logger.Debug($"  - WARNING: Army {army.ID} has no owner. Skipping unit processing.");
                 return;
             }
 
@@ -157,7 +158,7 @@ namespace CrusaderWars
                 // Check for autofix replacement
                 if (twbattle.BattleProcessor.AutofixReplacements.TryGetValue(commanderKey, out var replacement))
                 {
-                    Program.Logger.Debug($"Autofix: Applying commander unit replacement for '{commanderKey}' with '{replacement.replacementKey}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Autofix: Applying commander unit replacement for '{commanderKey}' with '{replacement.replacementKey}'.");
                     commanderKey = replacement.replacementKey;
                     isSiege = replacement.isSiege;
                 }
@@ -168,7 +169,7 @@ namespace CrusaderWars
                 string commanderAttilaKey = commander_unit.GetAttilaUnitKey();
                 if (string.IsNullOrEmpty(commanderAttilaKey) || commanderAttilaKey == UnitMappers_BETA.NOT_FOUND_KEY)
                 {
-                    Program.Logger.Debug($"  - WARNING: Could not map Commander unit for army {army.ID}. It will be dropped from the battle.");
+                    CrusaderWarsEnvironment.Logger.Debug($"  - WARNING: Could not map Commander unit for army {army.ID}. It will be dropped from the battle.");
                     BattleLog.AddUnmappedUnit(commander_unit, army.ID);
                 }
                 else
@@ -282,7 +283,7 @@ namespace CrusaderWars
                     if (string.IsNullOrEmpty(factionName) || factionName == UnitMappers_BETA.NOT_FOUND_KEY)
                     {
                         int soldiers = faction_group.Sum(u => u.GetSoldiers());
-                        Program.Logger.Debug($"WARNING - {soldiers} GARRISON SOLDIERS WITHOUT A FACTION FOUND. SKIPPING.");
+                        CrusaderWarsEnvironment.Logger.Debug($"WARNING - {soldiers} GARRISON SOLDIERS WITHOUT A FACTION FOUND. SKIPPING.");
                         continue;
                     }
 
@@ -296,7 +297,7 @@ namespace CrusaderWars
                     var garrisonCulture = representative_unit.GetObjCulture();
                     if (garrisonCulture == null)
                     {
-                        Program.Logger.Debug($"  - Garrison representative unit for faction '{factionName}' has no culture. Falling back to owner's culture.");
+                        CrusaderWarsEnvironment.Logger.Debug($"  - Garrison representative unit for faction '{factionName}' has no culture. Falling back to owner's culture.");
                         garrisonCulture = army.Owner.GetCulture();
                     }
 
@@ -304,7 +305,7 @@ namespace CrusaderWars
                     merged_garrison_unit.SetAttilaFaction(factionName);
                     merged_garrison_unit.SetMax(representative_unit.GetMax()); // Inherit max from representative
 
-                    Program.Logger.Debug($"Processing garrisons for faction '{factionName}' with a total of {total_faction_garrison_soldiers} soldiers.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Processing garrisons for faction '{factionName}' with a total of {total_faction_garrison_soldiers} soldiers.");
 
                     int holdingLevel = twbattle.Sieges.GetHoldingLevel();
                     var garrison_percentages = UnitMappers_BETA.GetFactionGarrison(factionName, holdingLevel);
@@ -332,7 +333,7 @@ namespace CrusaderWars
                     if (string.IsNullOrEmpty(factionName) || factionName == UnitMappers_BETA.NOT_FOUND_KEY)
                     {
                         int soldiers = faction_group.Sum(u => u.GetSoldiers());
-                        Program.Logger.Debug($"WARNING - {soldiers} LEVY SOLDIERS WITHOUT A FACTION FOUND. SKIPPING.");
+                        CrusaderWarsEnvironment.Logger.Debug($"WARNING - {soldiers} LEVY SOLDIERS WITHOUT A FACTION FOUND. SKIPPING.");
                         continue;
                     }
 
@@ -347,7 +348,7 @@ namespace CrusaderWars
                     var levyCulture = representative_unit.GetObjCulture();
                     if (levyCulture == null)
                     {
-                        Program.Logger.Debug($"  - Levy representative unit for faction '{factionName}' has no culture. Falling back to owner's culture.");
+                        CrusaderWarsEnvironment.Logger.Debug($"  - Levy representative unit for faction '{factionName}' has no culture. Falling back to owner's culture.");
                         levyCulture = army.Owner.GetCulture();
                     }
 
@@ -355,7 +356,7 @@ namespace CrusaderWars
                     merged_levy_unit.SetAttilaFaction(factionName);
                     merged_levy_unit.SetMax(representative_unit.GetMax()); // Inherit max from representative
 
-                    Program.Logger.Debug($"Processing levies for faction '{factionName}' with a total of {total_faction_levy_soldiers} soldiers.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Processing levies for faction '{factionName}' with a total of {total_faction_levy_soldiers} soldiers.");
 
                     var (levy_percentages, factionUsed) = UnitMappers_BETA.GetFactionLevies(factionName);
                     newLevyUnits.AddRange(BETA_LevyComposition(merged_levy_unit, army, levy_percentages, army_xp, factionUsed));
@@ -384,19 +385,19 @@ namespace CrusaderWars
             {
                 if (!BattleState.IsSiegeBattle && !siegeEnginesInFieldBattles && unit.IsSiege())
                 {
-                    Program.Logger.Debug($"  - Skipping siege unit '{unit.GetName()}' in field battle as per 'Siege Engines in Field Battles' option.");
+                    CrusaderWarsEnvironment.Logger.Debug($"  - Skipping siege unit '{unit.GetName()}' in field battle as per 'Siege Engines in Field Battles' option.");
                     continue;
                 }
                 string unitName = unit.GetName();
                 string attilaUnitKey = unit.GetAttilaUnitKey();
                 if (string.IsNullOrEmpty(attilaUnitKey) || attilaUnitKey == UnitMappers_BETA.NOT_FOUND_KEY)
                 {
-                    Program.Logger.Debug($"  - WARNING: Could not map CK3 Unit '{unit.GetName()}' (Type: {unit.GetRegimentType()}) for army {army.ID}. It will be dropped from the battle.");
+                    CrusaderWarsEnvironment.Logger.Debug($"  - WARNING: Could not map CK3 Unit '{unit.GetName()}' (Type: {unit.GetRegimentType()}) for army {army.ID}. It will be dropped from the battle.");
                     BattleLog.AddUnmappedUnit(unit, army.ID);
                     continue; // Skip this unit
                 }
 
-                Program.Logger.Debug($"  Processing MAA unit: Name={unit.GetName()}, Soldiers={unit.GetSoldiers()}, Culture={unit.GetCulture()}");
+                CrusaderWarsEnvironment.Logger.Debug($"  Processing MAA unit: Name={unit.GetName()}, Soldiers={unit.GetSoldiers()}, Culture={unit.GetCulture()}");
 
                 // Determine XP
                 int final_xp = army_xp;
@@ -430,17 +431,17 @@ namespace CrusaderWars
 
                     if (remainingSlots <= 0)
                     {
-                        Program.Logger.Debug($"  - Unit '{unit.GetName()}' skipped. Siege unit limit of {MAX_SIEGE_UNITS_PER_SIDE} reached for {army.CombatSide} side.");
+                        CrusaderWarsEnvironment.Logger.Debug($"  - Unit '{unit.GetName()}' skipped. Siege unit limit of {MAX_SIEGE_UNITS_PER_SIDE} reached for {army.CombatSide} side.");
                         continue; // Skip this whole CK3 unit
                     }
 
                     int unitsToCreate = Math.Min(numAttilaUnits, remainingSlots);
                     if (unitsToCreate < numAttilaUnits)
                     {
-                        Program.Logger.Debug($"  - Unit '{unit.GetName()}' creation capped from {numAttilaUnits} to {unitsToCreate} due to siege unit limit.");
+                        CrusaderWarsEnvironment.Logger.Debug($"  - Unit '{unit.GetName()}' creation capped from {numAttilaUnits} to {unitsToCreate} due to siege unit limit.");
                     }
 
-                    Program.Logger.Debug($"  - Unit '{unit.GetName()}' is a multi-gun siege unit. CK3 Machines: {totalCk3Machines}, NumGuns/Unit: {numGunsPerUnit}. Creating {unitsToCreate} Attila units.");
+                    CrusaderWarsEnvironment.Logger.Debug($"  - Unit '{unit.GetName()}' is a multi-gun siege unit. CK3 Machines: {totalCk3Machines}, NumGuns/Unit: {numGunsPerUnit}. Creating {unitsToCreate} Attila units.");
 
                     for (int j = 0; j < unitsToCreate; j++)
                     {
@@ -471,7 +472,7 @@ namespace CrusaderWars
                     if (unit.IsSiege())
                     {
                         soldiersForAttila = UnitMappers_BETA.ConvertMachinesToMen(unit.GetSoldiers());
-                        Program.Logger.Debug($"  - Unit '{unit.GetName()}' is a single-entry siege unit. Converting {unit.GetSoldiers()} machines to {soldiersForAttila} soldiers for Attila.");
+                        CrusaderWarsEnvironment.Logger.Debug($"  - Unit '{unit.GetName()}' is a single-entry siege unit. Converting {unit.GetSoldiers()} machines to {soldiersForAttila} soldiers for Attila.");
                     }
 
                     var MAA_Data = RetriveCalculatedUnits(soldiersForAttila, unit.GetMax());
@@ -484,14 +485,14 @@ namespace CrusaderWars
 
                         if (remainingSlots <= 0)
                         {
-                            Program.Logger.Debug($"  - Unit '{unit.GetName()}' skipped. Siege unit limit of {MAX_SIEGE_UNITS_PER_SIDE} reached for {army.CombatSide} side.");
+                            CrusaderWarsEnvironment.Logger.Debug($"  - Unit '{unit.GetName()}' skipped. Siege unit limit of {MAX_SIEGE_UNITS_PER_SIDE} reached for {army.CombatSide} side.");
                             continue; // Skip this whole CK3 unit
                         }
 
                         int unitsToCreate = Math.Min(MAA_Data.UnitNum, remainingSlots);
                         if (unitsToCreate < MAA_Data.UnitNum)
                         {
-                            Program.Logger.Debug($"  - Unit '{unit.GetName()}' creation capped from {MAA_Data.UnitNum} to {unitsToCreate} due to siege unit limit.");
+                            CrusaderWarsEnvironment.Logger.Debug($"  - Unit '{unit.GetName()}' creation capped from {MAA_Data.UnitNum} to {unitsToCreate} due to siege unit limit.");
                         }
                         MAA_Data.UnitNum = unitsToCreate;
                         currentSiegeCount += unitsToCreate;
@@ -536,7 +537,7 @@ namespace CrusaderWars
             var composedUnits = new List<Unit>();
             if (faction_levy_percentages == null || faction_levy_percentages.Count < 1)
             {
-                Program.Logger.Debug("ERROR - LEVIES WITHOUT FACTION IN UNIT" + $"\nNUMBER OF SOLDIERS:{unit.GetSoldiers()}" + $"\nATTILA FACTION:{unit.GetAttilaFaction()}");
+                CrusaderWarsEnvironment.Logger.Debug("ERROR - LEVIES WITHOUT FACTION IN UNIT" + $"\nNUMBER OF SOLDIERS:{unit.GetSoldiers()}" + $"\nATTILA FACTION:{unit.GetAttilaFaction()}");
                 return composedUnits;
             }
 
@@ -551,21 +552,21 @@ namespace CrusaderWars
                 // Priority 1: Manual Replacements
                 if (BattleState.ManualUnitReplacements.TryGetValue((currentKey, isPlayerAlliance), out var manualReplacement))
                 {
-                    Program.Logger.Debug($"Manual Replace: Applying levy template replacement for '{currentKey}' with '{manualReplacement.replacementKey}' for {(isPlayerAlliance ? "player" : "enemy")} alliance.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Manual Replace: Applying levy template replacement for '{currentKey}' with '{manualReplacement.replacementKey}' for {(isPlayerAlliance ? "player" : "enemy")} alliance.");
                     currentKey = manualReplacement.replacementKey;
                     isSiege = manualReplacement.isSiege;
                 }
                 // Priority 2: Autofix Replacements
                 else if (twbattle.BattleProcessor.AutofixReplacements.TryGetValue(currentKey, out var autofixReplacement))
                 {
-                    Program.Logger.Debug($"Autofix: Applying levy template replacement for '{currentKey}' with '{autofixReplacement.replacementKey}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Autofix: Applying levy template replacement for '{currentKey}' with '{autofixReplacement.replacementKey}'.");
                     currentKey = autofixReplacement.replacementKey;
                     isSiege = autofixReplacement.isSiege;
                 }
 
                 if (!BattleState.IsSiegeBattle && !siegeEnginesInFieldBattles && isSiege)
                 {
-                    Program.Logger.Debug($"  - Skipping siege unit '{currentKey}' in levy pool for field battle.");
+                    CrusaderWarsEnvironment.Logger.Debug($"  - Skipping siege unit '{currentKey}' in levy pool for field battle.");
                     continue;
                 }
 
@@ -580,12 +581,12 @@ namespace CrusaderWars
 
             if (filtered_levy_percentages.Any())
             {
-                Program.Logger.Debug($"  BETA_LevyComposition ({army.CombatSide}): Filtered out MAA units from levy pool for faction '{unit.GetAttilaFaction()}'. Using filtered list.");
+                CrusaderWarsEnvironment.Logger.Debug($"  BETA_LevyComposition ({army.CombatSide}): Filtered out MAA units from levy pool for faction '{unit.GetAttilaFaction()}'. Using filtered list.");
                 corrected_levy_percentages = filtered_levy_percentages;
             }
             else
             {
-                Program.Logger.Debug($"  BETA_LevyComposition ({army.CombatSide}): WARNING: No non-MAA levy units found for faction '{unit.GetAttilaFaction()}'. Using original (unfiltered) list as fallback.");
+                CrusaderWarsEnvironment.Logger.Debug($"  BETA_LevyComposition ({army.CombatSide}): WARNING: No non-MAA levy units found for faction '{unit.GetAttilaFaction()}'. Using original (unfiltered) list as fallback.");
             }
 
 
@@ -626,7 +627,7 @@ namespace CrusaderWars
             int totalPercentageSum = corrected_levy_percentages.Sum(p => p.percentage);
             if (totalPercentageSum <= 0)
             {
-                Program.Logger.Debug($"  BETA_LevyComposition ({army.CombatSide}): WARNING: Total percentage sum for levies is 0 or less for faction '{unit.GetAttilaFaction()}'. No levy units will be generated.");
+                CrusaderWarsEnvironment.Logger.Debug($"  BETA_LevyComposition ({army.CombatSide}): WARNING: Total percentage sum for levies is 0 or less for faction '{unit.GetAttilaFaction()}'. No levy units will be generated.");
                 return composedUnits;
             }
 
@@ -688,7 +689,7 @@ namespace CrusaderWars
             var composedUnits = new List<Unit>();
             if (faction_garrison_percentages == null || faction_garrison_percentages.Count < 1)
             {
-                Program.Logger.Debug("ERROR - GARRISON WITHOUT FACTION IN UNIT" + $"\nNUMBER OF SOLDIERS:{unit.GetSoldiers()}" + $"\nATTILA FACTION:{unit.GetAttilaFaction()}");
+                CrusaderWarsEnvironment.Logger.Debug("ERROR - GARRISON WITHOUT FACTION IN UNIT" + $"\nNUMBER OF SOLDIERS:{unit.GetSoldiers()}" + $"\nATTILA FACTION:{unit.GetAttilaFaction()}");
                 return composedUnits;
             }
 
@@ -703,20 +704,20 @@ namespace CrusaderWars
                 // Priority 1: Manual Replacements
                 if (BattleState.ManualUnitReplacements.TryGetValue((currentKey, isPlayerAlliance), out var manualReplacement))
                 {
-                    Program.Logger.Debug($"Manual Replace: Applying garrison template replacement for '{currentKey}' with '{manualReplacement.replacementKey}' for {(isPlayerAlliance ? "player" : "enemy")} alliance.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Manual Replace: Applying garrison template replacement for '{currentKey}' with '{manualReplacement.replacementKey}' for {(isPlayerAlliance ? "player" : "enemy")} alliance.");
                     currentKey = manualReplacement.replacementKey;
                     isSiege = manualReplacement.isSiege;
                 }
                 // Priority 2: Autofix Replacements
                 else if (twbattle.BattleProcessor.AutofixReplacements.TryGetValue(currentKey, out var autofixReplacement))
                 {
-                    Program.Logger.Debug($"Autofix: Applying garrison template replacement for '{currentKey}' with '{autofixReplacement.replacementKey}'.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Autofix: Applying garrison template replacement for '{currentKey}' with '{autofixReplacement.replacementKey}'.");
                     currentKey = autofixReplacement.replacementKey;
                     isSiege = autofixReplacement.isSiege;
                 }
                 if (!BattleState.IsSiegeBattle && !siegeEnginesInFieldBattles && isSiege)
                 {
-                    Program.Logger.Debug($"  - Skipping siege unit '{currentKey}' in garrison pool for field battle.");
+                    CrusaderWarsEnvironment.Logger.Debug($"  - Skipping siege unit '{currentKey}' in garrison pool for field battle.");
                     continue;
                 }
 
@@ -728,7 +729,7 @@ namespace CrusaderWars
             int totalPercentageSum = corrected_garrison_percentages.Sum(p => p.porcentage);
             if (totalPercentageSum <= 0)
             {
-                Program.Logger.Debug($"  BETA_GarrisonComposition ({army.CombatSide}): WARNING: Total percentage sum for garrisons is 0 or less for faction '{unit.GetAttilaFaction()}'. No garrison units will be generated.");
+                CrusaderWarsEnvironment.Logger.Debug($"  BETA_GarrisonComposition ({army.CombatSide}): WARNING: Total percentage sum for garrisons is 0 or less for faction '{unit.GetAttilaFaction()}'. No garrison units will be generated.");
                 return composedUnits;
             }
 

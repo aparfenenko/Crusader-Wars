@@ -18,7 +18,7 @@ namespace CrusaderWars.data.save_file
 
         public static void ReadProvinces(List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug("Reading landed titles...");
+            CrusaderWarsEnvironment.Logger.Debug("Reading landed titles...");
             ReadEnabledMods();
             ReadEachModPath();
             ReadModsLandedTitles(attacker_armies, defender_armies);
@@ -30,7 +30,7 @@ namespace CrusaderWars.data.save_file
             ck3_mods_folder_path = Regex.Replace(ck3_mods_folder_path, @"console_history.txt", "mod");
 
             string ck3_mods_enabled_file_path = Regex.Replace(ck3_mods_folder_path, "mod", "dlc_load.json");
-            Program.Logger.Debug($"Reading enabled mods from: {ck3_mods_enabled_file_path}");
+            CrusaderWarsEnvironment.Logger.Debug($"Reading enabled mods from: {ck3_mods_enabled_file_path}");
             string enabled_mods_json_text = File.ReadAllText(ck3_mods_enabled_file_path);
             var json = JsonSerializer.Deserialize<Dictionary<string, string[]>>(enabled_mods_json_text);
 
@@ -42,7 +42,7 @@ namespace CrusaderWars.data.save_file
             {
                 EnabledMods = new List<string>();
             }
-            Program.Logger.Debug($"Found {EnabledMods.Count} enabled mods.");
+            CrusaderWarsEnvironment.Logger.Debug($"Found {EnabledMods.Count} enabled mods.");
         }
 
         static List<string> EnabledMods_Folders_Paths = new List<string>();
@@ -76,7 +76,7 @@ namespace CrusaderWars.data.save_file
                                         string non_steam_path;
                                         non_steam_path = ck3_mods_folder_path.Replace("mod", "") + path.Replace('/', '\\');
                                         EnabledMods_Folders_Paths.Add(non_steam_path);
-                                        Program.Logger.Debug($"Found non-Steam mod path: {non_steam_path}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Found non-Steam mod path: {non_steam_path}");
                                     }
                                     //STEAM VERSION
                                     else
@@ -84,7 +84,7 @@ namespace CrusaderWars.data.save_file
                                         string steam_path;
                                         steam_path = path.Replace('/', '\\');
                                         EnabledMods_Folders_Paths.Add(steam_path);
-                                        Program.Logger.Debug($"Found Steam mod path: {steam_path}");
+                                        CrusaderWarsEnvironment.Logger.Debug($"Found Steam mod path: {steam_path}");
                                     }
 
 
@@ -105,7 +105,7 @@ namespace CrusaderWars.data.save_file
                 string landed_titles_dir = mod_folder_path.Trim('"') + @"\common\landed_titles";
                 if (Directory.Exists(landed_titles_dir))
                 {
-                    Program.Logger.Debug($"Scanning for landed titles files in mod directory: {landed_titles_dir}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Scanning for landed titles files in mod directory: {landed_titles_dir}");
                     string[] titleFiles = Directory.GetFiles(landed_titles_dir, "*.txt");
                     foreach (string file in titleFiles)
                     {
@@ -114,7 +114,7 @@ namespace CrusaderWars.data.save_file
                 }
                 else
                 {
-                    Program.Logger.Debug($"Landed titles directory not found for mod: {landed_titles_dir}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Landed titles directory not found for mod: {landed_titles_dir}");
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace CrusaderWars.data.save_file
 
             if (Directory.Exists(default_landed_titles_dir))
             {
-                Program.Logger.Debug($"Scanning for landed titles files in default CK3 directory: {default_landed_titles_dir}");
+                CrusaderWarsEnvironment.Logger.Debug($"Scanning for landed titles files in default CK3 directory: {default_landed_titles_dir}");
                 string[] titleFiles = Directory.GetFiles(default_landed_titles_dir, "*.txt");
                 foreach (string file in titleFiles)
                 {
@@ -135,13 +135,13 @@ namespace CrusaderWars.data.save_file
             }
             else
             {
-                Program.Logger.Debug($"Default CK3 landed titles directory not found: {default_landed_titles_dir}");
+                CrusaderWarsEnvironment.Logger.Debug($"Default CK3 landed titles directory not found: {default_landed_titles_dir}");
             }
         }
 
         static void ReadLandedTitles(string file_path, List<Army> attacker_armies, List<Army> defender_armies)
         {
-            Program.Logger.Debug($"Reading landed titles from file: {file_path}");
+            CrusaderWarsEnvironment.Logger.Debug($"Reading landed titles from file: {file_path}");
             using (StreamReader reader = new StreamReader(file_path))
             {
                 string? line = reader.ReadLine();

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars
 {
@@ -139,7 +140,7 @@ namespace CrusaderWars
                                 if ((location == landBridge.ProvinceFrom && prev == landBridge.ProvinceTo) ||
                                     (location == landBridge.ProvinceTo && prev == landBridge.ProvinceFrom))
                                 {
-                                    Program.Logger.Debug($"Land bridge crossing detected for army unit {unitIdMatch.Groups[1].Value}. CK3 Type: {landBridge.CK3Type}");
+                                    CrusaderWarsEnvironment.Logger.Debug($"Land bridge crossing detected for army unit {unitIdMatch.Groups[1].Value}. CK3 Type: {landBridge.CK3Type}");
                                     if (landBridge.CK3Type == "strait")
                                     {
                                         isStraitBattle(true);
@@ -155,7 +156,7 @@ namespace CrusaderWars
                     }
                     catch (Exception ex)
                     {
-                        Program.Logger.Debug($"Error checking for land bridge crossing in Units.txt: {ex.Message}");
+                        CrusaderWarsEnvironment.Logger.Debug($"Error checking for land bridge crossing in Units.txt: {ex.Message}");
                     }
                 }
             }
@@ -166,13 +167,13 @@ namespace CrusaderWars
             {
                 if (_random.Next(100) < 30)
                 {
-                    Program.Logger.Debug($"Coastal province battle detected for province {data.battle_results.BattleResult.ProvinceID}. 40% chance succeeded. Setting as coastal battle.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Coastal province battle detected for province {data.battle_results.BattleResult.ProvinceID}. 40% chance succeeded. Setting as coastal battle.");
                     isCoastalBattle(true);
                     return;
                 }
                 else
                 {
-                    Program.Logger.Debug($"Coastal province battle detected for province {data.battle_results.BattleResult.ProvinceID}. 40% chance failed. Proceeding with normal land battle terrain.");
+                    CrusaderWarsEnvironment.Logger.Debug($"Coastal province battle detected for province {data.battle_results.BattleResult.ProvinceID}. 40% chance failed. Proceeding with normal land battle terrain.");
                 }
             }
         }
@@ -185,7 +186,7 @@ namespace CrusaderWars
             //Special Battle Maps           
             if (isUnique)
             {
-                Program.Logger.Debug("Getting unique battle map.");
+                CrusaderWarsEnvironment.Logger.Debug("Getting unique battle map.");
                 var battlemap = UniqueMaps.GetBattleMap();
                 return battlemap;
             }
@@ -195,7 +196,7 @@ namespace CrusaderWars
                 var coastalMap = unit_mapper.UnitMappers_BETA.GetCoastalMap(data.battle_results.BattleResult.ProvinceID!);
                 if (coastalMap != null && coastalMap.Variants.Any())
                 {
-                    Program.Logger.Debug($"Getting coastal battle map for province: {data.battle_results.BattleResult.ProvinceID}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Getting coastal battle map for province: {data.battle_results.BattleResult.ProvinceID}");
                     int index = unit_mapper.UnitMappers_BETA.GetDeterministicIndex(data.battle_results.BattleResult.ProvinceID!, coastalMap.Variants.Count);
                     var variant = coastalMap.Variants[index];
                     string[] orientations = (variant.Orientations != null && variant.Orientations.Any()) ? variant.Orientations.ToArray() : new string[] { "All" };
@@ -209,14 +210,14 @@ namespace CrusaderWars
                 var landBridgeStrait = unit_mapper.UnitMappers_BETA.GetLandBridgeMap(data.battle_results.BattleResult.ProvinceID!);
                 if (landBridgeStrait != null && landBridgeStrait.CK3Type == "strait" && landBridgeStrait.Variants.Any())
                 {
-                    Program.Logger.Debug($"Getting land bridge (strait type) battle map for province: {data.battle_results.BattleResult.ProvinceID}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Getting land bridge (strait type) battle map for province: {data.battle_results.BattleResult.ProvinceID}");
                     int index = unit_mapper.UnitMappers_BETA.GetDeterministicIndex(data.battle_results.BattleResult.ProvinceID!, landBridgeStrait.Variants.Count);
                     var variant = landBridgeStrait.Variants[index];
                     string[] orientations = (variant.Orientations != null && variant.Orientations.Any()) ? variant.Orientations.ToArray() : new string[] { "All" };
                     return (variant.X, variant.Y, orientations, orientations);
                 }
 
-                Program.Logger.Debug($"Getting strait battle map for terrain: {TerrainType}");
+                CrusaderWarsEnvironment.Logger.Debug($"Getting strait battle map for terrain: {TerrainType}");
                 var battlemap = Straits.GetBattleMap(Region, TerrainType);
                 return battlemap;
             }
@@ -227,14 +228,14 @@ namespace CrusaderWars
                 var landBridgeRiver = unit_mapper.UnitMappers_BETA.GetLandBridgeMap(data.battle_results.BattleResult.ProvinceID!);
                 if (landBridgeRiver != null && landBridgeRiver.CK3Type != "strait" && landBridgeRiver.Variants.Any())
                 {
-                    Program.Logger.Debug($"Getting land bridge battle map for province: {data.battle_results.BattleResult.ProvinceID}");
+                    CrusaderWarsEnvironment.Logger.Debug($"Getting land bridge battle map for province: {data.battle_results.BattleResult.ProvinceID}");
                     int index = unit_mapper.UnitMappers_BETA.GetDeterministicIndex(data.battle_results.BattleResult.ProvinceID!, landBridgeRiver.Variants.Count);
                     var variant = landBridgeRiver.Variants[index];
                     string[] orientations = (variant.Orientations != null && variant.Orientations.Any()) ? variant.Orientations.ToArray() : new string[] { "All" };
                     return (variant.X, variant.Y, orientations, orientations);
                 }
 
-                Program.Logger.Debug($"Getting river battle map for terrain: {TerrainType}");
+                CrusaderWarsEnvironment.Logger.Debug($"Getting river battle map for terrain: {TerrainType}");
                 var battlemap = Lands.GetBattleMap(TerrainType, data.battle_results.BattleResult.ProvinceName ?? "");
                 return battlemap;
             }
@@ -243,7 +244,7 @@ namespace CrusaderWars
             bool isLand = (!isStrait && !isRiver && !isUnique && !isCoastal);
             if (isLand)
             {
-                Program.Logger.Debug($"Getting land battle map for terrain: {TerrainType}");
+                CrusaderWarsEnvironment.Logger.Debug($"Getting land battle map for terrain: {TerrainType}");
                 var battlemap = Lands.GetBattleMap(TerrainType, data.battle_results.BattleResult.ProvinceName ?? "");
                 return battlemap;
             }

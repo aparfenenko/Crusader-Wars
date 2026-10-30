@@ -29,7 +29,7 @@ namespace CrusaderWars.data.attila_settings
                                           "Note: Crusader Conflicts has its own built-in mod manager for handling Attila mods.\n\n" +
                                           $"Path: {user_script_path}";
                     CrusaderWarsEnvironment.Dialogs.Show(errorMessage, "Crusader Conflicts: User Script Mod Conflict", DialogIcon.Warning);
-                    Program.Logger.Debug($"User script file mod conflict detected at {user_script_path} on startup.");
+                    CrusaderWarsEnvironment.Logger.Debug($"User script file mod conflict detected at {user_script_path} on startup.");
                 }
             }
         }
@@ -54,20 +54,20 @@ namespace CrusaderWars.data.attila_settings
 
                         if (result == DialogChoice.Cancel)
                         {
-                            Program.Logger.Debug("User cancelled Attila launch due to user script conflict.");
+                            CrusaderWarsEnvironment.Logger.Debug("User cancelled Attila launch due to user script conflict.");
                             return false; // User chose to cancel
                         }
                         // If they click Retry, the loop will run again, re-checking the file.
                     }
                     else
                     {
-                        Program.Logger.Debug("User script file is valid (empty).");
+                        CrusaderWarsEnvironment.Logger.Debug("User script file is valid (empty).");
                         return true; // File is empty, OK to proceed
                     }
                 }
                 else
                 {
-                    Program.Logger.Debug("User script file is valid (non-existent).");
+                    CrusaderWarsEnvironment.Logger.Debug("User script file is valid (non-existent).");
                     return true; // File doesn't exist, OK to proceed
                 }
             }

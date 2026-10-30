@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using CrusaderWars.Core.Paths;
 
 namespace CrusaderWars.sieges
 {
@@ -171,7 +172,7 @@ namespace CrusaderWars.sieges
             }
             public static int GetLevel(string holding_key, string[] buildings_key, int fortLevel)
             {
-                Program.Logger.Debug($"Calculating holding level with key: '{holding_key}', fort level: {fortLevel}, and {buildings_key.Length} buildings.");
+                CrusaderWarsEnvironment.Logger.Debug($"Calculating holding level with key: '{holding_key}', fort level: {fortLevel}, and {buildings_key.Length} buildings.");
                 //If there is a holding building, increase wall size.
                 int building_wall_boost = 0;
                 if (buildings_key.Length > 0)
@@ -185,14 +186,14 @@ namespace CrusaderWars.sieges
                             building.Contains("palisades_"))
                         {
                             building_wall_boost = 1;
-                            Program.Logger.Debug($"  - Found defensive building '{building}'. Applying wall boost of {building_wall_boost}.");
+                            CrusaderWarsEnvironment.Logger.Debug($"  - Found defensive building '{building}'. Applying wall boost of {building_wall_boost}.");
                             break; // Found one, no need to check more
                         }
                     }
                 }
                 if (building_wall_boost == 0)
                 {
-                    Program.Logger.Debug("  - No defensive buildings found. Wall boost is 0.");
+                    CrusaderWarsEnvironment.Logger.Debug("  - No defensive buildings found. Wall boost is 0.");
                 }
 
                 int baseLevel;
@@ -216,11 +217,11 @@ namespace CrusaderWars.sieges
                     default:
                         baseLevel = 0; break;
                 }
-                Program.Logger.Debug($"  - Base level from holding key '{holding_key}' is {baseLevel} (includes wall boost).");
+                CrusaderWarsEnvironment.Logger.Debug($"  - Base level from holding key '{holding_key}' is {baseLevel} (includes wall boost).");
 
                 // Only add fort level if a valid holding was found
                 int finalLevel = baseLevel > 0 ? baseLevel + fortLevel : 0;
-                Program.Logger.Debug($"  - Final holding level: {finalLevel} (base level + fort level {fortLevel}).");
+                CrusaderWarsEnvironment.Logger.Debug($"  - Final holding level: {finalLevel} (base level + fort level {fortLevel}).");
                 return finalLevel;
             }
         };
