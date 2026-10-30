@@ -30,7 +30,7 @@ namespace CrusaderWars.locs
         public static void RemoveFiles()
         {
 
-            string path = @".\data\battle files\text\db";
+            string path = @"./data/battle files/text/db";
             foreach (var file in Directory.GetFiles(path))
             {
                 string fileName = Path.GetFileName(file);
@@ -85,7 +85,7 @@ namespace CrusaderWars.locs
                 default:
                     // Fallback: if mapper name is unknown, try to find loc files in a generic way
                     CrusaderWarsEnvironment.Logger.Debug($"Unknown mapper name '{Mapper_Name}' in ChangeUnitsCardsNames. Attempting to find localization files generically.");
-                    string genericLocPath = @".\data\units_cards_names";
+                    string genericLocPath = @"./data/units_cards_names";
                     if (Directory.Exists(genericLocPath))
                     {
                         var genericLocFiles = Directory.GetFiles(genericLocPath, "*.loc", SearchOption.AllDirectories);
@@ -159,7 +159,7 @@ namespace CrusaderWars.locs
             {
                 string loc_file_path = unit_cards_files[i];
                 string loc_file_name = Path.GetFileName(loc_file_path);
-                string file_to_edit_path = $@".\data\{loc_file_name}";
+                string file_to_edit_path = $@"./data/{loc_file_name}";
 
 
                 if (File.Exists(file_to_edit_path))
@@ -316,7 +316,7 @@ namespace CrusaderWars.locs
                     reader.Dispose();
                 }
 
-                string battle_files_path = $@".\data\battle files\text\db\{loc_file_name}";
+                string battle_files_path = $@"./data/battle files/text/db/{loc_file_name}";
 
                 File.WriteAllText(file_to_edit_path, edited_names);
                 if (File.Exists(battle_files_path)) File.Delete(battle_files_path);
@@ -448,7 +448,7 @@ namespace CrusaderWars.locs
                 default:
                     // Fallback: if mapper name is unknown, try to find loc files in a generic way
                     CrusaderWarsEnvironment.Logger.Debug($"Unknown mapper name '{Mapper_Name}'. Attempting to find localization files generically.");
-                    string genericLocPath = @".\data\units_cards_names";
+                    string genericLocPath = @"./data/units_cards_names";
                     if (Directory.Exists(genericLocPath))
                     {
                         locFiles = Directory.GetFiles(genericLocPath, "*.loc", SearchOption.AllDirectories);

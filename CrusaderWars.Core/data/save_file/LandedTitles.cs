@@ -102,7 +102,7 @@ namespace CrusaderWars.data.save_file
         {
             foreach (var mod_folder_path in EnabledMods_Folders_Paths)
             {
-                string landed_titles_dir = mod_folder_path.Trim('"') + @"\common\landed_titles";
+                string landed_titles_dir = mod_folder_path.Trim('"') + @"/common/landed_titles";
                 if (Directory.Exists(landed_titles_dir))
                 {
                     CrusaderWarsEnvironment.Logger.Debug($"Scanning for landed titles files in mod directory: {landed_titles_dir}");

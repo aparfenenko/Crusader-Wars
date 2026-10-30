@@ -172,7 +172,7 @@ namespace CrusaderWars.unit_mapper
 
             if (LoadedUnitMapper_FolderPath == null) return;
 
-            string factions_folder_path = LoadedUnitMapper_FolderPath + @"\Factions";
+            string factions_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Factions");
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
             var files_paths = GetSortedFilePaths(factions_folder_path, priorityFilePattern);
 
@@ -294,7 +294,7 @@ namespace CrusaderWars.unit_mapper
             var allSubmods = new List<Submod>();
             var allCk3ModFileNames = new List<(string fileName, string? displayName)>();
 
-            var unit_mappers_folder = Directory.GetDirectories(@".\unit mappers");
+            var unit_mappers_folder = Directory.GetDirectories(@"./unit mappers");
             if (tag == "Custom")
             {
                 string selectedMapperTag = ModOptions.GetSelectedCustomMapper();
@@ -866,7 +866,7 @@ namespace CrusaderWars.unit_mapper
             AvailableSubmods.Clear();
             List<string> requiredMods = new List<string>();
 
-            var unit_mappers_folder = Directory.GetDirectories(@".\unit mappers");
+            var unit_mappers_folder = Directory.GetDirectories(@"./unit mappers");
             if (tag == "Custom")
             {
                 string customMapperTag = ModOptions.GetSelectedCustomMapper();
@@ -1089,7 +1089,7 @@ namespace CrusaderWars.unit_mapper
                 return 0; // Or throw an exception
             }
 
-            string factions_folder_path = LoadedUnitMapper_FolderPath + @"\Factions";
+            string factions_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Factions");
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
             var files_paths = GetSortedFilePaths(factions_folder_path, priorityFilePattern);
 
@@ -1233,7 +1233,7 @@ namespace CrusaderWars.unit_mapper
                 return ""; // Return empty string if not found
             }
 
-            string factions_folder_path = LoadedUnitMapper_FolderPath + @"\Factions";
+            string factions_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Factions");
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
             var files_paths = GetSortedFilePaths(factions_folder_path, priorityFilePattern);
 
@@ -1479,7 +1479,7 @@ namespace CrusaderWars.unit_mapper
                 return (NOT_FOUND_KEY, false);
             }
 
-            string titles_folder_path = LoadedUnitMapper_FolderPath + @"\Titles";
+            string titles_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Titles");
             if (!Directory.Exists(titles_folder_path)) return (NOT_FOUND_KEY, false);
 
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
@@ -1533,7 +1533,7 @@ namespace CrusaderWars.unit_mapper
                 return (NOT_FOUND_KEY, false);
             }
 
-            string factions_folder_path = LoadedUnitMapper_FolderPath + @"\Factions";
+            string factions_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Factions");
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
             var files_paths = GetSortedFilePaths(factions_folder_path, priorityFilePattern);
             files_paths.Reverse(); // Search from last-loaded (submods) to first (OfficialCC)
@@ -1883,7 +1883,7 @@ namespace CrusaderWars.unit_mapper
         {
             if (LoadedUnitMapper_FolderPath == null) return "INFANTRY";
 
-            string factions_folder_path = LoadedUnitMapper_FolderPath + @"\Factions";
+            string factions_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Factions");
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
             var files_paths = GetSortedFilePaths(factions_folder_path, priorityFilePattern);
             files_paths.Reverse(); // Prioritize submods over base mappers
@@ -2059,7 +2059,7 @@ namespace CrusaderWars.unit_mapper
                 return (NOT_FOUND_KEY, false);
             }
 
-            string factions_folder_path = LoadedUnitMapper_FolderPath + @"\Factions";
+            string factions_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Factions");
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
             var files_paths = GetSortedFilePaths(factions_folder_path, priorityFilePattern);
             files_paths.Reverse(); // Prioritize sub-mods
@@ -2092,7 +2092,7 @@ namespace CrusaderWars.unit_mapper
                 return new List<string>();
             }
 
-            string cultures_folder_path = LoadedUnitMapper_FolderPath + @"\Cultures";
+            string cultures_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Cultures");
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
             var files_paths = GetSortedFilePaths(cultures_folder_path, priorityFilePattern);
 
@@ -2135,7 +2135,7 @@ namespace CrusaderWars.unit_mapper
                 throw new Exception("Unit mapper folder path not configured");
             }
 
-            string cultures_folder_path = LoadedUnitMapper_FolderPath + @"\Cultures";
+            string cultures_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Cultures");
             CrusaderWarsEnvironment.Logger.Debug($"Searching for Attila faction for Culture '{CultureName}', Heritage '{HeritageName}' in: {cultures_folder_path}");
 
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
@@ -2604,7 +2604,7 @@ namespace CrusaderWars.unit_mapper
 
         public static void SetMapperImage()
         {
-            string destination_path = Directory.GetCurrentDirectory() + @"\data\battle files\campaign_maps\main_attila_map\main_attila_map.png";
+            string destination_path = Directory.GetCurrentDirectory() + @"/data/battle files/campaign_maps/main_attila_map/main_attila_map.png";
             try
             {
                 if (LoadedUnitMapper_FolderPath == null)
@@ -2651,7 +2651,7 @@ namespace CrusaderWars.unit_mapper
                 return false;
             }
 
-            string factions_folder_path = LoadedUnitMapper_FolderPath + @"\Factions";
+            string factions_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Factions");
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
             var files_paths = GetSortedFilePaths(factions_folder_path, priorityFilePattern);
             files_paths.Reverse(); // Search from last-loaded (submods) to first (OfficialCC)
@@ -2713,7 +2713,7 @@ namespace CrusaderWars.unit_mapper
 
             if (LoadedUnitMapper_FolderPath == null) return allUnits;
 
-            string factions_folder_path = LoadedUnitMapper_FolderPath + @"\Factions";
+            string factions_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Factions");
             if (!Directory.Exists(factions_folder_path)) return allUnits;
 
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
@@ -2788,7 +2788,7 @@ namespace CrusaderWars.unit_mapper
         {
             if (string.IsNullOrEmpty(unitKey) || LoadedUnitMapper_FolderPath == null) return false;
 
-            string factions_folder_path = LoadedUnitMapper_FolderPath + @"\Factions";
+            string factions_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Factions");
             if (!Directory.Exists(factions_folder_path)) return false;
 
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;
@@ -2824,7 +2824,7 @@ namespace CrusaderWars.unit_mapper
         {
             if (string.IsNullOrEmpty(menAtArmType) || LoadedUnitMapper_FolderPath == null) return null;
 
-            string factions_folder_path = LoadedUnitMapper_FolderPath + @"\Factions";
+            string factions_folder_path = Path.Combine(LoadedUnitMapper_FolderPath, "Factions");
             if (!Directory.Exists(factions_folder_path)) return null;
 
             string priorityFilePattern = !string.IsNullOrEmpty(ActivePlaythroughTag) ? $"OfficialCC_{ActivePlaythroughTag}_*" : string.Empty;

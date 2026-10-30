@@ -37,7 +37,7 @@ namespace CrusaderWars.data.save_file
             // Removed resultsFound and combatsFound boolean variables.
 
             //string tempFilePath = Directory.GetCurrentDirectory() + "\\CrusaderWars_Battle.ck3";
-            string tempFilePath = @".\data\save_file_data\gamestate";
+            string tempFilePath = @"./data/save_file_data/gamestate";
             CrusaderWarsEnvironment.Logger.Debug($"Writing to temporary file: {Path.GetFullPath(tempFilePath)}");
 
             using (var inputFileStream = new FileStream(savePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -314,7 +314,7 @@ namespace CrusaderWars.data.save_file
             CrusaderWarsEnvironment.Logger.Debug($"Finished writing to temporary file: {Path.GetFullPath(tempFilePath)}");
 
             //string save_games_path = Properties.Settings.Default.VAR_dir_save;
-            //string editedSavePath = save_games_path + @"\CrusaderWars_Battle.ck3";
+            //string editedSavePath = Path.Combine(save_games_path, "CrusaderWars_Battle.ck3");
             //File.Delete(savePath);
             //File.Move(tempFilePath, editedSavePath);
         }
@@ -352,44 +352,44 @@ namespace CrusaderWars.data.save_file
 
         public struct DataFilesPaths
         {
-            public static string CombatResults_Path() { return @".\data\save_file_data\CombatResults.txt"; }
-            public static string Combats_Path() { return @".\data\save_file_data\Combats.txt"; }
-            public static string Regiments_Path() { return @".\data\save_file_data\Regiments.txt"; }
-            public static string ArmyRegiments_Path() { return @".\data\save_file_data\ArmyRegiments.txt"; }
-            public static string Living_Path() { return @".\data\save_file_data\Living.txt"; }
-            public static string Cultures_Path() { return @".\data\save_file_data\Cultures.txt"; }
-            public static string Mercenaries_Path() { return @".\data\save_file_data\Mercenaries.txt"; }
-            public static string Armies_Path() { return @".\data\save_file_data\Armies.txt"; }
-            public static string Counties_Path() { return @".\data\save_file_data\Counties.txt"; }
-            public static string Traits_Path() { return @".\data\save_file_data\Traits.txt"; }
-            public static string Units_Path() { return @".\data\save_file_data\Units.txt"; }
-            public static string CourtPositions_Path() { return @".\data\save_file_data\CourtPositions.txt"; }
-            public static string LandedTitles() { return @".\data\save_file_data\LandedTitles.txt"; }
-            public static string Accolades() { return @".\data\save_file_data\Accolades.txt"; }
-            public static string Dynasties_Path() { return @".\data\save_file_data\Dynasties.txt"; }
-            public static string Sieges_Path() { return @".\data\save_file_data\Sieges.txt"; }
-            public static string PlayedCharacter_Path() { return @".\data\save_file_data\PlayedCharacter.txt"; }
-            public static string CurrentlyPlayedCharacters_Path() { return @".\data\save_file_data\CurrentlyPlayedCharacters.txt"; }
-            public static string Wars_Path() { return @".\data\save_file_data\Wars.txt"; }
-            public static string VassalContracts_Path() { return @".\data\save_file_data\VassalContracts.txt"; }
-            public static string Opinions_Path() { return @".\data\save_file_data\Opinions.txt"; }
+            public static string CombatResults_Path() { return @"./data/save_file_data/CombatResults.txt"; }
+            public static string Combats_Path() { return @"./data/save_file_data/Combats.txt"; }
+            public static string Regiments_Path() { return @"./data/save_file_data/Regiments.txt"; }
+            public static string ArmyRegiments_Path() { return @"./data/save_file_data/ArmyRegiments.txt"; }
+            public static string Living_Path() { return @"./data/save_file_data/Living.txt"; }
+            public static string Cultures_Path() { return @"./data/save_file_data/Cultures.txt"; }
+            public static string Mercenaries_Path() { return @"./data/save_file_data/Mercenaries.txt"; }
+            public static string Armies_Path() { return @"./data/save_file_data/Armies.txt"; }
+            public static string Counties_Path() { return @"./data/save_file_data/Counties.txt"; }
+            public static string Traits_Path() { return @"./data/save_file_data/Traits.txt"; }
+            public static string Units_Path() { return @"./data/save_file_data/Units.txt"; }
+            public static string CourtPositions_Path() { return @"./data/save_file_data/CourtPositions.txt"; }
+            public static string LandedTitles() { return @"./data/save_file_data/LandedTitles.txt"; }
+            public static string Accolades() { return @"./data/save_file_data/Accolades.txt"; }
+            public static string Dynasties_Path() { return @"./data/save_file_data/Dynasties.txt"; }
+            public static string Sieges_Path() { return @"./data/save_file_data/Sieges.txt"; }
+            public static string PlayedCharacter_Path() { return @"./data/save_file_data/PlayedCharacter.txt"; }
+            public static string CurrentlyPlayedCharacters_Path() { return @"./data/save_file_data/CurrentlyPlayedCharacters.txt"; }
+            public static string Wars_Path() { return @"./data/save_file_data/Wars.txt"; }
+            public static string VassalContracts_Path() { return @"./data/save_file_data/VassalContracts.txt"; }
+            public static string Opinions_Path() { return @"./data/save_file_data/Opinions.txt"; }
 
         }
 
         public struct DataTEMPFilesPaths
         {
-            public static string CombatResults_Path() { return @".\data\save_file_data\temp\CombatResults.txt"; }
-            public static string Combats_Path() { return @".\data\save_file_data\temp\Combats.txt"; }
-            public static string Regiments_Path() { return @".\data\save_file_data\temp\Regiments.txt"; }
-            public static string ArmyRegiments_Path() { return @".\data\save_file_data\temp\ArmyRegiments.txt"; }
-            public static string Living_Path() { return @".\data\save_file_data\temp\Living.txt"; }
-            public static string Sieges_Path() { return @".\data\save_file_data\temp\Sieges.txt"; }
-            public static string PlayedCharacter_Path() { return @".\data\save_file_data\temp\PlayedCharacter.txt"; }
-            public static string CurrentlyPlayedCharacters_Path() { return @".\data\save_file_data\temp\CurrentlyPlayedCharacters.txt"; }
-            public static string CourtPositions_Path() { return @".\data\save_file_data\temp\CourtPositions.txt"; }
-            public static string Wars_Path() { return @".\data\save_file_data\temp\Wars.txt"; }
-            public static string VassalContracts_Path() { return @".\data\save_file_data\temp\VassalContracts.txt"; }
-            public static string Opinions_Path() { return @".\data\save_file_data\temp\Opinions.txt"; }
+            public static string CombatResults_Path() { return @"./data/save_file_data/temp/CombatResults.txt"; }
+            public static string Combats_Path() { return @"./data/save_file_data/temp/Combats.txt"; }
+            public static string Regiments_Path() { return @"./data/save_file_data/temp/Regiments.txt"; }
+            public static string ArmyRegiments_Path() { return @"./data/save_file_data/temp/ArmyRegiments.txt"; }
+            public static string Living_Path() { return @"./data/save_file_data/temp/Living.txt"; }
+            public static string Sieges_Path() { return @"./data/save_file_data/temp/Sieges.txt"; }
+            public static string PlayedCharacter_Path() { return @"./data/save_file_data/temp/PlayedCharacter.txt"; }
+            public static string CurrentlyPlayedCharacters_Path() { return @"./data/save_file_data/temp/CurrentlyPlayedCharacters.txt"; }
+            public static string CourtPositions_Path() { return @"./data/save_file_data/temp/CourtPositions.txt"; }
+            public static string Wars_Path() { return @"./data/save_file_data/temp/Wars.txt"; }
+            public static string VassalContracts_Path() { return @"./data/save_file_data/temp/VassalContracts.txt"; }
+            public static string Opinions_Path() { return @"./data/save_file_data/temp/Opinions.txt"; }
 
         }
 

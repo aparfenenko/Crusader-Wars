@@ -16,7 +16,7 @@ namespace CrusaderWars.data.save_file
         public static void Uncompress()
         {
             string lastSavePath = CrusaderWarsEnvironment.Paths.Ck3SaveGamesDirectory.Replace(@"save games", "last_save.ck3");
-            string myLastSavePath = @".\data\save_file_data\last_save.zip";
+            string myLastSavePath = @"./data/save_file_data/last_save.zip";
             string gamestatePath = @".\data\save_file_data\gamestate_file\";
 
             File.Copy(lastSavePath, myLastSavePath, true);
@@ -28,18 +28,18 @@ namespace CrusaderWars.data.save_file
         public static void Compress()
         {
 
-            string editedGamestatePath = @".\data\save_file_data\gamestate";
-            string newSaveFilePath = @".\data\save_file_data\battle_results.zip";
-            string metadataPath = @".\data\save_file_data\metadata.txt";
+            string editedGamestatePath = @"./data/save_file_data/gamestate";
+            string newSaveFilePath = @"./data/save_file_data/battle_results.zip";
+            string metadataPath = @"./data/save_file_data/metadata.txt";
             DEFAULTCompressFileWithMetadata(editedGamestatePath, newSaveFilePath, metadataPath);
         }
 
         public static void Finish()
         {
-            string newSaveFilePath = @".\data\save_file_data\battle_results.zip";
+            string newSaveFilePath = @"./data/save_file_data/battle_results.zip";
             string saveGamesDir = CrusaderWarsEnvironment.Paths.Ck3SaveGamesDirectory;
             string lastSavePath = saveGamesDir.Replace("save games", "last_save.ck3");
-            string normalSavePath = saveGamesDir + @"\battle_results.ck3";
+            string normalSavePath = Path.Combine(saveGamesDir, "battle_results.ck3");
 
             File.Copy(newSaveFilePath, lastSavePath, true);
             File.Copy(newSaveFilePath, normalSavePath, true);
@@ -128,10 +128,10 @@ namespace CrusaderWars.data.save_file
 
         static void DeleteOlderFiles()
         {
-            string myLastSavePath = @".\data\save_file_data\last_save.zip";
-            string editedGamestatePath = @".\data\save_file_data\gamestate";
-            string gamestatePath = @".\data\save_file_data\gamestate_file\gamestate";
-            string newSaveFilePath = @".\data\save_file_data\battle_results.zip";
+            string myLastSavePath = @"./data/save_file_data/last_save.zip";
+            string editedGamestatePath = @"./data/save_file_data/gamestate";
+            string gamestatePath = @"./data/save_file_data/gamestate_file/gamestate";
+            string newSaveFilePath = @"./data/save_file_data/battle_results.zip";
 
             string[] files_to_delete = new string[] { myLastSavePath, editedGamestatePath, gamestatePath, newSaveFilePath };
             foreach (string file in files_to_delete)
@@ -154,10 +154,10 @@ namespace CrusaderWars.data.save_file
 
         public static void ExtractGamestate(string zipFilePath, string extractPath)
         {
-            if (File.Exists(@".\data\save_file_data\gamestate_file\gamestate"))
-                File.Delete(@".\data\save_file_data\gamestate_file\gamestate");
-            if (File.Exists(@".\data\save_file_data\gamestate"))
-                File.Delete(@".\data\save_file_data\gamestate");
+            if (File.Exists(@"./data/save_file_data/gamestate_file/gamestate"))
+                File.Delete(@"./data/save_file_data/gamestate_file/gamestate");
+            if (File.Exists(@"./data/save_file_data/gamestate"))
+                File.Delete(@"./data/save_file_data/gamestate");
 
 
             using (FileStream fs = new FileStream(zipFilePath, FileMode.Open, FileAccess.Read))
@@ -218,7 +218,7 @@ namespace CrusaderWars.data.save_file
         static void ReadMetaData(string myLastSavePath)
         {
             using (StreamReader streamReader = new StreamReader(myLastSavePath))
-            using (StreamWriter streamWriter = new StreamWriter(@".\data\save_file_data\metadata.txt", false, Encoding.UTF8))
+            using (StreamWriter streamWriter = new StreamWriter(@"./data/save_file_data/metadata.txt", false, Encoding.UTF8))
             {
                 streamWriter.NewLine = "\n";
                 string? line; // Changed to nullable string

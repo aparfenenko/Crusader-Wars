@@ -232,7 +232,7 @@ namespace CrusaderWars
                     {
                         CrusaderWarsEnvironment.Logger.Debug("Found end of traits_lookup block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Traits.Length} characters to Traits.txt");
-                        File.WriteAllText(@".\data\save_file_data\Traits.txt", Data.SB_Traits.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Traits.txt", Data.SB_Traits.ToString());
                         Data.SB_Traits = new StringBuilder();
                         GC.Collect();
                         End_TraitsFound = true;
@@ -276,7 +276,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of combats block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Combats.Length} characters to Combats.txt");
                         //Write Combats Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\Combats.txt", Data.SB_Combats.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Combats.txt", Data.SB_Combats.ToString());
                         Data.SB_Combats = new StringBuilder();
                         GC.Collect();
 
@@ -321,7 +321,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of combat_results block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_CombatResults.Length} characters to CombatResults.txt");
                         //Write CombatResults Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\CombatResults.txt", Data.SB_CombatResults.ToString());
+                        File.WriteAllText(@"./data/save_file_data/CombatResults.txt", Data.SB_CombatResults.ToString());
                         Data.SB_CombatResults = new StringBuilder();
                         GC.Collect();
 
@@ -363,7 +363,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of regiments block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Regiments.Length} characters to Regiments.txt");
                         //Write Regiments Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\Regiments.txt", Data.SB_Regiments.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Regiments.txt", Data.SB_Regiments.ToString());
                         Data.SB_Regiments = new StringBuilder();
                         GC.Collect();
                         End_RegimentsFound = true;
@@ -406,7 +406,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of army_regiments block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_ArmyRegiments.Length} characters to ArmyRegiments.txt");
                         //Write ArmyRegiments Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\ArmyRegiments.txt", Data.SB_ArmyRegiments.ToString());
+                        File.WriteAllText(@"./data/save_file_data/ArmyRegiments.txt", Data.SB_ArmyRegiments.ToString());
                         Data.SB_ArmyRegiments = new StringBuilder();
                         GC.Collect();
                         End_ArmyRegimentsFound = true;
@@ -449,7 +449,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of armies block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Armies.Length} characters to Armies.txt");
                         //Write Armies Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\Armies.txt", Data.SB_Armies.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Armies.txt", Data.SB_Armies.ToString());
                         Data.SB_Armies = new StringBuilder();
                         GC.Collect();
                         End_ArmiesFound = true;
@@ -492,7 +492,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of living block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Living.Length} characters to Living.txt");
                         //Write Living Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\Living.txt", Data.SB_Living.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Living.txt", Data.SB_Living.ToString());
                         Data.SB_Living = new StringBuilder();
                         GC.Collect();
                         End_LivingFound = true;
@@ -536,7 +536,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of counties block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Counties.Length} characters to Counties.txt");
                         //Write Counties Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\Counties.txt", Data.SB_Counties.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Counties.txt", Data.SB_Counties.ToString());
                         Data.SB_Counties = new StringBuilder();
                         GC.Collect();
                         End_CountiesFound = true;
@@ -579,7 +579,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of units block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Units.Length} characters to Units.txt");
                         //Write Units Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\Units.txt", Data.SB_Units.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Units.txt", Data.SB_Units.ToString());
                         Data.SB_Units = new StringBuilder();
                         GC.Collect();
                         End_UnitsFound = true;
@@ -630,7 +630,7 @@ namespace CrusaderWars
                     {
                         CrusaderWarsEnvironment.Logger.Debug("Found end of court_positions block by bracket counting.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_CourtPositions.Length} characters to CourtPositions.txt");
-                        File.WriteAllText(@".\data\save_file_data\CourtPositions.txt", Data.SB_CourtPositions.ToString());
+                        File.WriteAllText(@"./data/save_file_data/CourtPositions.txt", Data.SB_CourtPositions.ToString());
                         Data.SB_CourtPositions = new StringBuilder();
                         GC.Collect();
                         End_CourtPositionsFound = true;
@@ -671,7 +671,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of culture_manager block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Cultures.Length} characters to Cultures.txt");
                         //Write Cultures Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\Cultures.txt", Data.SB_Cultures.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Cultures.txt", Data.SB_Cultures.ToString());
                         Data.SB_Cultures = new StringBuilder();
                         GC.Collect();
                         End_CulturesFound = true;
@@ -717,7 +717,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of mercenary_company_manager block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Mercenaries.Length} characters to Mercenaries.txt");
                         //Write Mercenaries Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\Mercenaries.txt", Data.SB_Mercenaries.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Mercenaries.txt", Data.SB_Mercenaries.ToString());
                         Data.SB_Mercenaries = new StringBuilder();
                         GC.Collect();
                         End_MercenariesFound = true;
@@ -763,7 +763,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of landed_titles block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_LandedTitles.Length} characters to LandedTitles.txt");
                         //Write Landed Titles Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\LandedTitles.txt", Data.SB_LandedTitles.ToString());
+                        File.WriteAllText(@"./data/save_file_data/LandedTitles.txt", Data.SB_LandedTitles.ToString());
                         Data.SB_LandedTitles = new StringBuilder();
                         GC.Collect();
                         End_LandedTitlesFound = true;
@@ -810,7 +810,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of accolades block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Accolades.Length} characters to Accolades.txt");
                         //Write Accolades Data to txt file
-                        File.WriteAllText(@".\data\save_file_data\Accolades.txt", Data.SB_Accolades.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Accolades.txt", Data.SB_Accolades.ToString());
                         Data.SB_Accolades = new StringBuilder();
                         GC.Collect();
                         End_AccoladesFound = true;
@@ -869,7 +869,7 @@ namespace CrusaderWars
                     {
                         CrusaderWarsEnvironment.Logger.Debug("Found end of dynasties block by bracket counting.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Dynasties.Length} characters to Dynasties.txt");
-                        File.WriteAllText(@".\data\save_file_data\Dynasties.txt", Data.SB_Dynasties.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Dynasties.txt", Data.SB_Dynasties.ToString());
                         Data.SB_Dynasties = new StringBuilder();
                         GC.Collect();
                         End_DynastiesFound = true;
@@ -920,7 +920,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of played_character block by bracket counting.");
                         Data.Original_PlayedCharacter_Block = Data.SB_PlayedCharacter.ToString();
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.Original_PlayedCharacter_Block.Length} characters to PlayedCharacter.txt");
-                        File.WriteAllText(@".\data\save_file_data\PlayedCharacter.txt", Data.Original_PlayedCharacter_Block);
+                        File.WriteAllText(@"./data/save_file_data/PlayedCharacter.txt", Data.Original_PlayedCharacter_Block);
                         Data.SB_PlayedCharacter = new StringBuilder();
                         GC.Collect();
                         End_PlayedCharacterFound = true;
@@ -962,7 +962,7 @@ namespace CrusaderWars
                         CrusaderWarsEnvironment.Logger.Debug("Found end of currently_played_characters block.");
                         Data.Original_CurrentlyPlayedCharacters_Block = Data.SB_CurrentlyPlayedCharacters.ToString();
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.Original_CurrentlyPlayedCharacters_Block.Length} characters to CurrentlyPlayedCharacters.txt");
-                        File.WriteAllText(@".\data\save_file_data\CurrentlyPlayedCharacters.txt", Data.Original_CurrentlyPlayedCharacters_Block);
+                        File.WriteAllText(@"./data/save_file_data/CurrentlyPlayedCharacters.txt", Data.Original_CurrentlyPlayedCharacters_Block);
                         Data.SB_CurrentlyPlayedCharacters = new StringBuilder();
                         GC.Collect();
                         End_CurrentlyPlayedCharactersFound = true;
@@ -1010,7 +1010,7 @@ namespace CrusaderWars
                     {
                         CrusaderWarsEnvironment.Logger.Debug("Found end of sieges block.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Sieges.Length} characters to Sieges.txt");
-                        File.WriteAllText(@".\data\save_file_data\Sieges.txt", Data.SB_Sieges.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Sieges.txt", Data.SB_Sieges.ToString());
                         Data.SB_Sieges = new StringBuilder();
                         GC.Collect();
                         End_SiegesFound = true;
@@ -1065,7 +1065,7 @@ namespace CrusaderWars
                     {
                         CrusaderWarsEnvironment.Logger.Debug("Found end of wars block by bracket counting.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Wars.Length} characters to Wars.txt");
-                        File.WriteAllText(@".\data\save_file_data\Wars.txt", Data.SB_Wars.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Wars.txt", Data.SB_Wars.ToString());
                         Data.SB_Wars = new StringBuilder();
                         GC.Collect();
                         End_WarsFound = true;
@@ -1114,7 +1114,7 @@ namespace CrusaderWars
                     {
                         CrusaderWarsEnvironment.Logger.Debug("Found end of vassal_contracts block by bracket counting.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_VassalContracts.Length} characters to VassalContracts.txt");
-                        File.WriteAllText(@".\data\save_file_data\VassalContracts.txt", Data.SB_VassalContracts.ToString());
+                        File.WriteAllText(@"./data/save_file_data/VassalContracts.txt", Data.SB_VassalContracts.ToString());
                         Data.SB_VassalContracts = new StringBuilder();
                         GC.Collect();
                         End_VassalContractsFound = true;
@@ -1163,7 +1163,7 @@ namespace CrusaderWars
                     {
                         CrusaderWarsEnvironment.Logger.Debug("Found end of opinions block by bracket counting.");
                         CrusaderWarsEnvironment.Logger.Debug($"Writing {Data.SB_Opinions.Length} characters to Opinions.txt");
-                        File.WriteAllText(@".\data\save_file_data\Opinions.txt", Data.SB_Opinions.ToString());
+                        File.WriteAllText(@"./data/save_file_data/Opinions.txt", Data.SB_Opinions.ToString());
                         Data.SB_Opinions = new StringBuilder();
                         GC.Collect();
                         End_OpinionsFound = true;

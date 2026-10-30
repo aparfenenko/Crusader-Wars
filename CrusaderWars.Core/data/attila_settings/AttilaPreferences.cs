@@ -11,8 +11,8 @@ namespace CrusaderWars.data.attila_settings
     public static class AttilaPreferences
     {
 
-        static string preferences_file_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\The Creative Assembly\Attila\scripts\preferences.script.txt";
-        static string user_script_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\The Creative Assembly\Attila\scripts\user.script.txt";
+        static string preferences_file_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"/The Creative Assembly/Attila/scripts/preferences.script.txt";
+        static string user_script_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"/The Creative Assembly/Attila/scripts/user.script.txt";
 
         [SupportedOSPlatform("windows")]
         public static void ValidateOnStartup()

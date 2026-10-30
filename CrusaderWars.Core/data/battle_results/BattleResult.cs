@@ -192,7 +192,7 @@ namespace CrusaderWars.data.battle_results
             {
                 string battle_id = "";
                 StringBuilder f = new StringBuilder();
-                using (StreamReader sr = new StreamReader(@".\data\save_file_data\CombatResults.txt"))
+                using (StreamReader sr = new StreamReader(@"./data/save_file_data/CombatResults.txt"))
                 {
                     if (twbattle.BattleState.IsSiegeBattle && !twbattle.BattleState.HasReliefArmy && SiegeID != null)
                     {

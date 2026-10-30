@@ -7,7 +7,7 @@ namespace CrusaderWars.twbattle
 {
     public static class BattleState
     {
-        private static string StateFolder => @".\data\attila_battle";
+        private static string StateFolder => @"./data/attila_battle";
         private static string StateFile => Path.Combine(StateFolder, "battle_state.txt");
         private static string LogSnippetFile => Path.Combine(StateFolder, "battle_log_snippet.txt");
         public static bool IsSiegeBattle { get; set; }

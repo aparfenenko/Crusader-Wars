@@ -407,8 +407,8 @@ namespace CrusaderWars
 
         private string? GetUpdaterPath()
         {
-            string primaryPath = @".\data\updater\CWUpdater.exe";
-            string fallbackPath = @".\data\updater\CW-Updater.exe";
+            string primaryPath = @"./data/updater/CWUpdater.exe";
+            string fallbackPath = @"./data/updater/CW-Updater.exe";
 
             if (File.Exists(primaryPath))
             {
@@ -570,7 +570,7 @@ namespace CrusaderWars
             if (IsNewerVersion(currentVersion, latestRelease.version))
             {
                 // Check if this version has been skipped by the user
-                string skippedVersionPath = @".\app_skipped_version.txt";
+                string skippedVersionPath = @"./app_skipped_version.txt";
                 if (File.Exists(skippedVersionPath))
                 {
                     string skippedVersion = File.ReadAllText(skippedVersionPath).Trim();
@@ -649,7 +649,7 @@ namespace CrusaderWars
             if (IsNewerVersion(currentVersion, latestRelease.version))
             {
                 // Check if this version has been skipped by the user
-                string skippedVersionPath = @".\um_skipped_version.txt";
+                string skippedVersionPath = @"./um_skipped_version.txt";
                 if (File.Exists(skippedVersionPath))
                 {
                     string skippedVersion = File.ReadAllText(skippedVersionPath).Trim();

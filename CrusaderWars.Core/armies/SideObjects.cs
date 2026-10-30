@@ -264,7 +264,7 @@ namespace CrusaderWars
             CrusaderWarsEnvironment.Logger.Debug("");
             sb.AppendLine();
 
-            File.AppendAllText(@".\data\battle.log", sb.ToString());
+            File.AppendAllText(@"./data/battle.log", sb.ToString());
         }
 
 

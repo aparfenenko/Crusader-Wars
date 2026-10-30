@@ -29,7 +29,7 @@ namespace CrusaderWars.data.save_file
         public static void ReadMetaData()
         {
             CrusaderWarsEnvironment.Logger.Debug("Reading metadata.txt...");
-            string metaDataPath = @".\data\save_file_data\metadata.txt";
+            string metaDataPath = @"./data/save_file_data/metadata.txt";
             if (File.Exists(metaDataPath))
             {
                 string[] lines = File.ReadAllLines(metaDataPath);
