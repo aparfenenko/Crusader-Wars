@@ -50,7 +50,6 @@ static void PrintHelp()
 
         Options:
           --timeout-minutes <n>   Wait timeout (default: 180 for battles, 60 for CK3 watch)
-          --clear-user-script     Empty Attila user.script.txt if it is not empty
           --continue-last-save    Launch CK3 with --continuelastsave
         """);
 }
@@ -59,7 +58,6 @@ static async Task<int> RunCommand(string command, Dictionary<string, string> fla
 {
     var detector = new MacPathDetector(logger);
     int timeoutMinutes = flags.TryGetValue("timeout-minutes", out string? t) && int.TryParse(t, out int n) ? n : 0;
-    bool clearUserScript = flags.ContainsKey("clear-user-script");
     bool continueLastSave = flags.ContainsKey("continue-last-save");
 
     switch (command)
@@ -88,7 +86,7 @@ static async Task<int> RunCommand(string command, Dictionary<string, string> fla
         case "launch-attila":
         {
             var (paths, launcher) = LoadServices(logger, detector);
-            new AttilaUserScript(paths, logger).EnsureEmpty(clearUserScript);
+            new AttilaUserScript(paths, logger).WarnIfPackMissing();
             launcher.LaunchAttila();
             return 0;
         }
@@ -135,7 +133,7 @@ static async Task<int> RunCommand(string command, Dictionary<string, string> fla
                 new AttilaUserScript(paths, logger));
             TimeSpan ck3Wait = TimeSpan.FromMinutes(timeoutMinutes > 0 ? timeoutMinutes : 60);
             TimeSpan attilaWait = TimeSpan.FromMinutes(timeoutMinutes > 0 ? timeoutMinutes : 180);
-            await bridge.RunAsync(ck3Wait, attilaWait, clearUserScript, CancellationToken.None);
+            await bridge.RunAsync(ck3Wait, attilaWait, CancellationToken.None);
             return 0;
         }
         default:

@@ -39,9 +39,9 @@ public sealed class BattleBridge
         _userScript = userScript;
     }
 
-    public async Task RunAsync(TimeSpan ck3Wait, TimeSpan attilaWait, bool clearUserScript, CancellationToken cancellationToken)
+    public async Task RunAsync(TimeSpan ck3Wait, TimeSpan attilaWait, CancellationToken cancellationToken)
     {
-        _userScript.EnsureEmpty(clearUserScript);
+        _userScript.WarnIfPackMissing();
         _attilaLog.Clear();
 
         await _ck3Log.WaitForBattleAsync(ck3Wait, cancellationToken);
