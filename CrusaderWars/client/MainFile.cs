@@ -3153,16 +3153,7 @@ namespace CrusaderWars
          ---------------------------------------------*/
         public static string RemoveASCII(string inputString)
         {
-            StringBuilder sb = new StringBuilder();
-            string apostrophe = "'";
-            foreach (char c in inputString)
-            {
-                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '.' || c == '_' || c == '\n' || c == '-' || c == ':' || c == ' ' || char.IsLetter(c) || c == '?' || c == apostrophe[0] || c == '%')
-                {
-                    sb.Append(c);
-                }
-            }
-            return sb.ToString();
+            return CrusaderWars.Core.Utils.TextUtils.RemoveASCII(inputString);
         }
 
         private void LoadDLLs()

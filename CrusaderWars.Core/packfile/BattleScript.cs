@@ -1,0 +1,299 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using CrusaderWars.Core.Paths;
+
+
+namespace CrusaderWars
+{
+    public static class BattleScript
+    {
+        static string filePath = GetFilePath();
+
+        private static string GetFilePath()
+        {
+            string scriptDirectory = "data\\battle files\\script\\tut_tutorial_battle";
+            string fileName = "tut_start.lua";
+            string fullPath = Path.Combine(scriptDirectory, fileName);
+
+            // Ensure the directory exists
+            if (!Directory.Exists(scriptDirectory))
+            {
+                Directory.CreateDirectory(scriptDirectory);
+            }
+
+            // Search for the file
+            string[] files = Directory.GetFiles(scriptDirectory, fileName, SearchOption.AllDirectories);
+
+            if (files.Length > 0)
+            {
+                return files[0];
+            }
+            else
+            {
+                // If not found, create an empty file
+                File.WriteAllText(fullPath, string.Empty);
+                return fullPath;
+            }
+        }
+
+        public static void CreateScript()
+        {
+            CrusaderWarsEnvironment.Logger.Debug("Creating battle script...");
+            string script_base = @"
+
+function remaining_soldiers()
+    dev.log(""-----REMAINING SOLDIERS-----!!"")";
+            File.AppendAllText(filePath, script_base);
+        }
+
+        public static void SetCommandersLocals()
+        {
+            var left_side = DeclarationsFile.GetLeftSideArmies();
+            var right_side = DeclarationsFile.GetRightSideArmies();
+
+            // Add null checks for the lists to prevent CS8602 warnings
+            if (left_side == null) left_side = new List<Army>();
+            if (right_side == null) right_side = new List<Army>();
+
+            CrusaderWarsEnvironment.Logger.Debug($"Setting commander locals for {left_side.Count} left side armies and {right_side.Count} right side armies.");
+
+            var scriptBuilder = new StringBuilder();
+            scriptBuilder.AppendLine();
+            scriptBuilder.AppendLine();
+            scriptBuilder.AppendLine("function commander_system()");
+
+
+            for (int i = 1; i <= left_side.Count; i++)
+            {
+                var army = left_side[i - 1]; // Get army once
+                if (army?.Commander != null) // Null-conditional check for army and Commander
+                {
+                    CrusaderWarsEnvironment.Logger.Debug($"Adding commander death check for left side army {army.ID?.ToString() ?? "unknown"}, commander {army.Commander.ID?.ToString() ?? "unknown"}");
+                    scriptBuilder.AppendLine($"	if(not Stark_Army{i}:is_commander_alive()) then");
+                    scriptBuilder.AppendLine($"		dev.log(\"Commander{army.Commander.ID?.ToString() ?? "unknown"} from Army{army.ID?.ToString() ?? "unknown"} has fallen\")");
+                    scriptBuilder.AppendLine("	end;");
+                    scriptBuilder.AppendLine();
+                }
+
+            }
+            for (int i = 1; i <= right_side.Count; i++)
+            {
+                var army = right_side[i - 1]; // Get army once
+                if (army?.Commander != null) // Null-conditional check for army and Commander
+                {
+                    CrusaderWarsEnvironment.Logger.Debug($"Adding commander death check for right side army {army.ID?.ToString() ?? "unknown"}, commander {army.Commander.ID?.ToString() ?? "unknown"}");
+                    scriptBuilder.AppendLine($"	if(not Bolton_Army{i}:is_commander_alive()) then");
+                    scriptBuilder.AppendLine($"		dev.log(\"Commander{army.Commander.ID?.ToString() ?? "unknown"} from Army{army.ID?.ToString() ?? "unknown"} has fallen\")");
+                    scriptBuilder.AppendLine("	end;");
+                    scriptBuilder.AppendLine();
+                }
+            }
+
+            scriptBuilder.Append("end;");
+
+            File.AppendAllText(filePath, scriptBuilder.ToString());
+
+        }
+
+        public static void SetLocals(string unitName, string declarationName)
+        {
+            string local = $"\n\tdev.log(\"{unitName}-\".. {declarationName}.unit:number_of_men_alive())";
+            File.AppendAllText(filePath, local);
+        }
+
+        public static void SetLocalsKills(List<(string unitName, string declarationName)> units_scripts_list)
+        {
+            // Add null check for the list parameter to prevent CS8602 warning
+            if (units_scripts_list == null)
+            {
+                CrusaderWarsEnvironment.Logger.Debug("Warning: units_scripts_list is null. Skipping kill tracking locals.");
+                return; // Exit the method if the list is null
+            }
+
+            CrusaderWarsEnvironment.Logger.Debug($"Setting kill tracking locals for {units_scripts_list.Count} units.");
+            //Units Script Start
+            string start = @"
+
+function kills()
+    dev.log(""-----NUMBERS OF KILLS-----!!"")";
+            File.AppendAllText(filePath, start);
+
+            //Units Locals Kills
+            foreach (var unit in units_scripts_list)
+            {
+                string locals = $"\n\tdev.log(\"kills_{unit.unitName}-\".. {unit.declarationName}.unit:number_of_enemies_killed())";
+                File.AppendAllText(filePath, locals);
+            }
+
+        }
+
+
+        public static void CloseScript()
+        {
+            CrusaderWarsEnvironment.Logger.Debug("Closing script function block.");
+            string close = "\nend;";
+            File.AppendAllText(filePath, close);
+        }
+
+        //Add
+        public static void EraseScript(bool isSiege)
+        {
+            CrusaderWarsEnvironment.Logger.Debug("Erasing and resetting battle script to default.");
+
+            string siegeLogic = "";
+            string victoryLogic;
+
+            if (isSiege)
+            {
+                siegeLogic = @"
+local settlement_captured = false;
+
+function settlement_captured_func()
+  bm:out(""SETTLEMENT_CAPTURED"");
+  dev.log(""SETTLEMENT_CAPTURED"");
+  settlement_captured = true;
+end;
+
+scripting.AddEventCallBack(""GarrisonResidenceCaptured"", settlement_captured_func);
+
+local walls_attacked = false;
+
+function building_destroyed()
+  if walls_attacked == true then
+    bm:out(""WALLS_DESTROYED"");
+    dev.log(""WALLS_DESTROYED"");
+    walls_attacked = false;
+  end; 
+end;
+
+scripting.AddEventCallBack(""BattleUnitDestroysBuilding"", building_destroyed);
+
+function walls_attacked_func()
+  bm:out(""WALLS_ATTACKED"");
+  dev.log(""WALLS_ATTACKED"");
+  walls_attacked = true;
+end;
+
+scripting.AddEventCallBack(""BattleUnitAttacksWalls"", walls_attacked_func);
+";
+                victoryLogic = @"
+	if is_routing_or_dead(Alliance_Stark) then	
+		bm:out(""Player has lost, army is routing"");
+        dev.log(""Defeat"")
+	elseif is_routing_or_dead(Alliance_Bolton) then
+		bm:out(""Player has won !"");
+		dev.log(""Victory"")
+    elseif settlement_captured and PLAYER_IS_ATTACKER then
+        bm:out(""Player has won !"");
+        dev.log(""Victory"")
+    elseif settlement_captured and not PLAYER_IS_ATTACKER then
+        bm:out(""Player has lost, army is routing"");
+        dev.log(""Defeat"")
+	end;";
+            }
+            else
+            {
+                victoryLogic = @"
+	if is_routing_or_dead(Alliance_Stark) then	
+		bm:out(""Player has lost, army is routing"");
+        dev.log(""Defeat"")
+	elseif is_routing_or_dead(Alliance_Bolton) then
+		bm:out(""Player has won !"");
+		dev.log(""Victory"")
+	end;";
+            }
+
+
+            string original = $@"
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+--
+--	INITIAL SCRIPT SETUP
+--
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
+-- clear out loaded files
+system.ClearRequiredFiles();
+
+local logging_enabled = true;
+
+-- load in battle script library
+require ""lua_scripts.Battle_Script_Header"";
+
+-- declare battlemanager object
+bm = battle_manager:new(empire_battle:new());
+
+-- get battle name from folder, and print header
+battle_name, battle_shortform = get_folder_name_and_shortform();
+
+-- load in other script files associated with this battle
+package.path = package.path .. "";data/Script/"" .. battle_name .. ""/?.lua"";
+
+require (battle_shortform .. ""_Declarations"");
+
+----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
+--
+--	HISTORICAL BATTLE CUTSCENE AND UNIT POSITION SCRIPT
+--
+----------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------
+
+dev = require(""lua_scripts.dev"");
+
+require(""lua_scripts.logging_callbacks"");
+
+local date = os.date(""\A, %c"");
+
+dev.log(""\n"" .. date);
+dev.log""\n Script Loaded"";
+
+
+bm:setup_victory_callback(function() file_debug() end);
+bm:register_phase_change_callback(""Complete"", function() file_debug() end);	
+
+ 
+function Deployment_Phase()
+	bm:out(""Battle is in deployment phase"");
+end;
+
+function Start_Battle()
+	bm:out(""Battle is Starting"");
+	
+end;
+
+local scripting = require ""lua_scripts.episodicscripting""
+-- Callbacks
+function EndBattle(context)
+   
+    if context.string == ""button_end_battle"" then
+        dev.log(""Battle has finished"")
+    end;
+    
+    if context.string == ""button_dismiss_results"" then
+        dev.log(""Battle has finished"")
+    end;
+
+end;
+scripting.AddEventCallBack(""ComponentLClickUp"", EndBattle);
+{siegeLogic}
+
+
+--Crusader Conflicts Get Winner
+function file_debug()
+
+	bm:callback(function() bm:end_battle() end, 1000);
+{victoryLogic}
+    
+	remaining_soldiers();
+	kills();
+	commander_system();
+	dev.log(""-----PRINT ENDED-----!!"")
+
+end;";
+            File.WriteAllText(filePath, original);
+        }
+    }
+}

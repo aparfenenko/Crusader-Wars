@@ -30,7 +30,7 @@ namespace CrusaderWars.twbattle
     public static class BattleProcessor
     {
         private static readonly Random _random = new Random();
-        public static Dictionary<string, (string replacementKey, bool isSiege)> AutofixReplacements { get; private set; } = new Dictionary<string, (string, bool)>();
+        public static Dictionary<string, (string replacementKey, bool isSiege)> AutofixReplacements => global::CrusaderWars.twbattle.AutofixReplacements.Replacements;
 
         public class AutofixState
         {
@@ -89,7 +89,7 @@ namespace CrusaderWars.twbattle
 
             if (autofixState == null)
             {
-                AutofixReplacements.Clear(); // Clear fixes for a new battle
+                global::CrusaderWars.twbattle.AutofixReplacements.Clear(); // Clear fixes for a new battle
                 CharacterDataManager.ClearCache(); // Clear dynasty name cache
                 UnitMappers_BETA.ClearFactionCache();
                 BattleStateBridge.Clear();
